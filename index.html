@@ -305,7 +305,12 @@
         .page-limit-wrapper:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 
         @media (max-width: 600px) { .pagination-footer { flex-direction: column; gap: 15px; } }
-        #viewItemModal .excel-table td { white-space: normal !important; word-wrap: break-word; line-height: 1.5; }
+        #viewItemModal .excel-table td { 
+            white-space: normal !important; 
+            word-wrap: break-word; 
+            line-height: 1.3; 
+            padding: 5px 10px !important; /* Ini jurus rahasia biar barisnya rapet! */
+        }
     </style>
 </head>
 <body>
@@ -362,7 +367,12 @@
         <span onclick="document.getElementById('viewItemModal').style.display='none'" style="position:absolute; right:20px; top:20px; cursor:pointer; font-weight:bold; font-size:18px; color:#888; z-index:10;"><span class="material-symbols-outlined">close</span></span>
         
         <h3 style="margin-top:0; color:var(--ig-primary); display:flex; align-items:center; gap:8px;"><span class="material-symbols-outlined">receipt_long</span> <span id="vi-title">DETAIL LAPORAN</span></h3>
-        <p style="margin:5px 0; border-bottom: 1px solid #eee; padding-bottom: 15px;"><strong>ID:</strong> <span id="vi-id"></span> &nbsp;|&nbsp; <strong>Tipe:</strong> <span id="vi-type"></span> &nbsp;|&nbsp; <strong>User:</strong> <span id="vi-karu"></span></p>
+        <p style="margin:5px 0; border-bottom: 1px solid #eee; padding-bottom: 15px; line-height: 1.6;">
+            <strong>ID:</strong> <span id="vi-id"></span> &nbsp;|&nbsp; 
+            <strong>Tipe:</strong> <span id="vi-type"></span> &nbsp;|&nbsp; 
+            <strong>User:</strong> <span id="vi-karu"></span> &nbsp;|&nbsp; 
+            <strong>Pekerjaan:</strong> <span id="vi-job" style="color:var(--ig-primary); font-weight:bold;">-</span>
+        </p>
         
         <div id="vi-op-container" style="background:#f0f2f5; padding:10px; margin:15px 0;">
             <strong>Operator:</strong> <span id="vi-ops" style="color:#444;"></span>
@@ -437,7 +447,7 @@
             <input type="password" id="passIn" placeholder="Password" style="padding-left:40px;">
             <span class="pass-eye" onclick="togglePass()"><span class="material-symbols-outlined" style="font-size: 16px;">visibility</span></span>
         </div>
-        <button id="btnLogin" class="btn-primary" style="width:100%; padding:12px;"><span class="material-symbols-outlined" style="font-size:18px;">login</span> Masuk</button>
+        <button id="btnLogin" class="btn-primary" style="width:100%; padding:12px;"><span class="material-symbols-outlined" style="font-size:24px;">login</span> Masuk</button>
     </div>
     <div style="position:absolute; bottom:20px; font-size:11px; color:#ccc;">v3.0 Designed by Robert</div>
 </div>
@@ -1410,6 +1420,7 @@ function openViewModal(id, source) {
     document.getElementById('vi-id').innerText = d.id;
     document.getElementById('vi-type').innerHTML = d.type === 'BS' ? '<span style="color:#b91c1c; font-weight:bold;">BS Produksi</span>' : '<span style="color:#0369a1; font-weight:bold;">Produksi</span>';
     document.getElementById('vi-karu').innerText = d.type === 'BS' ? d.user : d.karu;
+    document.getElementById('vi-job').innerText = d.type === 'BS' ? 'BS Produksi' : (d.job || '-');
     
     let opContainer = document.getElementById('vi-op-container');
     if(d.type === 'BS') {
@@ -1440,12 +1451,13 @@ function openViewModal(id, source) {
         });
 
         // BARIS TAMBAHAN UNTUK MENAMPILKAN TOTAL QTY DI PALING BAWAH
+        // BARIS TAMBAHAN UNTUK MENAMPILKAN TOTAL QTY DI PALING BAWAH
         if(d.type === 'BS') {
-            // Karena BS punya 4 kolom, kita gabung (colspan) 2 kolom pertama
-            tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#0095f6; font-size:15px;">${totalQty}</td><td style="background:#f8f9fa;"></td></tr>`;
+            // Warna diganti jadi #000000 (Hitam Pekat)
+            tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td><td style="background:#f8f9fa;"></td></tr>`;
         } else {
-            // PRD punya 3 kolom
-            tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#0095f6; font-size:15px;">${totalQty}</td></tr>`;
+            // Warna diganti jadi #000000 (Hitam Pekat)
+            tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td></tr>`;
         }
 
     } else { 
@@ -2128,6 +2140,7 @@ function printReport(tipe) {
     let isBS = type.includes('BS');
     let karu = document.getElementById('vi-karu').innerText;
     let ops = document.getElementById('vi-ops').innerText;
+    let job = document.getElementById('vi-job').innerText; 
     let tbody = document.getElementById('vi-body').innerHTML;
     
     let title = isBS ? 'LAPORAN BS PRODUKSI' : 'LAPORAN PRODUKSI';
@@ -2157,6 +2170,7 @@ function printReport(tipe) {
         <div class="info-box">
             <div><strong>ID Laporan :</strong> ${id}</div>
             <div><strong>Karu / User :</strong> ${karu}</div>
+            <div><strong>Pekerjaan :</strong> ${job}</div>
             ${!isBS ? `<div><strong>Operator :</strong> ${ops}</div>` : ''}
         </div>
         <table>
