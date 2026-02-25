@@ -72,11 +72,14 @@
             /* INI KUNCI BIAR PINNED! Harus di elemen <th>, bukan <thead> */
             position: sticky !important; 
             top: 0 !important; 
-            z-index: 20 !important; 
+            z-index: 20 !important; /* Biar dia berada di atas teks yang lewat */
             
-            /* Biar garis pemisahnya nggak hilang pas di-scroll */
+            /* Tambahan: kasih bayangan bawah tipis biar kelihatan batasnya pas di-scroll */
             box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
-        }
+            
+            /* Pastikan background tidak transparan biar teks di bawahnya nggak kelihatan tembus */
+            background: var(--ig-primary) !important; 
+        }   
         .excel-table td { padding: 10px 15px !important; border-bottom: 1px solid var(--border); text-align: left; }
         
         * { box-sizing: border-box; }
@@ -478,7 +481,7 @@
             <div onclick="refreshData()" style="cursor:pointer; font-size:18px; margin-right:10px; background:#e0f2fe; color:#0369a1; padding:4px 8px; border-radius:2px;" title="Tarik Data Terbaru"><span class="material-symbols-outlined">sync</span></div>
             
             <input type="hidden" id="headerRoleValue">
-            <div class="custom-select-btn" id="btnHeaderRole" style="padding: 5px 10px; border: none; background: #f0f0f0; border-radius: 2px; font-weight: 600; font-size: 12px; margin-left: 10px; width: auto; gap: 5px;" onclick="openRoleSelect()">
+            <div class="custom-select-btn" id="btnHeaderRole" style="padding:3px 6px; border: none; background: #f0f0f0; border-radius: 2px; font-weight: 600; font-size: 12px; margin-left: 10px; width: auto; gap: 5px;" onclick="openRoleSelect()">
                 <span id="labelHeaderRole">Role</span>
                 <span class="material-symbols-outlined" style="font-size: 14px; color: #888;">expand_more</span>
             </div>
@@ -532,8 +535,19 @@
                     <div style="padding: 15px;">
                         <div class="swipe-wrapper">
                             
-                            <div class="swipe-item">
-                                <div style="text-align:center; font-size:12px; font-weight:600; color:var(--ig-text); margin-bottom:15px; text-transform: uppercase;">Hari Ini</div>
+                            <div class="swipe-item" style="padding-top: 5px;">
+                                
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:0 5px;">
+                                    <div style="font-size:13px; font-weight:800; color:var(--ig-primary); text-transform: uppercase; letter-spacing: 1px;">
+                                        &mdash; HARI INI &mdash;
+                                    </div>
+                                    
+                                    <input type="hidden" id="filterPelangganValue" value="ALL">
+                                    <div class="custom-select-btn" id="btnFilterPelanggan" onclick="openPelangganSelect()" style="padding: 6px 12px !important; font-size: 11px; width: auto; max-width: 150px; border-radius: 6px !important; background: #ffffff; border: 1px solid var(--border) !important; margin: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;">
+                                        <span id="labelFilterPelanggan" style="font-weight: 600; color: var(--ig-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Semua Pelanggan</span>
+                                        <span class="material-symbols-outlined" style="font-size: 16px; color: #888; margin-left: 5px;">expand_more</span>
+                                    </div>
+                                </div>
                                 
                                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-bottom: 15px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);">
                                     <div style="background: white; padding: 15px 5px; text-align: center;">
@@ -556,7 +570,7 @@
                                 </div>
 
                                 <h5 style="margin: 0 0 10px 0; color:var(--ig-sec-text); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Rincian per Kategori Barang</h5>
-                                <div style="overflow-y: auto; max-height: 300px; border-radius: 8px; border: 1px solid var(--border);">
+                                <div style="overflow-y: auto; max-height: 270px; border-radius: 4px; border: 1px solid var(--border);">
                                     <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
                                         <thead>
                                             <tr>
@@ -564,7 +578,7 @@
                                                 <th style="text-align: center;">CYC 1</th>
                                                 <th style="text-align: center;">CYC 2</th>
                                                 <th style="text-align: center;">CYC 3</th>
-                                                <th style="text-align: center;">TOTAL</th>
+                                                <th style="text-align: right;">TOTAL</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tableKirimanBody"></tbody>
@@ -572,13 +586,26 @@
                                 </div>
                             </div>
 
-                            <div class="swipe-item">
-                                <div style="text-align:center; font-size:12px; font-weight:600; color:var(--ig-text); margin-bottom:15px; text-transform: uppercase;">Global (Semua Supplier)</div>
+                            <div class="swipe-item" style="padding-top: 5px;">
+                                <div style="text-align:center; font-size:13px; font-weight:800; color:var(--ig-primary); margin-bottom:15px; text-transform: uppercase; letter-spacing: 1px;">
+                                    &mdash; GLOBAL (ALL SUPPLIER) &mdash;
+                                </div>
                                 
-                                <div style="height: 100%; min-height: 350px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#efefef; border-radius:8px; border: 2px dashed var(--border); color:var(--ig-sec-text);">
-                                    <span class="material-symbols-outlined" style="font-size: 40px; margin-bottom: 10px; opacity: 0.5;">public</span>
-                                    <div style="font-size: 13px; font-weight: 600;">Data Kiriman Global</div>
-                                    <div style="font-size: 11px; margin-top: 5px;">Siap diisi dengan tabel Supplier (A, B, C, dll)</div>
+                                <div style="background: rgba(0, 149, 246, 0.1); border: 1px solid rgba(0, 149, 246, 0.3); border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 15px;">
+                                    <div style="font-size: 11px; color: var(--ig-primary); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Total Kiriman Global</div>
+                                    <div id="valGlobalTotal" style="font-size: 26px; font-weight: 800; color: var(--ig-primary); margin-top: 5px;">0</div>
+                                </div>
+
+                                <div style="overflow-y: auto; max-height: 300px; border-radius: 8px; border: 1px solid var(--border);">
+                                    <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: left;">NAMA PELANGGAN / SUPPLIER</th>
+                                                <th style="text-align: center; width: 100px;">QTY</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableSupplierBody"></tbody>
+                                    </table>
                                 </div>
                             </div>
 
@@ -824,7 +851,7 @@
 
 <script>
 // --- URL API TERBARU DARI SCRIPT GOOGLE ---
-const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbxvp1RmfMZ-b2tN1QgrW44O34K63_0rf0boU1wuOnVM0GZG1aDvhUdMMgBmRABFH6Wmpw/exec"; 
+const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbxxrxDbzN58i7stZASIcn-gNCb8e5BJlBcN3AdmTKMUel36THVXtq7juOnyZG2a5ZGYzA/exec"; 
 
 let DATA = {};
 let currentPageLaporan = 1; let rowsPerPageLaporan = 15;
@@ -1059,18 +1086,42 @@ function loginSuccess() {
 
     const btnHeaderRole = document.getElementById('btnHeaderRole');
     if(USER.role === 'Author') {
-        btnHeaderRole.classList.remove('disabled'); changeRole('Staff'); 
+        btnHeaderRole.classList.remove('disabled'); 
+        // true artinya isLogin (biar nggak loading 2x pas baru masuk)
+        changeRole('Staff', true); 
     } else {
-        btnHeaderRole.classList.add('disabled'); btnHeaderRole.querySelector('.material-symbols-outlined').style.display = 'none'; changeRole(USER.role);
+        btnHeaderRole.classList.add('disabled'); 
+        btnHeaderRole.querySelector('.material-symbols-outlined').style.display = 'none'; 
+        changeRole(USER.role, true);
     }
     showView('home'); renderMaster(DATA.master.slice(0,50));
 }
 
-function changeRole(newRole) { 
+function changeRole(newRole, isLogin = false) { 
     currentRole = newRole; 
     document.getElementById('headerRoleValue').value = newRole;
     document.getElementById('labelHeaderRole').innerText = newRole;
+    
+    // === LOGIKA GEMBOK PELANGGAN ===
+    let btnFilter = document.getElementById('btnFilterPelanggan');
+    if (btnFilter) {
+        if (currentRole !== 'Author') {
+            btnFilter.classList.add('disabled');
+            document.getElementById('filterPelangganValue').value = "CV. KARYA KREASI NUSANTARA";
+            document.getElementById('labelFilterPelanggan').innerText = "CV. KARYA KREASI NUSANTARA";
+        } else {
+            btnFilter.classList.remove('disabled');
+            document.getElementById('filterPelangganValue').value = "ALL";
+            document.getElementById('labelFilterPelanggan').innerText = "Semua Pelanggan";
+        }
+    }
+    
     applyRoleLogic(); 
+    
+    // === AUTO REFRESH + LOADING JIKA GANTI ROLE ===
+    if (!isLogin) {
+        refreshData();
+    }
 }
 
 function applyRoleLogic() {
@@ -1351,6 +1402,7 @@ function loadViewDataTable() {
     });
 }
 function filterViewData() { currentPageView = 1; loadViewDataTable(); }
+// === FUNGSI VIEW MODAL (DENGAN TAMBAHAN TOTAL QTY) ===
 function openViewModal(id, source) {
     let d = source === 'local' ? getLocalDrafts().find(x => x.id === id) : DATA.history.find(x => x.id === id);
     if(!d) return;
@@ -1372,15 +1424,34 @@ function openViewModal(id, source) {
     let tbody = document.getElementById('vi-body'); tbody.innerHTML = '';
     let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
     
+    // VARIABEL PENAMPUNG TOTAL QTY
+    let totalQty = 0; 
+
     if(items && items.length > 0) {
         items.forEach((item, index) => {
+            let qty = parseInt(item.q) || 0; // Pastikan angkanya valid
+            totalQty += qty; // Tambahkan ke total
+
             if(d.type === 'BS') {
-                tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td>${item.n}</td><td style="text-align:center; font-weight:bold;">${item.q}</td><td>${item.ket || '-'}</td></tr>`;
+                tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td>${item.n}</td><td style="text-align:center; font-weight:bold;">${qty}</td><td>${item.ket || '-'}</td></tr>`;
             } else {
-                tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td>${item.n}</td><td style="text-align:center; font-weight:bold;">${item.q}</td></tr>`;
+                tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td>${item.n}</td><td style="text-align:center; font-weight:bold;">${qty}</td></tr>`;
             }
         });
-    } else { tbody.innerHTML = `<tr><td colspan="4" align="center">Kosong</td></tr>`; }
+
+        // BARIS TAMBAHAN UNTUK MENAMPILKAN TOTAL QTY DI PALING BAWAH
+        if(d.type === 'BS') {
+            // Karena BS punya 4 kolom, kita gabung (colspan) 2 kolom pertama
+            tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#0095f6; font-size:15px;">${totalQty}</td><td style="background:#f8f9fa;"></td></tr>`;
+        } else {
+            // PRD punya 3 kolom
+            tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#0095f6; font-size:15px;">${totalQty}</td></tr>`;
+        }
+
+    } else { 
+        tbody.innerHTML = `<tr><td colspan="${d.type === 'BS' ? 4 : 3}" align="center">Kosong</td></tr>`; 
+    }
+    
     // Atur visibilitas tombol print HANYA untuk Author
     document.getElementById('vi-print-btns').style.display = (currentRole === 'Author') ? 'flex' : 'none';
 
@@ -1866,14 +1937,11 @@ function renderDashboard() {
         let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
         items.forEach(i => {
             let qty = parseInt(i.q);
-            // Tambahkan jika qty angka valid (Basmi NaN)
-            if (!isNaN(qty)) {
-                totalQty += qty;
-            }
+            if (!isNaN(qty)) totalQty += qty;
         });
     });
     document.getElementById('statTotalQty').innerText = totalQty.toLocaleString('id-ID');
-    // (Taruh di dalam renderDashboard)
+
     let selectKaru = document.getElementById('selectKaruChart');
     selectKaru.innerHTML = '<option value="ALL">Semua Karu</option>';
     EXPORT_KARU_LIST.forEach(k => { selectKaru.innerHTML += `<option value="${k}">${k}</option>`; });
@@ -1883,7 +1951,6 @@ function renderDashboard() {
     const last7Days = Array.from({length: 7}, (_, i) => { const d = new Date(); d.setDate(d.getDate() - i); return d.toISOString().split('T')[0]; }).reverse();
     const dataTrenQty = last7Days.map(tgl => {
         let dailyQty = 0;
-        // Filter: Sesuai tanggal + Bukan Draft + Produksi + Job Packing
         DATA.history.filter(d => d.date.startsWith(tgl) && d.status !== 'Draft' && d.type === 'PRD' && d.job === 'Packing').forEach(d => {
             let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
             items.forEach(i => {
@@ -1902,36 +1969,66 @@ function renderDashboard() {
             datasets: [{ 
                 label: 'Qty Matang (Packing)', 
                 data: dataTrenQty, 
-                borderColor: '#16a34a', 
-                backgroundColor: 'rgba(22, 163, 74, 0.1)', 
-                borderWidth: 2, 
-                fill: true, 
-                tension: 0, // <--- INI RAHASIANYA (0 bikin garis jadi tajam/patah-patah tegas)
-                pointRadius: 4, 
-                pointBackgroundColor: '#16a34a',
-                pointBorderColor: '#ffffff', // Tambahan sedikit: kasih border putih di titiknya biar makin cakep pas timbul
-                pointBorderWidth: 2
+                borderColor: '#16a34a', backgroundColor: 'rgba(22, 163, 74, 0.1)', borderWidth: 2, fill: true, tension: 0, pointRadius: 4, pointBackgroundColor: '#16a34a', pointBorderColor: '#ffffff', pointBorderWidth: 2
             }] 
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'Tanggal', font: { weight: 'bold' } }, grid: { display: false } }, y: { title: { display: true, text: 'Qty (Pcs)', font: { weight: 'bold' } }, beginAtZero: true, border: { dash: [5, 5] } } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, border: { dash: [5, 5] } } } }
     });
 
-    if (barChart) barChart.destroy();
-    barChart = new Chart(document.getElementById('barChartKaru'), {
-        type: 'bar',
-        data: { labels: [], datasets: [{ label: 'Performa Karu', data: [], backgroundColor: '#f59e0b', borderRadius: 0 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'Karu', font: { weight: 'bold' } } }, y: { title: { display: true, text: 'Target/Pencapaian', font: { weight: 'bold' } }, beginAtZero: true } } }
-    });
+    // --- AMBIL NILAI FILTER PELANGGAN ---
+    // --- AMBIL NILAI FILTER PELANGGAN (DARI HIDDEN INPUT) ---
+    let filterPelangganElement = document.getElementById('filterPelangganValue');
+    let filterPelanggan = filterPelangganElement ? filterPelangganElement.value : 'ALL';
 
     const tbody = document.getElementById('tableKirimanBody'); tbody.innerHTML = '';
     let totalC1 = 0, totalC2 = 0, totalC3 = 0, grandTotal = 0;
     let statData = DATA.statistik || {};
+
     KIRIMAN_KATEGORI.forEach(kat => {
-        let d = statData[kat] || {c1: 0, c2: 0, c3: 0}; let rowTotal = d.c1 + d.c2 + d.c3;
-        totalC1 += d.c1; totalC2 += d.c2; totalC3 += d.c3; grandTotal += rowTotal;
-        tbody.innerHTML += `<tr><td class="dash-table-kat">${kat}</td><td style="text-align: center;">${d.c1}</td><td style="text-align: center;">${d.c2}</td><td style="text-align: center;">${d.c3}</td><td style="text-align: center; font-weight: 800; background: #f8f9fa;">${rowTotal}</td></tr>`;
+        let d = statData[kat] || {c1: 0, c2: 0, c3: 0};
+        
+        let c1 = d.c1, c2 = d.c2, c3 = d.c3;
+
+        // LOGIKA FILTER PELANGGAN
+        // LOGIKA FILTER (Bypass untuk CV. KARYA KREASI agar tetap pakai data default yang ada)
+        if (filterPelanggan !== "ALL" && filterPelanggan !== "CV. KARYA KREASI NUSANTARA") {
+            c1 = 0; c2 = 0; c3 = 0;
+            if(DATA.history) {
+                DATA.history.forEach(h => {
+                    // PENTING: Aplikasi akan mencari data pelanggan di "h.customer"
+                    if(h.date.startsWith(today) && h.status === 'Approved' && h.customer === filterPelanggan) {
+                        let items = typeof h.items === 'string' ? JSON.parse(h.items) : h.items;
+                        items.forEach(it => {
+                            if(it.n.toUpperCase().includes(kat.toUpperCase())) {
+                                c1 += (parseInt(it.q) || 0); 
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        let rowTotal = c1 + c2 + c3;
+        totalC1 += c1; totalC2 += c2; totalC3 += c3; grandTotal += rowTotal;
+
+        tbody.innerHTML += `
+            <tr style="height: 35px;">
+                <td class="dash-table-kat" style="padding: 5px 10px !important; font-size: 11px;">${kat}</td>
+                <td style="text-align: center;">${c1}</td>
+                <td style="text-align: center;">${c2}</td>
+                <td style="text-align: center;">${c3}</td>
+                <td style="text-align: center; font-weight: 800; background: #f8f9fa;">${rowTotal}</td>
+            </tr>`;
     });
-    document.getElementById('valCycle1').innerText = totalC1.toLocaleString('id-ID'); document.getElementById('valCycle2').innerText = totalC2.toLocaleString('id-ID'); document.getElementById('valCycle3').innerText = totalC3.toLocaleString('id-ID'); document.getElementById('valCycleTotal').innerText = grandTotal.toLocaleString('id-ID');
+
+    // Update angka Cycle di atas (Cukup 1 kali saja)
+    document.getElementById('valCycle1').innerText = totalC1.toLocaleString('id-ID');
+    document.getElementById('valCycle2').innerText = totalC2.toLocaleString('id-ID');
+    document.getElementById('valCycle3').innerText = totalC3.toLocaleString('id-ID');
+    document.getElementById('valCycleTotal').innerText = grandTotal.toLocaleString('id-ID');
+
+    // Panggil update tabel supplier global
+    updateGlobalSupplierTable();
 }
 
 function processOCR(input) {
@@ -2153,6 +2250,72 @@ function updateKaruChart() {
         }
     });
 }
+// === FUNGSI UPDATE TABEL GLOBAL (SUPPLIER) ===
+function updateGlobalSupplierTable() {
+    const tbody = document.getElementById('tableSupplierBody');
+    const totalGlobalElement = document.getElementById('valGlobalTotal');
+    
+    if (!DATA.supplierStats || DATA.supplierStats.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" align="center" style="padding:20px; color:#999;">Data tidak ditemukan</td></tr>';
+        return;
+    }
+
+    let html = '';
+    let grandTotal = 0;
+
+    DATA.supplierStats.forEach(item => {
+        let nameRaw = String(item.name || "").trim();
+        let nameUpper = nameRaw.toUpperCase();
+        
+        // KUNCI: Abaikan baris yang namanya "TOTAL", "PELANGGAN", atau kosong
+        if (nameRaw !== "" && nameUpper !== "TOTAL" && nameUpper !== "PELANGGAN") {
+            let total = parseInt(item.total) || 0;
+            grandTotal += total;
+
+            html += `
+                <tr>
+                    <td style="font-weight: 600; color: var(--ig-text); font-size: 12px;">${nameRaw}</td>
+                    <td style="text-align: center; font-weight: 800; background: #fdfdfd; color: var(--ig-primary); font-size: 14px;">
+                        ${total.toLocaleString('id-ID')}
+                    </td>
+                </tr>`;
+        }
+    });
+
+    tbody.innerHTML = html;
+    
+    // Sekarang grandTotal hanya menjumlahkan supplier saja, tidak termasuk baris total dari sheet
+    totalGlobalElement.innerText = grandTotal.toLocaleString('id-ID');
+}
+// === FUNGSI BUKA POP-UP PILIH PELANGGAN ===
+function openPelangganSelect() {
+    // Tolak mentah-mentah kalau bukan Author!
+    if (currentRole !== 'Author') {
+        showAlert("Terkunci", "Hanya Author yang dapat memfilter pelanggan lain untuk saat ini.");
+        return;
+    }
+
+    let items = [{value: 'ALL', label: 'Semua Pelanggan'}];
+    
+    if(DATA.supplierStats) {
+        DATA.supplierStats.forEach(s => {
+            let nUpper = (s.name || "").toUpperCase();
+            if(s.name && nUpper !== "PELANGGAN" && !nUpper.includes("TOTAL")) {
+                items.push({value: s.name, label: s.name});
+            }
+        });
+    }
+
+    openSelectionModal("Pilih Pelanggan", items, document.getElementById('filterPelangganValue').value, (val, label) => {
+        document.getElementById('filterPelangganValue').value = val;
+        document.getElementById('labelFilterPelanggan').innerText = label;
+        closeSelectionModal();
+        renderDashboard(); 
+    });
+}
+
+// Panggil fungsi ini saat aplikasi pertama kali dimuat (setelah DATA terisi)
+// updateGlobalSupplierTable();
 </script>
 </body>
 </html>
