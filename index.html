@@ -447,7 +447,7 @@
             <input type="password" id="passIn" placeholder="Password" style="padding-left:40px;">
             <span class="pass-eye" onclick="togglePass()"><span class="material-symbols-outlined" style="font-size: 16px;">visibility</span></span>
         </div>
-        <button id="btnLogin" class="btn-primary" style="width:100%; padding:12px;"><span class="material-symbols-outlined" style="font-size:24px;">login</span> Masuk</button>
+        <button id="btnLogin" class="btn-primary" style="width:100%; padding:12px;"><span class="material-symbols-outlined" style="font-size:18px;">login</span> Masuk</button>
     </div>
     <div style="position:absolute; bottom:20px; font-size:11px; color:#ccc;">v3.0 Designed by Robert</div>
 </div>
@@ -861,7 +861,7 @@
 
 <script>
 // --- URL API TERBARU DARI SCRIPT GOOGLE ---
-const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbxxrxDbzN58i7stZASIcn-gNCb8e5BJlBcN3AdmTKMUel36THVXtq7juOnyZG2a5ZGYzA/exec"; 
+const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbxKkRD9xll5L4H_TGBm6U4m67fkETguIbRSV8Z2KnhoGPmCcojb-M2QNK_pOi9sgEtvNA/exec"; 
 
 let DATA = {};
 let currentPageLaporan = 1; let rowsPerPageLaporan = 15;
@@ -1728,7 +1728,7 @@ async function saveData(status, type = 'PRD') {
     if(!id) {
         let d = type === 'PRD' ? (document.getElementById('inputDate').valueAsDate || new Date()) : (document.getElementById('inputBSDate').valueAsDate || new Date());
         let yymmdd = d.getFullYear().toString().substr(-2) + (d.getMonth()+1).toString().padStart(2,'0') + d.getDate().toString().padStart(2,'0');
-        let prefix = type === 'BS' ? "LPS-BS-" + yymmdd + "-" : "LPS-PRD-" + yymmdd + "-";
+        let prefix = type === 'BS' ? "LPS-BS-" + yymm + "-" : "LPS-PRD-" + yymm + "-";
         
         let allIds = [...(DATA.history || []), ...getLocalDrafts()].map(x => x.id).filter(id => id && id.startsWith(prefix));
         let maxSeq = 0;
@@ -2152,15 +2152,15 @@ function printReport(tipe) {
     <head>
         <title>Cetak ${id}</title>
         <style>
-            body { font-family: 'Arial', sans-serif; font-size: 12px; padding: 20px; color: #000; }
-            h2 { text-align: center; margin-bottom: 5px; font-size: 18px; text-transform: uppercase; }
-            .info-box { margin-bottom: 20px; border: 1px solid #000; padding: 10px; display: inline-block; width: 100%; box-sizing: border-box;}
-            .info-box div { margin-bottom: 5px; }
+            body { font-family: 'Arial', sans-serif; font-size: 11px; padding: 10px; color: #000; }
+            h2 { text-align: center; margin-bottom: 10px; font-size: 20px; text-transform: uppercase; }
+            .info-box { margin-bottom: 10px; border: 1px solid #000; padding: 5px 8px; display: inline-block; width: 100%; box-sizing: border-box;}
+            .info-box div { margin-bottom: 2px; }
             table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th, td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 12px; }
-            th { background-color: #f2f2f2; text-align: center; }
+            th, td { border: 1px solid #000; padding: 4px 6px; text-align: left; font-size: 11px; }
+            th { background-color: #f2f2f2; text-align: center; font-weight: bold; }
             @media print {
-                @page { size: ${ukuranKertas}; margin: 15mm; }
+                @page { size: ${ukuranKertas}; margin: 10mm; }
                 body { -webkit-print-color-adjust: exact; }
             }
         </style>
