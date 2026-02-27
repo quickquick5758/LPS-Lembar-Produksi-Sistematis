@@ -861,7 +861,7 @@
 
 <script>
 // --- URL API TERBARU DARI SCRIPT GOOGLE ---
-const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbxKkRD9xll5L4H_TGBm6U4m67fkETguIbRSV8Z2KnhoGPmCcojb-M2QNK_pOi9sgEtvNA/exec"; 
+const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbyWPgXVugthK9gGIkx7ANBwyqhTrBdHYW0tdfsnx-sjt54NXWQeDR7I9RR1vaOCmaUzSw/exec"; 
 
 let DATA = {};
 let currentPageLaporan = 1; let rowsPerPageLaporan = 15;
@@ -1464,8 +1464,8 @@ function openViewModal(id, source) {
         tbody.innerHTML = `<tr><td colspan="${d.type === 'BS' ? 4 : 3}" align="center">Kosong</td></tr>`; 
     }
     
-    // Atur visibilitas tombol print HANYA untuk Author
-    document.getElementById('vi-print-btns').style.display = (currentRole === 'Author') ? 'flex' : 'none';
+    // Atur visibilitas tombol print untuk SEMUA ROLE, asalkan statusnya sudah Approved
+    document.getElementById('vi-print-btns').style.display = (d.status === 'Approved') ? 'flex' : 'none';
 
     document.getElementById('viewItemModal').style.display = 'flex';
 }
@@ -1727,12 +1727,17 @@ async function saveData(status, type = 'PRD') {
     
     if(!id) {
         let d = type === 'PRD' ? (document.getElementById('inputDate').valueAsDate || new Date()) : (document.getElementById('inputBSDate').valueAsDate || new Date());
-        let yymmdd = d.getFullYear().toString().substr(-2) + (d.getMonth()+1).toString().padStart(2,'0') + d.getDate().toString().padStart(2,'0');
+        
+        // 1. Ganti jadi yymm aja (contoh: 2602 untuk Februari 2026)
+        let yymm = d.getFullYear().toString().substr(-2) + (d.getMonth()+1).toString().padStart(2,'0');
+        
+        // 2. Prefixnya pastikan pakai variabel yymm yang baru
         let prefix = type === 'BS' ? "LPS-BS-" + yymm + "-" : "LPS-PRD-" + yymm + "-";
         
         let allIds = [...(DATA.history || []), ...getLocalDrafts()].map(x => x.id).filter(id => id && id.startsWith(prefix));
         let maxSeq = 0;
         allIds.forEach(val => {
+            // 3. Pastikan format ID-nya tetap 3 kali strip (LPS-PRD-2602-001) biar [3] tetap tepat ke nomor urut!
             let seqStr = val.split('-')[3]; 
             if(seqStr) { let seq = parseInt(seqStr, 10); if(seq > maxSeq) maxSeq = seq; }
         });
