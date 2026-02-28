@@ -27,6 +27,9 @@
             --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.08);
             --shadow-pressed: none;
             --shadow-inset: none;
+
+            /* ==== BARU: Bayangan Melayang Tinggi khusus Stat Box ==== */
+            --shadow-high-float: 0 15px 30px rgba(0, 0, 0, 0.12);
         }
 
         /* ==== INPUT & SEARCH BAR ALA INSTAGRAM ==== */
@@ -143,13 +146,29 @@
             transition: all 0.3s ease !important;
         }
 
-        .stat-box {
-            border-radius: 4px !important;
-            border: 2px solid rgba(255,255,255,0.5) !important;
-            box-shadow: var(--shadow-timbul) !important;
-            overflow: hidden;
-            position: relative;
-        }
+        /* Update Shadow Melayang Tinggi untuk Stat Box */
+.stat-box {
+    border-radius: 4px !important;
+    border: 2px solid rgba(255,255,255,0.5) !important;
+    /* Efek melayang tinggi dengan blur lebih lebar */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08) !important;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.stat-box:hover {
+    transform: translateY(-5px); /* Efek makin melayang pas disentuh */
+}
+
+/* Style tombol kalau lagi dikunci */
+.custom-select-btn.disabled {
+    background: #eef2f6 !important;
+    color: #888 !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+}
 
         /* Tombol Mengapung (Pill Shape) */
         .btn-primary, .btn-success, .btn-outline, .btn-outline-danger, .custom-select-btn {
@@ -269,7 +288,7 @@
         .dash-table td, .excel-table td { font-size: 14px !important; font-weight: 600; }
         .excel-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 2px; overflow: hidden; box-shadow: var(--shadow-timbul); background: #ffffff; }
         .excel-table th { padding: 15px !important; background: var(--excel-header); font-weight: 700; color: #444; border-bottom: 2px solid var(--border); text-align: left; text-transform: uppercase; letter-spacing: 0.5px; }
-        .excel-table td { padding: 12px 15px !important; border-bottom: 1px solid #f0f0f0; text-align: left; }
+        .excel-table td { padding: 6px 8px !important; border-bottom: 1px solid #f0f0f0; text-align: left; }
         .excel-table tr:last-child td { border-bottom: none; }
         .excel-table tr:hover td { background-color: #f8fafd; }
 
@@ -327,8 +346,12 @@
 
 <div id="successAnim">
     <div class="confirm-box" style="padding: 30px;">
-        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
-        <h3 style="color:#7ac142; margin-top:15px; margin-bottom:0;">Berhasil!</h3>
+        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+        <h3 style="color:#7ac142; margin-top:15px; margin-bottom:5px;">Berhasil!</h3>
+        <div id="displaySuccessID" style="font-weight: 800; font-size: 16px; color: #262626;"></div>
     </div>
 </div>
 
@@ -447,7 +470,7 @@
             <input type="password" id="passIn" placeholder="Password" style="padding-left:40px;">
             <span class="pass-eye" onclick="togglePass()"><span class="material-symbols-outlined" style="font-size: 16px;">visibility</span></span>
         </div>
-        <button id="btnLogin" class="btn-primary" style="width:100%; padding:12px;"><span class="material-symbols-outlined" style="font-size:24px;">login</span> Masuk</button>
+        <button id="btnLogin" class="btn-primary" style="width:100%; padding:12px;"><span class="material-symbols-outlined" style="font-size:18px;">login</span> Masuk</button>
     </div>
     <div style="position:absolute; bottom:20px; font-size:11px; color:#ccc;">v3.0 Designed by Robert</div>
 </div>
@@ -743,7 +766,7 @@
                         <input type="hidden" id="selKaruValue" value="">
                         <div class="custom-select-btn" id="btnInputKaru" onclick="openInputKaruSelect()">
                             <span id="labelInputKaru">-- Pilih Karu --</span>
-                            <span class="material-symbols-outlined" style="color:#888; font-size:16px;">keyboard_arrow_down</span>
+                            <span class="material-symbols-outlined" style="color:#888; font-size:16px; display:none;">keyboard_arrow_down</span>
                         </div>
                         <input type="hidden" id="selJobValue" value="">
                         <div class="custom-select-btn" id="btnInputJob" onclick="openInputJobSelect()">
@@ -880,7 +903,7 @@ let USER = null;
 let currentRole = ""; 
 let tempAction = null;
 let EXPORT_KARU_LIST = [];
-let ALL_JOB_LIST = ["Garuk Dacron", "Pengecekan", "Jahit Bulatan", "Pengisian", "Jahit Tutup", "Penyarungan", "Packing", "Ikat/Ball"];
+let ALL_JOB_LIST = ["Bahan Baku Masuk", "Garuk Dacron", "Pengecekan", "Jahit Bulatan", "Pengisian", "Jahit Tutup", "Penyarungan", "Packing", "Ikat/Ball"];
 
 const KIRIMAN_KATEGORI = [
     "ALAS STROLLER", "BANTAL ANAK", "BANTAL BALITA", "BANTAL GULING SET", "BANTAL IBU HAMIL",
@@ -916,7 +939,7 @@ async function refreshData() {
             renderDashboard();
         }
         
-        setTimeout(() => showAlert("Berhasil", "Data terbaru sudah ditarik dari server! ✨"), 500);
+        setTimeout(() => showAlert("Berhasil", "Data terbaru sudah diupdate dari server! ✨"), 500);
     } catch(e) { 
         console.log("Refresh Gagal", e); 
         setTimeout(() => showAlert("Koneksi Error", "Gagal mengambil data terbaru. Pastikan internet stabil!"), 500);
@@ -954,12 +977,9 @@ function toggleFormLock(isLocked, type = 'PRD') {
     if (type === 'PRD') {
         document.getElementById('inputDate').disabled = isLocked;
         if(isLocked) {
-            document.getElementById('btnInputKaru').classList.add('disabled');
             document.getElementById('btnInputJob').classList.add('disabled');
         } else {
-            document.getElementById('btnInputKaru').classList.remove('disabled');
             document.getElementById('btnInputJob').classList.remove('disabled');
-            if(currentRole === 'Karu') document.getElementById('btnInputKaru').classList.add('disabled');
         }
         let btnReset = document.getElementById('btnResetForm');
         if(btnReset) {
@@ -989,6 +1009,11 @@ function toggleFormLock(isLocked, type = 'PRD') {
 
 function enableDraftEdit(type = 'PRD') {
     toggleFormLock(false, type);
+    // Masalah form terkunci setelah draft diedit diperbaiki di sini
+    // Kita harus memastikan tombol Pilih Karu tetap locked jika role-nya Karu
+    if(currentRole === 'Karu') {
+        document.getElementById('btnInputKaru').classList.add('disabled');
+    }
     if(type === 'PRD') {
         document.getElementById('btnSimpanDraft').classList.remove('hidden');
         document.getElementById('btnEditDraft').classList.add('hidden');
@@ -1044,14 +1069,51 @@ function openInputKaruSelect() {
 
 function openInputJobSelect() {
     if(document.getElementById('btnInputJob').classList.contains('disabled')) return;
-    let items = ALL_JOB_LIST.map(j => ({value: j, label: j}));
+
+    let roleVIP = ['Admin', 'Staff', 'PPIC', 'Supervisor', 'Author'];
+    let filteredJobs = ALL_JOB_LIST.filter(j => (j === 'Bahan Baku Masuk') ? roleVIP.includes(currentRole) : true);
+    let items = filteredJobs.map(j => ({value: j, label: j}));
+
     openSelectionModal("Pilih Pekerjaan", items, document.getElementById('selJobValue').value, (val, label) => {
         document.getElementById('selJobValue').value = val;
         document.getElementById('labelInputJob').innerText = label;
         document.getElementById('labelInputJob').style.color = "var(--ig-text)";
+
+        let isBahanBaku = (val === 'Bahan Baku Masuk');
+        let btnKaru = document.getElementById('btnInputKaru');
+
+        if (isBahanBaku) {
+            btnKaru.style.visibility = 'hidden'; 
+            document.getElementById('selKaruValue').value = "(System)";
+            document.getElementById('labelInputKaru').innerText = "(System)";
+            document.getElementById('labelInputKaru').style.color = "var(--ig-text)";
+            document.getElementById('opArea').classList.add('hidden');
+        } else {
+            btnKaru.style.visibility = 'visible';
+            // BUG FIX: Hanya reset jika sebelumnya adalah '(System)' dari Bahan Baku
+            if (document.getElementById('selKaruValue').value === "(System)") {
+                if (currentRole === 'Karu') {
+                    document.getElementById('selKaruValue').value = USER.name;
+                    document.getElementById('labelInputKaru').innerText = USER.name;
+                } else {
+                    document.getElementById('selKaruValue').value = "";
+                    document.getElementById('labelInputKaru').innerText = "-- Pilih Karu --";
+                    document.getElementById('labelInputKaru').style.color = "#888";
+                }
+            }
+        }
+        
+        document.getElementById('itemArea').classList.remove('hidden'); 
+        
+        // Logika update placeholder (Pcs/KG)
+        let isDakronJob = (val === 'Garuk Dacron' || isBahanBaku);
+        document.querySelectorAll('.input-row-wrapper').forEach(r => {
+            r.querySelector('.i-name').placeholder = isDakronJob ? 'Cari Master Garuk...' : 'Nama Barang';
+            r.querySelector('.i-qty').placeholder = isDakronJob ? 'Berat' : 'Qty';
+            r.querySelector('.satuan-label').innerText = isDakronJob ? 'KG' : 'Pcs';
+        });
     });
 }
-
 function openExTypeSelect() {
     let items = [
         {value: 'ALL', label: 'Semua Laporan'},
@@ -1144,17 +1206,24 @@ function changeRole(newRole, isLogin = false) {
 }
 
 function applyRoleLogic() {
-    document.getElementById('selKaruValue').value = '';
-    document.getElementById('labelInputKaru').innerText = '-- Pilih Karu --';
-    document.getElementById('labelInputKaru').style.color = '#888';
+    let btnKaru = document.getElementById('btnInputKaru');
+    btnKaru.style.visibility = 'visible'; // Reset dulu ke visible
+    
     if(currentRole === 'Karu') {
         document.getElementById('selKaruValue').value = USER.name;
         document.getElementById('labelInputKaru').innerText = USER.name;
         document.getElementById('labelInputKaru').style.color = 'var(--ig-text)';
-        document.getElementById('btnInputKaru').classList.add('disabled'); 
+        btnKaru.classList.add('disabled'); 
+        loadOps(USER.name);
+    // ... potongan di dalam applyRoleLogic ...
     } else {
-        document.getElementById('btnInputKaru').classList.remove('disabled');
+        document.getElementById('selKaruValue').value = "";
+        document.getElementById('labelInputKaru').innerText = "-- Pilih Karu --";
+        document.getElementById('labelInputKaru').style.color = '#888'; // <--- Tambahin ini
+        btnKaru.classList.remove('disabled'); 
+        document.getElementById('opArea').classList.add('hidden');
     }
+
     let ocrDiv = document.getElementById('ocrWrapper');
     if(ocrDiv) { ocrDiv.classList.toggle('hidden', currentRole !== 'Author'); }
     loadLaporanTable();
@@ -1460,7 +1529,6 @@ function openViewModal(id, source) {
         });
 
         // BARIS TAMBAHAN UNTUK MENAMPILKAN TOTAL QTY DI PALING BAWAH
-        // BARIS TAMBAHAN UNTUK MENAMPILKAN TOTAL QTY DI PALING BAWAH
         if(d.type === 'BS') {
             // Warna diganti jadi #000000 (Hitam Pekat)
             tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td><td style="background:#f8f9fa;"></td></tr>`;
@@ -1482,36 +1550,42 @@ function openViewModal(id, source) {
 function openLaporanList() { showView('laporan'); switchLaporanMode('list'); }
 
 function startInputNew() {
-    document.getElementById('inputTitle').innerHTML = `<span class="material-symbols-outlined" style="color:var(--ig-primary);">note_add</span> INPUT PRODUKSI`;
+    // 1. Reset Judul & Icon (Biar gak 'EDIT PRODUKSI')
+    document.getElementById('inputTitle').innerHTML = `<span class="material-symbols-outlined" style="color:var(--ig-primary);">add_box</span> INPUT PRODUKSI BARU`;
+
+    // 2. Reset ID & Metadata
     document.getElementById('editId').value = "";
     document.getElementById('formMode').value = "new";
     document.getElementById('originalUser').value = USER.name; 
     document.getElementById('inputDate').valueAsDate = new Date();
-    
-    document.getElementById('selJobValue').value = ""; document.getElementById('labelInputJob').innerText = "-- Pekerjaan --"; document.getElementById('labelInputJob').style.color = "#888";
-    document.getElementById('reviewHeaderPRD').classList.add('hidden');
-    
-    if(currentRole === 'Karu') {
-        document.getElementById('selKaruValue').value = USER.name; document.getElementById('labelInputKaru').innerText = USER.name; document.getElementById('labelInputKaru').style.color = "var(--ig-text)";
-        loadOps(USER.name);
-    } else {
-        document.getElementById('selKaruValue').value = ""; document.getElementById('labelInputKaru').innerText = "-- Pilih Karu --"; document.getElementById('labelInputKaru').style.color = "#888";
-        document.getElementById('opArea').classList.add('hidden'); document.getElementById('itemArea').classList.add('hidden');
-    }
 
-    document.getElementById('rowContainer').innerHTML = ''; addRow();
-    
-    toggleFormLock(false, 'PRD');
-    document.getElementById('reviewHeaderPRD').classList.add('hidden');
-    document.getElementById('btnGroupKaru').classList.remove('hidden');
+    // 3. Reset Dropdown Pekerjaan (Wajib Kosong)
+    document.getElementById('selJobValue').value = ""; 
+    document.getElementById('labelInputJob').innerText = "-- Pilih Pekerjaan --";
+    document.getElementById('labelInputJob').style.color = "#888";
+
+    // 4. Reset Karu via applyRoleLogic
+    // (Kalau Login sebagai Karu dia otomatis keisi, kalau Admin/Staff dia kosong)
+    applyRoleLogic(); 
+
+    // 5. Bersihkan Area Input (Sembunyikan dulu sampai Pekerjaan dipilih)
+    document.getElementById('opArea').classList.add('hidden');
+    document.getElementById('itemArea').classList.add('hidden'); 
+    document.getElementById('rowContainer').innerHTML = ''; 
+    addRow(); // Kasih 1 baris kosong
+
+    // 6. Atur Tombol Sesuai Permintaan (Hanya Bersihkan & Simpan)
     document.getElementById('btnSimpanDraft').classList.remove('hidden');
-    document.getElementById('btnEditDraft').classList.add('hidden');
+    document.getElementById('btnResetForm').classList.remove('hidden');
+    
     document.getElementById('btnKirim').classList.add('hidden');
+    document.getElementById('btnEditDraft').classList.add('hidden');
     document.getElementById('btnGroupStaff').classList.add('hidden');
 
-    showView('laporan'); switchLaporanMode('input');
+    toggleFormLock(false, 'PRD');
+    showView('laporan'); 
+    switchLaporanMode('input');
 }
-
 function startInputBS() {
     document.getElementById('editBSId').value = "";
     document.getElementById('formBSMode').value = "new";
@@ -1527,7 +1601,7 @@ function startInputBS() {
     document.getElementById('btnGroupBSUser').classList.remove('hidden');
     document.getElementById('btnSimpanBSDraft').classList.remove('hidden');
     document.getElementById('btnEditBSDraft').classList.add('hidden');
-    document.getElementById('btnKirimBS').classList.add('hidden');
+    document.getElementById('btnKirimBS').classList.remove('hidden');
     document.getElementById('btnGroupBSStaff').classList.add('hidden');
 
     showView('laporan'); switchLaporanMode('bs');
@@ -1535,13 +1609,27 @@ function startInputBS() {
 
 function clearFormFields() {
     showConfirm("Bersihkan Form", "Yakin ingin menghapus semua isian yang sudah diketik?", () => {
-        document.getElementById('selJobValue').value = ""; document.getElementById('labelInputJob').innerText = "-- Pekerjaan --"; document.getElementById('labelInputJob').style.color = "#888";
-        if(currentRole !== 'Karu') {
-            document.getElementById('selKaruValue').value = ""; document.getElementById('labelInputKaru').innerText = "-- Pilih Karu --"; document.getElementById('labelInputKaru').style.color = "#888";
-            document.getElementById('opArea').classList.add('hidden'); document.getElementById('itemArea').classList.add('hidden');
+        // Reset Job
+        document.getElementById('selJobValue').value = ""; 
+        document.getElementById('labelInputJob').innerText = "-- Pilih Pekerjaan --"; 
+        document.getElementById('labelInputJob').style.color = "#888";
+        
+        // BUG FIX: Reset Karu (Hanya jika role bukan Karu)
+        if (currentRole !== 'Karu') {
+            document.getElementById('selKaruValue').value = "";
+            document.getElementById('labelInputKaru').innerText = "-- Pilih Karu --";
+            document.getElementById('labelInputKaru').style.color = "#888";
+            document.getElementById('opArea').classList.add('hidden');
+            document.getElementById('btnInputKaru').style.visibility = 'visible';
         }
+        
+        // Reset Operator & Baris
         document.querySelectorAll('.op-btn.selected').forEach(b => b.classList.remove('selected'));
-        document.getElementById('rowContainer').innerHTML = ''; addRow(); 
+        document.getElementById('rowContainer').innerHTML = ''; 
+        addRow(); 
+        
+        // Sembunyikan item area lagi sampai job dipilih ulang
+        document.getElementById('itemArea').classList.add('hidden');
     });
 }
 function clearBSFormFields() {
@@ -1633,14 +1721,21 @@ function openForm(id, mode) {
 
 function loadOps(karu) {
     const g = document.getElementById('opGrid'); g.innerHTML = '';
+    
+    // KUNCI: Item Barang harus SELALU MUNCUL, jangan disembunyiin lagi!
+    document.getElementById('itemArea').classList.remove('hidden'); 
+
     if(karu && DATA.ops[karu]) {
-        document.getElementById('opArea').classList.remove('hidden'); document.getElementById('itemArea').classList.remove('hidden');
+        document.getElementById('opArea').classList.remove('hidden'); 
         DATA.ops[karu].forEach(o => {
             let d = document.createElement('div'); d.className = 'op-btn'; d.innerText = o;
             d.onclick = () => d.classList.toggle('selected');
             g.appendChild(d);
         });
-    } else { document.getElementById('opArea').classList.add('hidden'); document.getElementById('itemArea').classList.add('hidden'); }
+    } else { 
+        // Kalau Karu nggak punya operator (misal Admin), sembunyikan cuma grid operatornya
+        document.getElementById('opArea').classList.add('hidden'); 
+    }
 }
 
 function removeRow(btn) { btn.closest('.input-row-wrapper').remove(); if(document.getElementById('rowContainer').children.length === 0) addRow(); }
@@ -1649,14 +1744,22 @@ function removeBSRow(btn) { btn.closest('.input-bs-row-wrapper').remove(); if(do
 function addRow(n = '', q = '') {
     const c = document.getElementById('rowContainer'); const r = document.createElement('div'); r.className = 'input-row-wrapper';
     r.style = "display:flex; gap:0; margin-bottom:-1px; position:relative;";
+    
+    // Pecah kerjaan saat ini buat nentuin tampilan awal baris
+    let currentJob = document.getElementById('selJobValue').value;
+    let isDakronJob = (currentJob === 'Garuk Dacron' || currentJob === 'Bahan Baku Masuk');
+    let pName = isDakronJob ? 'Cari Master Garuk...' : 'Nama Barang';
+    let pQty = isDakronJob ? 'Berat' : 'Qty';
+    let sSatuan = isDakronJob ? 'KG' : 'Pcs';
+
     r.innerHTML = `
         <div style="display:flex; align-items:center; background:#f9f9f9; padding:0 10px; border:1px solid var(--border); border-right:none; color:#888;">
             <span class="material-symbols-outlined" style="font-size:16px;">drag_indicator</span>
         </div>
-        <input type="text" class="i-name" placeholder="Nama Barang" style="flex:2; border-left:none; border-radius:0;" value="${n}">
+        <input type="text" class="i-name" placeholder="${pName}" style="flex:2; border-left:none; border-radius:0;" value="${n}">
         <div style="flex:1; display:flex;">
-            <input type="number" class="i-qty" placeholder="Qty" style="width:100%; border-left:none; border-radius:0;" value="${q}">
-            <span style="background:#eee; padding:10px; border:1px solid var(--border); border-left:none; font-size:11px; color:#666; border-radius:0;">Pcs</span>
+            <input type="number" class="i-qty" placeholder="${pQty}" style="width:100%; border-left:none; border-radius:0;" value="${q}">
+            <span class="satuan-label" style="background:#eee; padding:10px; border:1px solid var(--border); border-left:none; font-size:11px; color:#666; border-radius:0;">${sSatuan}</span>
             <button onclick="removeRow(this)" class="btn-delete-row" style="background:var(--danger); color:white; border:1px solid var(--danger); padding:0 10px; cursor:pointer; border-radius: 0 2px 2px 0; display:flex; align-items:center; justify-content:center;" title="Hapus Baris"><span class="material-symbols-outlined" style="font-size:16px;">delete</span></button>
         </div>`;
     c.appendChild(r);
@@ -1669,7 +1772,24 @@ function addRow(n = '', q = '') {
         let l = document.createElement('div'); l.className = 'autocomplete-items';
         l.style = "position:absolute; top:100%; left:30px; right:0; background:white; border:1px solid #ddd; z-index:9999; max-height:200px; overflow-y:auto; box-shadow:0 5px 15px rgba(0,0,0,0.1); border-radius:2px;";
         r.appendChild(l); let count = 0;
+        
+        // --- FILTER AUTOCOMPLETE BUNGLON ---
+        let jobVal = document.getElementById('selJobValue').value;
+        let isGarukJob = (jobVal === "Garuk Dacron");
+        let isBahanMasuk = (jobVal === "Bahan Baku Masuk"); // <--- Tambahan baru
+
         for(let m of DATA.master) {
+            let isGarukItem = m.kode.toUpperCase().startsWith("GARUK-");
+            let matchKeyword = m.kode.toLowerCase().includes(val);
+
+            if (!matchKeyword) continue;
+            
+            // Aturan Tampil:
+            // 1. Garuk Dacron CUMA bisa lihat GARUK-
+            if (isGarukJob && !isGarukItem) continue;
+            // 2. Kerja produksi biasa NGGAK BISA lihat GARUK- (Kecuali Bahan Masuk, dia bebas!)
+            if (!isGarukJob && !isBahanMasuk && isGarukItem) continue;
+
             if(m.kode.toLowerCase().includes(val)) {
                 let d = document.createElement('div'); d.innerText = m.kode; d.style = "padding:10px; border-bottom:1px solid #eee; cursor:pointer;";
                 d.onclick = () => { inp.value = m.kode; l.remove(); qty.focus(); };
@@ -1702,6 +1822,12 @@ function addBSRow(n = '', q = '', ket = '') {
         l.style = "position:absolute; top:45px; left:10px; right:10px; background:white; border:1px solid #ddd; z-index:9999; max-height:150px; overflow-y:auto; box-shadow:0 5px 15px rgba(0,0,0,0.1); border-radius:2px;";
         r.appendChild(l); let count = 0;
         for(let m of DATA.master) {
+            let isGarukItem = m.kode.toUpperCase().startsWith("GARUK-");
+            let matchKeyword = m.kode.toLowerCase().includes(val);
+
+            // Cegah item "GARUK-" masuk ke form BS
+            if (isGarukItem || !matchKeyword) continue;
+
             if(m.kode.toLowerCase().includes(val)) {
                 let d = document.createElement('div'); d.innerText = m.kode; d.style = "padding:10px; border-bottom:1px solid #eee; cursor:pointer;";
                 d.onclick = () => { inp.value = m.kode; l.remove(); r.querySelector('.bs-qty').focus(); };
@@ -1721,7 +1847,6 @@ function togglePass() {
     x.type = x.type === "password" ? "text" : "password"; 
     if(icon) icon.innerText = x.type === "password" ? "visibility" : "visibility_off";
 }
-
 function askSave(status, type = 'PRD') {
     let msg = "Simpan laporan?";
     if(status === 'Draft') msg = "Simpan sebagai Draft lokal?";
@@ -1731,6 +1856,26 @@ function askSave(status, type = 'PRD') {
     }
     if(status === 'Approved') msg = "Setujui Laporan Ini?";
     if(status === 'Rejected') msg = "Tolak Laporan Ini?";
+    
+    // --- SATPAM PEMBLOKIR WIP ULTIMATE ---
+    let jobVal = document.getElementById('selJobValue').value;
+    
+    // Sekarang semua pekerjaan wajib lapor satpam checkWIP!
+    if (type === 'PRD' && status !== 'Draft' && status !== 'Rejected') {
+        let items = [];
+        document.querySelectorAll('.input-row-wrapper').forEach(r => {
+            let n = r.querySelector('.i-name').value; let q = r.querySelector('.i-qty').value;
+            if(n && q) items.push({n:n, q:q});
+        });
+        
+        let currentId = document.getElementById('editId').value; 
+        let cekWip = checkWIP(items, jobVal, currentId);
+        
+        if(!cekWip.aman) {
+            return showAlert("Alur Produksi Ditolak ❌", `Validasi gagal:\n\n${cekWip.msg}`);
+        }
+    }
+    // -------------------------------------
     
     showConfirm("Konfirmasi", msg, () => saveData(status, type));
 }
@@ -1747,22 +1892,26 @@ async function saveData(status, type = 'PRD') {
     if(!id) {
         let d = type === 'PRD' ? (document.getElementById('inputDate').valueAsDate || new Date()) : (document.getElementById('inputBSDate').valueAsDate || new Date());
         
-        // 1. Ganti jadi yymm aja (contoh: 2602 untuk Februari 2026)
-        let yymm = d.getFullYear().toString().substr(-2) + (d.getMonth()+1).toString().padStart(2,'0');
+        // 1. Ganti format jadi yymm (TahunBulan, contoh: 2602 untuk Feb 2026)
+        let yy = d.getFullYear().toString().substr(-2);
+        let mm = (d.getMonth() + 1).toString().padStart(2, '0');
+        let yymm = yy + mm;
         
-        // 2. Prefixnya pastikan pakai variabel yymm yang baru
+        // 2. Pasang prefix barunya
         let prefix = type === 'BS' ? "LPS-BS-" + yymm + "-" : "LPS-PRD-" + yymm + "-";
         
         let allIds = [...(DATA.history || []), ...getLocalDrafts()].map(x => x.id).filter(id => id && id.startsWith(prefix));
         let maxSeq = 0;
         allIds.forEach(val => {
-            // 3. Pastikan format ID-nya tetap 3 kali strip (LPS-PRD-2602-001) biar [3] tetap tepat ke nomor urut!
+            // 3. Ambil potongan ke-4 (setelah 3 tanda strip) buat dapetin angkanya
             let seqStr = val.split('-')[3]; 
             if(seqStr) { let seq = parseInt(seqStr, 10); if(seq > maxSeq) maxSeq = seq; }
         });
         
-        let nextSeq = (maxSeq + 1).toString().padStart(3, '0');
+        // 4. Bikin nomor urutnya jadi 4 digit (0001, 0002, dst)
+        let nextSeq = (maxSeq + 1).toString().padStart(4, '0');
         id = prefix + nextSeq;
+        
         if(type === 'PRD') document.getElementById('editId').value = id; else document.getElementById('editBSId').value = id;
     }
     
@@ -1782,15 +1931,38 @@ async function saveData(status, type = 'PRD') {
     if(items.length === 0) return showAlert("Peringatan", "Barang tidak boleh kosong!");
     
     let payload = {};
+    // ... di dalam fungsi saveData ...
     if(type === 'PRD') {
-        let selectedOps = []; document.querySelectorAll('.op-btn.selected').forEach(b => selectedOps.push(b.innerText));
-        let ops = selectedOps.join(', ') || "-"; 
+        let jobVal = document.getElementById('selJobValue').value;
+        let isBahanBaku = (jobVal === "Bahan Baku Masuk");
+
+        let selectedOps = []; 
+        document.querySelectorAll('.op-btn.selected').forEach(b => selectedOps.push(b.innerText));
+        
+        // Kalau Bahan Baku, Operatornya kita kasih strip saja
+        let ops = isBahanBaku ? "-" : (selectedOps.join(', ') || "-"); 
+        
         let originalCreator = document.getElementById('originalUser').value || USER.name;
         let karuVal = document.getElementById('selKaruValue').value;
-        let jobVal = document.getElementById('selJobValue').value;
-        if(!karuVal || !jobVal) return showAlert("Peringatan", "Harap pilih Karu dan Pekerjaan!");
+
+        // Validasi: Kalau bukan bahan baku, Karu wajib ada. Kalau bahan baku, bebas.
+        if(!isBahanBaku && (!karuVal || karuVal === "-- Pilih Karu --")) {
+            return showAlert("Peringatan", "Harap pilih Karu!");
+        }
+        if(!jobVal) return showAlert("Peringatan", "Harap pilih Pekerjaan!");
         
-        payload = { action: 'saveDataPRD', type: 'PRD', id: id, date: document.getElementById('inputDate').value, karu: karuVal, job: jobVal, ops: ops, items: items, status: status, user: originalCreator };
+        payload = { 
+            action: 'saveDataPRD', 
+            type: 'PRD', 
+            id: id, 
+            date: document.getElementById('inputDate').value, 
+            karu: isBahanBaku ? "(System)" : karuVal, // Penamaan di database
+            job: jobVal, 
+            ops: ops, 
+            items: items, 
+            status: status, 
+            user: originalCreator 
+        };
     } else {
         let originalCreator = document.getElementById('originalBSUser').value || USER.name;
         payload = { action: 'saveDataBS', type: 'BS', id: id, date: document.getElementById('inputBSDate').value, karu: "-", job: "BS Produksi", ops: "-", items: items, status: status, user: originalCreator };
@@ -1798,11 +1970,22 @@ async function saveData(status, type = 'PRD') {
 
     if(status === 'Draft') {
         saveLocalDraft(payload);
-        showSuccessAnim(); toggleFormLock(true, type);
+        
+        // Panggil animasi dengan ID Laporan
+        showSuccessAnim(id); 
+        
+        // Kunci form-nya
+        toggleFormLock(true, type);
+        
+        // UPDATE TOMBOL: Sembunyikan "Simpan", Munculkan "Edit" & "Kirim"
         if(type === 'PRD') {
-            document.getElementById('btnSimpanDraft').classList.add('hidden'); document.getElementById('btnEditDraft').classList.remove('hidden'); document.getElementById('btnKirim').classList.remove('hidden');
+            document.getElementById('btnSimpanDraft').classList.add('hidden');
+            document.getElementById('btnEditDraft').classList.remove('hidden'); 
+            document.getElementById('btnKirim').classList.remove('hidden');
         } else {
-            document.getElementById('btnSimpanBSDraft').classList.add('hidden'); document.getElementById('btnEditBSDraft').classList.remove('hidden'); document.getElementById('btnKirimBS').classList.remove('hidden');
+            document.getElementById('btnSimpanBSDraft').classList.add('hidden');
+            document.getElementById('btnEditBSDraft').classList.remove('hidden');
+            document.getElementById('btnKirimBS').classList.remove('hidden');
         }
         return; 
     }
@@ -1829,9 +2012,18 @@ async function saveData(status, type = 'PRD') {
     });
 }
 
-function showSuccessAnim() {
-    let anim = document.getElementById('successAnim'); anim.style.display = 'flex';
-    setTimeout(() => { anim.style.display = 'none'; }, 1500);
+function showSuccessAnim(reportId = "") {
+    let anim = document.getElementById('successAnim');
+    let idLabel = document.getElementById('displaySuccessID');
+    
+    // Masukkan ID laporan kalau ada
+    idLabel.innerText = reportId; 
+    
+    anim.style.display = 'flex';
+    setTimeout(() => { 
+        anim.style.display = 'none'; 
+        idLabel.innerText = ""; // Bersihkan lagi setelah hilang
+    }, 2000);
 }
 
 function toggleSubMenu(id) {
@@ -1927,7 +2119,7 @@ async function processExport() {
                     "NAMA BARANG": brg.n,                      
                     "QTY": Number(brg.q),                      
                     "STATUS": item.status,                     
-                    "KETERANGAN": colKet                       
+                    "KETERANGAN": colKet                        
                 });
             });
         });
@@ -2071,7 +2263,7 @@ function processOCR(input) {
     if (!input.files || !input.files[0]) return; 
     let file = input.files[0];
     
-    showAlert("AI Scanner Aktif", "Memproses foto... Biasanya cuma 3-5 detik sayang! ⏳🤖");
+    showAlert("AI Scanner Aktif", "Memproses foto... Proses 3-5 detik! ⏳🤖");
     showLoading(); 
     
     let reader = new FileReader();
@@ -2132,7 +2324,7 @@ function processOCR(input) {
                             addRow(namaDitemukan, item.qty);
                         });
 
-                        showAlert("Sukses!", "Kecepatan cahaya! Data berhasil masuk form! ⚡");
+                        showAlert("Sukses!", "Data berhasil masuk form! ⚡");
                     } else {
                         showAlert("Info", "Tidak ada teks berpola yang terbaca AI. Coba foto lagi.");
                         if(document.getElementById('rowContainer').children.length === 0) addRow();
@@ -2354,6 +2546,87 @@ function openPelangganSelect() {
 
 // Panggil fungsi ini saat aplikasi pertama kali dimuat (setelah DATA terisi)
 // updateGlobalSupplierTable();
+// === FUNGSI VALIDASI STOK (SATPAM WIP) ===
+function checkWIP(newItems, job, currentId) {
+    let errorMsg = "";
+    let isAman = true;
+
+    // Normalisasi nama kerjaan (buang spasi & bikin huruf kecil semua)
+    let normalizedJob = job.trim().toLowerCase();
+
+    // --- JALUR TOL: Bahan Baku Masuk BEBAS 100% ---
+    // Karena ini proses awal, gak perlu cek stok ke belakang.
+    if (normalizedJob === "bahan baku masuk") return { aman: true };
+
+    newItems.forEach(item => {
+        let kodeBarang = item.n;
+        let qtyMauDiinput = Number(item.q) || 0;
+
+        // --- 1. LOGIKA KHUSUS DAKRON (GARUK) ---
+        // Garuk Dacron HANYA bisa diinput kalau stok di 'Bahan Baku Masuk' mencukupi
+        if (normalizedJob === "garuk dacron") {
+            let totalMasuk = 0;
+            let totalGarukLain = 0;
+
+            if (DATA.history) {
+                DATA.history.forEach(h => {
+                    // Abaikan draft/reject dan dokumen yang sedang diedit (biar gak double hitung)
+                    if (h.status !== 'Draft' && h.status !== 'Rejected' && h.id !== currentId) {
+                        let hItems = typeof h.items === 'string' ? JSON.parse(h.items) : h.items;
+                        hItems.forEach(hi => {
+                            if (hi.n === kodeBarang) {
+                                let hJob = h.job.trim().toLowerCase();
+                                if (hJob === 'bahan baku masuk') totalMasuk += (Number(hi.q) || 0);
+                                if (hJob === 'garuk dacron') totalGarukLain += (Number(hi.q) || 0);
+                            }
+                        });
+                    }
+                });
+            }
+            let sisaStokDakron = totalMasuk - totalGarukLain;
+            if (qtyMauDiinput > sisaStokDakron) {
+                isAman = false;
+                errorMsg += `- ${kodeBarang}: Kurang! Sisa di Gudang cuma ${sisaStokDakron} KG.\n`;
+            }
+            return; // Selesai cek dakron
+        }
+
+        // --- 2. LOGIKA BARANG PRODUKSI BIASA (BERANTAI) ---
+        let master = DATA.master.find(m => m.kode === kodeBarang);
+        if (!master || !master.alur) return; // Barang aneh/tanpa alur dibebasin
+
+        let alurArray = master.alur.split(',').map(s => s.trim().toLowerCase());
+        let myIndex = alurArray.indexOf(normalizedJob);
+
+        if (myIndex <= 0) return; // Kalau proses pertama di alur (misal Jahit), bebaskan
+
+        let jobSebelumnya = alurArray[myIndex - 1];
+        let totalSetoran = 0;
+        let totalSudahDikerjakan = 0;
+
+        if (DATA.history) {
+            DATA.history.forEach(h => {
+                if (h.status !== 'Draft' && h.status !== 'Rejected' && h.id !== currentId) {
+                    let hItems = typeof h.items === 'string' ? JSON.parse(h.items) : h.items;
+                    hItems.forEach(hi => {
+                        if (hi.n === kodeBarang) {
+                            let hJob = h.job.trim().toLowerCase();
+                            if (hJob === jobSebelumnya) totalSetoran += (Number(hi.q) || 0);
+                            if (hJob === normalizedJob) totalSudahDikerjakan += (Number(hi.q) || 0);
+                        }
+                    });
+                }
+            });
+        }
+        let sisaBisaInput = totalSetoran - totalSudahDikerjakan;
+        if (qtyMauDiinput > sisaBisaInput) {
+            isAman = false;
+            errorMsg += `- ${kodeBarang}: Max ${sisaBisaInput} Pcs (Setoran dari ${jobSebelumnya.toUpperCase()}).\n`;
+        }
+    });
+
+    return { aman: isAman, msg: errorMsg };
+}
 </script>
 </body>
 </html>
