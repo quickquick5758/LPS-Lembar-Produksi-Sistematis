@@ -711,9 +711,17 @@
                         </div>
                     </div>
                     
-                    <div style="position: relative; margin-bottom: 15px; width: 100%;">
-                        <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; color: #888;">search</span>
-                        <input type="text" id="findLaporan" placeholder="Cari..." onkeyup="filterLaporan()" style="width:100%; padding-left: 35px; box-sizing: border-box;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <div style="position: relative; flex: 1; min-width: 200px;">
+                            <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 12px; color: #888;">search</span>
+                            <input type="text" id="findLaporan" placeholder="Cari laporan..." onkeyup="filterLaporan()" style="width:100%; padding-left: 35px; box-sizing: border-box;">
+                        </div>
+                        <div style="display: flex; gap: 5px; align-items: center; background: #eef2f6; border: 1px solid var(--border); border-radius: 4px; padding: 2px 10px; box-shadow: var(--shadow-inset);">
+                            <span class="material-symbols-outlined" style="color: var(--ig-primary); font-size: 18px;">calendar_month</span>
+                            <input type="date" id="laporanDateFrom" onchange="filterLaporan()" style="border: none !important; background: transparent !important; padding: 8px 5px; box-shadow: none !important; outline: none; width: 130px; font-weight: 600;">
+                            <span style="color: #888; font-weight: bold;">-</span>
+                            <input type="date" id="laporanDateTo" onchange="filterLaporan()" style="border: none !important; background: transparent !important; padding: 8px 5px; box-shadow: none !important; outline: none; width: 130px; font-weight: 600;">
+                        </div>
                     </div>
 
                     <div style="overflow-x:auto;">
@@ -847,11 +855,21 @@
 
         <div id="viewViewdata" class="hidden stagger-anim">
             <div class="card">
-                <h3 style="margin:0 0 8px 0; display:flex; align-items:center; gap:8px;"><span class="material-symbols-outlined" style="color:var(--ig-primary);">table_view</span> VIEW DATA</h3>
-                <div style="position: relative; margin-bottom: 8px; width: 100%;">
-                    <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; color: #888;">search</span>
-                    <input type="text" id="findViewData" placeholder="Cari data..." onkeyup="filterViewData()" style="width:100%; padding-left: 35px; box-sizing: border-box;">
+                <h3 style="margin:0 0 15px 0; display:flex; align-items:center; gap:8px;"><span class="material-symbols-outlined" style="color:var(--ig-primary);">table_view</span> VIEW DATA</h3>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <div style="position: relative; flex: 1; min-width: 200px;">
+                        <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 12px; color: #888;">search</span>
+                        <input type="text" id="findViewData" placeholder="Cari data (ID, Kode, User)..." onkeyup="filterViewData()" style="width:100%; padding-left: 35px; box-sizing: border-box;">
+                    </div>
+                    <div style="display: flex; gap: 5px; align-items: center; background: #eef2f6; border: 1px solid var(--border); border-radius: 4px; padding: 2px 10px; box-shadow: var(--shadow-inset);">
+                        <span class="material-symbols-outlined" style="color: var(--ig-primary); font-size: 18px;">calendar_month</span>
+                        <input type="date" id="viewDateFrom" onchange="filterViewData()" style="border: none !important; background: transparent !important; padding: 8px 5px; box-shadow: none !important; outline: none; width: 130px; font-weight: 600;">
+                        <span style="color: #888; font-weight: bold;">-</span>
+                        <input type="date" id="viewDateTo" onchange="filterViewData()" style="border: none !important; background: transparent !important; padding: 8px 5px; box-shadow: none !important; outline: none; width: 130px; font-weight: 600;">
+                    </div>
                 </div>
+
                 <div style="overflow-x:auto;">
                     <table class="excel-table">
                         <thead><tr><th>ID</th><th>TIPE</th><th>TANGGAL</th><th>KARU</th><th>PEKERJAAN</th><th>OPERATOR</th><th>KODE/BARANG</th><th>QTY</th><th>KETERANGAN</th></tr></thead>
@@ -867,7 +885,6 @@
                     </div>
                     <div id="viewPagination" style="display:flex; gap:5px; flex-wrap:wrap; justify-content: center;"></div>
                 </div>
-                
             </div>
         </div>
         
@@ -1333,7 +1350,23 @@ function openViewLimitSelect() {
     });
 }
 
+// === SET DEFAULT TANGGAL BULAN BERJALAN (UNTUK LAPORAN) ===
+function setDefaultLaporanDates() {
+    let d = new Date();
+    let y = d.getFullYear();
+    let m = String(d.getMonth() + 1).padStart(2, '0');
+    let lastDay = new Date(y, d.getMonth() + 1, 0).getDate();
+    
+    document.getElementById('laporanDateFrom').value = `${y}-${m}-01`;
+    document.getElementById('laporanDateTo').value = `${y}-${m}-${lastDay}`;
+}
+
 function loadLaporanTable() {
+    // Jika input tanggal kosong, isi dengan default bulan berjalan
+    if(!document.getElementById('laporanDateFrom').value || !document.getElementById('laporanDateTo').value) {
+        setDefaultLaporanDates();
+    }
+
     const body = document.getElementById('laporanTableBody'); body.innerHTML = '';
     let drafts = getLocalDrafts();
     let serverData = DATA.history || [];
@@ -1350,19 +1383,33 @@ function loadLaporanTable() {
     myData.sort((a,b) => b.id.localeCompare(a.id)); 
 
     let query = document.getElementById('findLaporan').value.toLowerCase();
+    let dateFrom = document.getElementById('laporanDateFrom').value;
+    let dateTo = document.getElementById('laporanDateTo').value;
+
+    // --- FILTER 1: RENTANG TANGGAL ---
+    if (dateFrom && dateTo) {
+        let dStart = parseInt(dateFrom.replace(/-/g, ''));
+        let dEnd = parseInt(dateTo.replace(/-/g, ''));
+        myData = myData.filter(d => {
+            if (!d.date) return false;
+            let dateStr = typeof d.date === 'string' ? d.date.substr(0,10) : new Date(d.date).toISOString().split('T')[0];
+            let dTgl = parseInt(dateStr.replace(/-/g, ''));
+            return dTgl >= dStart && dTgl <= dEnd;
+        });
+    }
+
+    // --- FILTER 2: KATA KUNCI PENCARIAN ---
     if(query) {
         let keywords = query.split(' ').filter(k => k.trim() !== '');
         myData = myData.filter(d => {
-            // Gabungkan semua field jadi satu teks raksasa untuk dicari
             let itemsStr = typeof d.items === 'string' ? d.items : JSON.stringify(d.items || []);
             let textToSearch = `${d.id || ''} ${d.karu || ''} ${d.user || ''} ${d.job || ''} ${d.ops || ''} ${itemsStr}`.toLowerCase();
-            // Kembalikan true HANYA JIKA semua kata kunci ditemukan
             return keywords.every(kw => textToSearch.includes(kw));
         });
     }
 
     if(myData.length === 0) {
-        body.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:#888;">Belum ada data laporan</td></tr>`;
+        body.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:#888; font-weight:600;">Belum ada data laporan pada periode ini</td></tr>`;
         document.getElementById('laporanPagination').innerHTML = '';
         return;
     }
@@ -1444,26 +1491,53 @@ function buildViewDataCache() {
     VIEW_DATA_CACHE = flat;
 }
 
+// === SET DEFAULT TANGGAL BULAN BERJALAN ===
+function setDefaultViewDates() {
+    let d = new Date();
+    let y = d.getFullYear();
+    let m = String(d.getMonth() + 1).padStart(2, '0');
+    let lastDay = new Date(y, d.getMonth() + 1, 0).getDate();
+    
+    document.getElementById('viewDateFrom').value = `${y}-${m}-01`;
+    document.getElementById('viewDateTo').value = `${y}-${m}-${lastDay}`;
+}
+
 function loadViewDataTable() {
     if(!VIEW_DATA_CACHE) buildViewDataCache();
+
+    // Jika input tanggal kosong, isi dengan default bulan berjalan
+    if(!document.getElementById('viewDateFrom').value || !document.getElementById('viewDateTo').value) {
+        setDefaultViewDates();
+    }
 
     const body = document.getElementById('viewDataTableBody'); body.innerHTML = '';
     
     let query = document.getElementById('findViewData').value.toLowerCase();
+    let dateFrom = document.getElementById('viewDateFrom').value;
+    let dateTo = document.getElementById('viewDateTo').value;
     let myData = VIEW_DATA_CACHE;
     
+    // --- FILTER 1: RENTANG TANGGAL ---
+    if (dateFrom && dateTo) {
+        let dStart = parseInt(dateFrom.replace(/-/g, ''));
+        let dEnd = parseInt(dateTo.replace(/-/g, ''));
+        myData = myData.filter(d => {
+            let dTgl = parseInt(d.tgl.replace(/-/g, ''));
+            return dTgl >= dStart && dTgl <= dEnd;
+        });
+    }
+
+    // --- FILTER 2: KATA KUNCI PENCARIAN ---
     if(query) {
         let keywords = query.split(' ').filter(k => k.trim() !== '');
         myData = myData.filter(d => {
-            // Gabungkan semua kolom jadi satu buat bahan pencarian
             let textToSearch = `${d.id || ''} ${d.karu || ''} ${d.job || ''} ${d.ops || ''} ${d.kode || ''} ${d.ket || ''}`.toLowerCase();
-            // Syarat: Semua kata yang diketik pakai spasi harus ada di baris ini
             return keywords.every(kw => textToSearch.includes(kw));
         });
     }
 
     if(myData.length === 0) {
-        body.innerHTML = `<tr><td colspan="9" align="center" style="padding:20px; color:#888;">Tidak ada data</td></tr>`; 
+        body.innerHTML = `<tr><td colspan="9" align="center" style="padding:20px; color:#888; font-weight:600;">Tidak ada data pada periode ini</td></tr>`; 
         document.getElementById('viewPagination').innerHTML = '';
         return;
     }
@@ -2155,11 +2229,12 @@ let lineChart = null; let barChart = null;
 function renderDashboard() {
     if (!DATA.history) return;
     const today = new Date().toISOString().split('T')[0];
+    
+    // --- UPDATE KOTAK STATISTIK HARI INI ---
     const laporanHariIni = DATA.history.filter(d => d.date.startsWith(today));
     document.getElementById('statTotalToday').innerText = laporanHariIni.length;
     document.getElementById('statPending').innerText = DATA.history.filter(d => d.status === 'Submitted').length;
 
-    // === 1. HITUNG TOTAL QTY (HANYA JOB "PACKING" & BUKAN DRAFT) ===
     let totalQty = 0;
     DATA.history.filter(d => d.type === 'PRD' && d.job === 'Packing' && d.status !== 'Draft').forEach(d => {
         let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
@@ -2171,15 +2246,41 @@ function renderDashboard() {
     document.getElementById('statTotalQty').innerText = totalQty.toLocaleString('id-ID');
 
     let selectKaru = document.getElementById('selectKaruChart');
-    selectKaru.innerHTML = '<option value="ALL">Semua Karu</option>';
-    EXPORT_KARU_LIST.forEach(k => { selectKaru.innerHTML += `<option value="${k}">${k}</option>`; });
+    if(selectKaru.options.length <= 1) { // Biar ngga dobel saat di-refresh
+        selectKaru.innerHTML = '<option value="ALL">Semua Karu</option>';
+        EXPORT_KARU_LIST.forEach(k => { selectKaru.innerHTML += `<option value="${k}">${k}</option>`; });
+    }
     updateKaruChart();
 
-    // === 2. HITUNG GRAFIK 7 HARI (HANYA JOB "PACKING") ===
+    // --- AMBIL NILAI FILTER PELANGGAN ---
+    let filterPelangganElement = document.getElementById('filterPelangganValue');
+    let filterP = filterPelangganElement ? filterPelangganElement.value : 'ALL';
+
+    // --- LOGIKA TARGET HARIAN (AKURAT) ---
+    let targetHarian = 0;
+    if (filterP === "ALL") {
+        if(DATA.supplierStats) {
+            targetHarian = DATA.supplierStats.reduce((sum, s) => sum + s.target, 0);
+        }
+    } else {
+        let supplier = DATA.supplierStats ? DATA.supplierStats.find(s => s.name === filterP) : null;
+        targetHarian = supplier ? supplier.target : 0;
+    }
+
+    // --- LOGIKA JOB BERDASARKAN PELANGGAN ---
+    let targetJob = (filterP === "PT. TIRAI PELANGI NUSANTARA") ? "Pengisian" : "Packing";
+
+    // --- 2. HITUNG DATA GRAFIK 7 HARI ---
     const last7Days = Array.from({length: 7}, (_, i) => { const d = new Date(); d.setDate(d.getDate() - i); return d.toISOString().split('T')[0]; }).reverse();
     const dataTrenQty = last7Days.map(tgl => {
         let dailyQty = 0;
-        DATA.history.filter(d => d.date.startsWith(tgl) && d.status !== 'Draft' && d.type === 'PRD' && d.job === 'Packing').forEach(d => {
+        DATA.history.filter(d => 
+            d.date.startsWith(tgl) && 
+            d.status !== 'Draft' && 
+            d.type === 'PRD' && 
+            d.job === targetJob && 
+            (filterP === "ALL" || d.customer === filterP)
+        ).forEach(d => {
             let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
             items.forEach(i => {
                 let qty = parseInt(i.q);
@@ -2189,42 +2290,61 @@ function renderDashboard() {
         return dailyQty;
     });
 
+    // --- LOGIKA CERDAS SUMBU Y (Y-AXIS) ---
+    // Cari nilai tertinggi: apakah data produksinya, atau target hariannya?
+    let maxHasilProduksi = Math.max(...dataTrenQty);
+    let baseMax = Math.max(targetHarian, maxHasilProduksi);
+    // Beri rongga kosong 20% di atasnya biar garis ngga nyundul atap layar
+    let yAxisMax = baseMax > 0 ? Math.ceil(baseMax * 1.2) : 1000;
+
     if (lineChart) lineChart.destroy();
     lineChart = new Chart(document.getElementById('lineChartProduksi'), {
         type: 'line',
         data: { 
             labels: last7Days.map(t => t.split('-')[2] + '/' + t.split('-')[1]), 
-            datasets: [{ 
-                label: 'Qty Matang (Packing)', 
-                data: dataTrenQty, 
-                borderColor: '#16a34a', backgroundColor: 'rgba(22, 163, 74, 0.1)', borderWidth: 2, fill: true, tension: 0, pointRadius: 4, pointBackgroundColor: '#16a34a', pointBorderColor: '#ffffff', pointBorderWidth: 2
-            }] 
+            datasets: [
+                { 
+                    label: `Qty (${targetJob})`, 
+                    data: dataTrenQty, 
+                    borderColor: '#16a34a', backgroundColor: 'rgba(22, 163, 74, 0.1)', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#16a34a', pointBorderColor: '#ffffff', pointBorderWidth: 2
+                },
+                { 
+                    label: 'Target Harian', 
+                    data: Array(7).fill(targetHarian), 
+                    borderColor: '#ed4956', borderDash: [5, 5], borderWidth: 2, pointRadius: 0, fill: false 
+                }
+            ] 
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, border: { dash: [5, 5] } } } }
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            plugins: { legend: { display: false } }, 
+            scales: { 
+                x: { grid: { display: false } }, 
+                y: { 
+                    beginAtZero: true, 
+                    max: yAxisMax, // Konsisten tinggi
+                    ticks: { stepSize: Math.ceil(yAxisMax / 5) },
+                    border: { dash: [5, 5] } 
+                } 
+            } 
+        }
     });
 
-    // --- AMBIL NILAI FILTER PELANGGAN ---
-    // --- AMBIL NILAI FILTER PELANGGAN (DARI HIDDEN INPUT) ---
-    let filterPelangganElement = document.getElementById('filterPelangganValue');
-    let filterPelanggan = filterPelangganElement ? filterPelangganElement.value : 'ALL';
-
+    // --- UPDATE TABEL CYCLES & GLOBAL BAWAH ---
     const tbody = document.getElementById('tableKirimanBody'); tbody.innerHTML = '';
     let totalC1 = 0, totalC2 = 0, totalC3 = 0, grandTotal = 0;
     let statData = DATA.statistik || {};
 
     KIRIMAN_KATEGORI.forEach(kat => {
         let d = statData[kat] || {c1: 0, c2: 0, c3: 0};
-        
         let c1 = d.c1, c2 = d.c2, c3 = d.c3;
 
-        // LOGIKA FILTER PELANGGAN
-        // LOGIKA FILTER (Bypass untuk CV. KARYA KREASI agar tetap pakai data default yang ada)
-        if (filterPelanggan !== "ALL" && filterPelanggan !== "CV. KARYA KREASI NUSANTARA") {
+        if (filterP !== "ALL" && filterP !== "CV. KARYA KREASI NUSANTARA") {
             c1 = 0; c2 = 0; c3 = 0;
             if(DATA.history) {
                 DATA.history.forEach(h => {
-                    // PENTING: Aplikasi akan mencari data pelanggan di "h.customer"
-                    if(h.date.startsWith(today) && h.status === 'Approved' && h.customer === filterPelanggan) {
+                    if(h.date.startsWith(today) && h.status === 'Approved' && h.customer === filterP) {
                         let items = typeof h.items === 'string' ? JSON.parse(h.items) : h.items;
                         items.forEach(it => {
                             if(it.n.toUpperCase().includes(kat.toUpperCase())) {
@@ -2249,13 +2369,11 @@ function renderDashboard() {
             </tr>`;
     });
 
-    // Update angka Cycle di atas (Cukup 1 kali saja)
     document.getElementById('valCycle1').innerText = totalC1.toLocaleString('id-ID');
     document.getElementById('valCycle2').innerText = totalC2.toLocaleString('id-ID');
     document.getElementById('valCycle3').innerText = totalC3.toLocaleString('id-ID');
     document.getElementById('valCycleTotal').innerText = grandTotal.toLocaleString('id-ID');
 
-    // Panggil update tabel supplier global
     updateGlobalSupplierTable();
 }
 
