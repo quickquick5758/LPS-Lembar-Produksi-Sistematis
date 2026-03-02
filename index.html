@@ -383,6 +383,13 @@
             .card { padding: 12px !important; width: 100%; box-sizing: border-box; }
             .swipe-wrapper { gap: 10px; margin-right: -12px; padding-right: 12px; }
         }
+        /* ==== FIX TANGGAL MELELEH DI FORM INPUT (MOBILE) ==== */
+        @media (max-width: 768px) {
+            #inputDate, #inputBSDate {
+                width: auto !important;
+                min-width: 140px;
+            }
+        }
     </style>
 </head>
 <body>
