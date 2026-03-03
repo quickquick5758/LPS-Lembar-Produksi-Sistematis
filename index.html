@@ -34,7 +34,7 @@
 
         /* ==== INPUT & SEARCH BAR ALA INSTAGRAM ==== */
         input[type="date"], input[type="text"], input[type="number"], input[type="password"], select {
-            border-radius: 8px !important; /* Agak membulat */
+            border-radius: 2px !important; /* Agak membulat */
             border: 1px solid var(--border) !important;
             background: #efefef !important; /* Abu-abu terang khas kolom pencarian IG */
             padding: 10px 15px;
@@ -45,7 +45,7 @@
 
         /* ==== TOMBOL ALA INSTAGRAM ==== */
         .btn-primary, .btn-success, .btn-outline, .btn-outline-danger, .custom-select-btn {
-            border-radius: 8px !important;
+            border-radius: 2px !important;
             box-shadow: none !important; /* Hilangkan efek timbul tebal */
             border: 1px solid transparent !important;
             transition: all 0.2s ease-in-out !important;
@@ -59,7 +59,7 @@
         /* ==== TABEL EXCEL & STICKY HEADER BIRU IG ==== */
         .excel-table { 
             width: 100%; border-collapse: separate; border-spacing: 0; 
-            border-radius: 8px; overflow: hidden; 
+            border-radius: 2px; overflow: hidden; 
             box-shadow: var(--shadow-timbul); background: #ffffff; 
             border: 1px solid var(--border); 
         }
@@ -390,6 +390,35 @@
                 min-width: 140px;
             }
         }
+        /* ==== TABEL PER JAM STYLISH (DASHBOARD) ==== */
+        .hourly-wrapper { overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .hourly-wrapper::-webkit-scrollbar { display: none; }
+        
+        .hourly-table { min-width: 800px; border-radius: 2px; box-shadow: none; border: 1px solid var(--border); }
+        .hourly-table th { 
+            padding: 10px 4px !important; text-align: center; font-size: 10px !important; 
+            background: #262626 !important; /* Warna Dark/Hitam Elegan */
+            color: white !important; border-right: 1px solid #444; letter-spacing: 0.5px;
+        }
+        .hourly-table td { 
+            padding: 12px 4px !important; text-align: center; font-weight: 800; 
+            font-size: 13px !important; border-right: 1px solid var(--border); 
+            transition: 0.2s;
+        }
+        /* UPDATE: Mengecilkan kolom Proses di tabel per jam */
+        .hourly-table th:first-child, .hourly-table td:first-child { 
+            position: sticky; left: 0; background: #fafafa; z-index: 10; 
+            border-right: 2px solid var(--border); box-shadow: 2px 0 5px rgba(0,0,0,0.02);
+            text-align: left; 
+            padding: 8px !important; /* Padding dikurangi biar langsing */
+            font-size: 12px !important; /* Huruf lebih kecil */
+            width: 90px; /* Lebar kolom dipangkas */
+        }
+        .hourly-table th:first-child { background: #1a1a1a !important; }
+        
+        /* Efek untuk sel yang ada isinya vs kosong */
+        .h-isi { color: var(--ig-primary); background: rgba(0, 149, 246, 0.05); }
+        .h-kosong { color: #d4d4d4; font-weight: 400; }
     </style>
 </head>
 <body>
@@ -617,12 +646,37 @@
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; align-items: start;">
                 
+                <div class="card" style="padding: 0; border: 1px solid var(--border); margin-bottom: 20px;">
+                    <div style="padding: 12px 15px; background: #fafafa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                        <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: var(--ig-text);">
+                            <span class="material-symbols-outlined" style="color:#f59e0b">schedule</span> Performa Per Jam (Hari Ini)
+                        </h4>
+                        <span style="font-size:10px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 4px 8px; border-radius: 2px;">
+                            <span class="material-symbols-outlined" style="font-size:14px;">swipe</span> Geser
+                        </span>
+                    </div>
+                    <div style="padding: 2px;">
+                        <div class="hourly-wrapper">
+                            <table class="excel-table hourly-table">
+                                <thead>
+                                    <tr>
+                                        <th>PROSES
+                                        <th>06-07</th><th>07-08</th><th>08-09</th><th>09-10</th><th>10-11</th><th>11-12</th><th>12-13</th><th>13-14</th>
+                                        <th>14-15</th><th>15-16</th><th>16-17</th><th>17-18</th><th>18-19</th><th>19-20</th><th>20-21</th><th>21-22</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hourlyTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <div class="card" style="padding: 0; border: 1px solid var(--border);">
                     <div style="padding: 12px 15px; background: #fafafa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
                         <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: var(--ig-text);">
                             <span class="material-symbols-outlined" style="color:var(--success)">local_shipping</span> Monitor Kiriman
                         </h4>
-                        <span style="font-size:10px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 4px 8px; border-radius: 6px;"><span class="material-symbols-outlined" style="font-size:14px;">swipe</span> Geser</span>
+                        <span style="font-size:10px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 4px 8px; border-radius: 2px;"><span class="material-symbols-outlined" style="font-size:14px;">swipe</span> Geser</span>
                     </div>
                     
                     <div style="padding: 15px;">
@@ -636,13 +690,13 @@
                                     </div>
                                     
                                     <input type="hidden" id="filterPelangganValue" value="ALL">
-                                    <div class="custom-select-btn" id="btnFilterPelanggan" onclick="openPelangganSelect()" style="padding: 6px 12px !important; font-size: 11px; width: auto; max-width: 150px; border-radius: 6px !important; background: #ffffff; border: 1px solid var(--border) !important; margin: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;">
+                                    <div class="custom-select-btn" id="btnFilterPelanggan" onclick="openPelangganSelect()" style="padding: 6px 12px !important; font-size: 11px; width: auto; max-width: 150px; border-radius: 2px !important; background: #ffffff; border: 1px solid var(--border) !important; margin: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;">
                                         <span id="labelFilterPelanggan" style="font-weight: 600; color: var(--ig-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Semua Pelanggan</span>
                                         <span class="material-symbols-outlined" style="font-size: 16px; color: #888; margin-left: 5px;">expand_more</span>
                                     </div>
                                 </div>
                                 
-                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-bottom: 15px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);">
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-bottom: 15px; border-radius: 2px; overflow: hidden; border: 1px solid var(--border);">
                                     <div style="background: white; padding: 15px 5px; text-align: center;">
                                         <div style="font-size: 10px; color: var(--ig-sec-text); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Cycle 1</div>
                                         <div id="valCycle1" style="font-size: 20px; font-weight: 800; color: var(--ig-text); margin-top: 5px;">0</div>
@@ -657,13 +711,13 @@
                                     </div>
                                 </div>
 
-                                <div style="background: rgba(88, 195, 34, 0.1); border: 1px solid rgba(88, 195, 34, 0.3); border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 15px;">
+                                <div style="background: rgba(88, 195, 34, 0.1); border: 1px solid rgba(88, 195, 34, 0.3); border-radius: 2px; padding: 15px; text-align: center; margin-bottom: 15px;">
                                     <div style="font-size: 11px; color: var(--success); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Total Kiriman Hari Ini</div>
                                     <div id="valCycleTotal" style="font-size: 26px; font-weight: 800; color: var(--success); margin-top: 5px;">0</div>
                                 </div>
 
                                 <h5 style="margin: 0 0 10px 0; color:var(--ig-sec-text); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Rincian per Kategori Barang</h5>
-                                <div style="overflow-y: auto; max-height: 270px; border-radius: 4px; border: 1px solid var(--border);">
+                                <div style="overflow-y: auto; max-height: 270px; border-radius: 2px; border: 1px solid var(--border);">
                                     <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
                                         <thead>
                                             <tr>
@@ -684,12 +738,12 @@
                                     &mdash; GLOBAL (ALL SUPPLIER) &mdash;
                                 </div>
                                 
-                                <div style="background: rgba(0, 149, 246, 0.1); border: 1px solid rgba(0, 149, 246, 0.3); border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 15px;">
+                                <div style="background: rgba(0, 149, 246, 0.1); border: 1px solid rgba(0, 149, 246, 0.3); border-radius: 2px; padding: 15px; text-align: center; margin-bottom: 15px;">
                                     <div style="font-size: 11px; color: var(--ig-primary); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Total Kiriman Global</div>
                                     <div id="valGlobalTotal" style="font-size: 26px; font-weight: 800; color: var(--ig-primary); margin-top: 5px;">0</div>
                                 </div>
 
-                                <div style="overflow-y: auto; max-height: 300px; border-radius: 8px; border: 1px solid var(--border);">
+                                <div style="overflow-y: auto; max-height: 300px; border-radius: 2px; border: 1px solid var(--border);">
                                     <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
                                         <thead>
                                             <tr>
@@ -728,7 +782,7 @@
             
             <div style="font-size:12px; font-weight:600; color:var(--ig-text); text-transform: uppercase; margin-bottom: 6px;">Performa Tim</div>
             
-            <select id="selectKaruChart" onchange="updateKaruChart()" style="padding: 6px 12px; font-size: 11px; width: auto; min-width: 120px; border-radius: 8px !important; background: #ffffff; border: 1px solid var(--border) !important; font-weight: 600; color: var(--ig-primary); cursor: pointer; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.02); text-align: center; margin: 0;">
+            <select id="selectKaruChart" onchange="updateKaruChart()" style="padding: 6px 12px; font-size: 11px; width: auto; min-width: 120px; border-radius: 2px !important; background: #ffffff; border: 1px solid var(--border) !important; font-weight: 600; color: var(--ig-primary); cursor: pointer; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.02); text-align: center; margin: 0;">
                 <option value="ALL">Semua Karu</option>
             </select>
             
@@ -774,9 +828,9 @@
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; width: 100%; overflow-x: auto; padding-bottom: 5px;">
                         <div style="position: relative; flex: 1; min-width: 180px;">
                             <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; color: #888; font-size: 18px;">search</span>
-                            <input type="text" id="findLaporan" placeholder="Cari laporan..." onkeyup="filterLaporan()" style="width:100%; padding: 10px 10px 10px 35px; margin: 0; box-sizing: border-box; border-radius: 6px;">
+                            <input type="text" id="findLaporan" placeholder="Cari laporan..." onkeyup="filterLaporan()" style="width:100%; padding: 10px 10px 10px 35px; margin: 0; box-sizing: border-box; border-radius: 2px;">
                         </div>
-                        <div style="display: flex; align-items: center; gap: 5px; background: #eef2f6; border: 1px solid var(--border); border-radius: 6px; padding: 0 10px; height: 38px; white-space: nowrap;">
+                        <div style="display: flex; align-items: center; gap: 5px; background: #eef2f6; border: 1px solid var(--border); border-radius: 2px; padding: 0 10px; height: 38px; white-space: nowrap;">
                             <span class="material-symbols-outlined" style="color: var(--ig-primary); font-size: 18px;">calendar_month</span>
                             <input type="date" id="laporanDateFrom" onchange="filterLaporan()" style="border: none !important; background: transparent !important; padding: 0 !important; margin: 0; box-shadow: none !important; outline: none; width: 110px !important; font-weight: 600; font-size: 12px; color: var(--ig-text);">
                             <span style="color: #888; font-weight: bold;">-</span>
@@ -920,9 +974,9 @@
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; width: 100%; overflow-x: auto; padding-bottom: 5px;">
                     <div style="position: relative; flex: 1; min-width: 180px;">
                         <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; color: #888; font-size: 18px;">search</span>
-                        <input type="text" id="findViewData" placeholder="Cari data..." onkeyup="filterViewData()" style="width:100%; padding: 10px 10px 10px 35px; margin: 0; box-sizing: border-box; border-radius: 6px;">
+                        <input type="text" id="findViewData" placeholder="Cari data..." onkeyup="filterViewData()" style="width:100%; padding: 10px 10px 10px 35px; margin: 0; box-sizing: border-box; border-radius: 2px;">
                     </div>
-                    <div style="display: flex; align-items: center; gap: 5px; background: #eef2f6; border: 1px solid var(--border); border-radius: 6px; padding: 0 10px; height: 38px; white-space: nowrap;">
+                    <div style="display: flex; align-items: center; gap: 5px; background: #eef2f6; border: 1px solid var(--border); border-radius: 2px; padding: 0 10px; height: 38px; white-space: nowrap;">
                         <span class="material-symbols-outlined" style="color: var(--ig-primary); font-size: 18px;">calendar_month</span>
                         <input type="date" id="viewDateFrom" onchange="filterViewData()" style="border: none !important; background: transparent !important; padding: 0 !important; margin: 0; box-shadow: none !important; outline: none; width: 110px !important; font-weight: 600; font-size: 12px; color: var(--ig-text);">
                         <span style="color: #888; font-weight: bold;">-</span>
@@ -2140,6 +2194,11 @@ async function saveData(status, type = 'PRD') {
         hideLoading();
         showSuccessAnim();
         openLaporanList(); 
+        
+        // --- TARIK DATA FRESH DARI SERVER BIAR JAMNYA UPDATE ---
+        setTimeout(() => {
+            refreshData(); 
+        }, 1000); // Kasih jeda 1 detik biar Google Sheet kelar nyatet waktunya
     })
     .catch(err => {
         hideLoading();
@@ -2436,6 +2495,7 @@ function renderDashboard() {
     document.getElementById('valCycleTotal').innerText = grandTotal.toLocaleString('id-ID');
 
     updateGlobalSupplierTable();
+    renderHourlyTable(); // <--- INI SAKLARNYA BIAR TABELNYA JALAN!
 }
 
 function processOCR(input) {
@@ -2725,6 +2785,66 @@ function openPelangganSelect() {
 
 // Panggil fungsi ini saat aplikasi pertama kali dimuat (setelah DATA terisi)
 // updateGlobalSupplierTable();
+// === FUNGSI RENDER TABEL PER JAM ===
+function renderHourlyTable() {
+    if (!DATA.history) return;
+    const tbody = document.getElementById('hourlyTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    const today = new Date().toISOString().split('T')[0];
+    let filterP = document.getElementById('filterPelangganValue') ? document.getElementById('filterPelangganValue').value : 'ALL';
+
+    // Urutan pekerjaan disamakan persis dengan gambar referensi
+    let jobsToTrack = ["Pengisian", "Jahit Bulatan", "Jahit Tutup", "Penyarungan", "Packing", "Ikat/Ball"];
+    let hoursArray = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+
+    let todayData = DATA.history.filter(d => 
+        d.date.startsWith(today) && 
+        d.status !== 'Draft' && 
+        d.type === 'PRD' &&
+        (filterP === "ALL" || d.customer === filterP)
+    );
+
+    let tableContent = '';
+    jobsToTrack.forEach(job => {
+        let rowHtml = `<tr><td style="font-weight: 800; color: var(--ig-text);">${job.toUpperCase()}</td>`;
+        
+        hoursArray.forEach(hourStart => {
+            let qtyInThisHour = 0;
+
+            todayData.forEach(d => {
+                if (d.job && d.job.toUpperCase() === job.toUpperCase()) {
+                    let submitHour = -1;
+                    try {
+                        let dt = new Date(d.date);
+                        if (!isNaN(dt.getTime())) {
+                            submitHour = dt.getHours();
+                        }
+                    } catch(e) {}
+
+                    if (submitHour === hourStart) {
+                        let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
+                        items.forEach(i => {
+                            let q = parseInt(i.q);
+                            if (!isNaN(q)) qtyInThisHour += q;
+                        });
+                    }
+                }
+            });
+
+            let cssClass = qtyInThisHour > 0 ? 'h-isi' : 'h-kosong';
+            let displayQty = qtyInThisHour > 0 ? qtyInThisHour.toLocaleString('id-ID') : '-';
+            
+            rowHtml += `<td class="${cssClass}">${displayQty}</td>`;
+        });
+
+        rowHtml += `</tr>`;
+        tableContent += rowHtml;
+    });
+    
+    tbody.innerHTML = tableContent;
+}
 // === FUNGSI VALIDASI STOK (SATPAM WIP) ===
 function checkWIP(newItems, job, currentId) {
     let errorMsg = "";
@@ -2828,6 +2948,68 @@ function resetInactivityTimer() {
 ['mousemove', 'mousedown', 'keypress', 'touchmove', 'touchstart', 'scroll'].forEach(evt => {
     document.addEventListener(evt, resetInactivityTimer, true);
 });
+function renderHourlyTable() {
+    if (!DATA.history) return;
+    const tbody = document.getElementById('hourlyTableBody');
+    tbody.innerHTML = '';
+
+    const today = new Date().toISOString().split('T')[0];
+    let filterP = document.getElementById('filterPelangganValue')?.value || 'ALL';
+
+    // List Pekerjaan yang mau kita pantau per jamnya
+    let jobsToTrack = ["Jahit Bulatan", "Pengisian", "Jahit Tutup", "Penyarungan", "Packing"];
+    
+    // Rentang Jam (06 sampai 21)
+    let hoursArray = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+
+    // Filter data khusus hari ini & status Approved/Submitted
+    let todayData = DATA.history.filter(d => 
+        d.date.startsWith(today) && 
+        d.status !== 'Draft' && 
+        d.type === 'PRD' &&
+        (filterP === "ALL" || d.customer === filterP)
+    );
+
+    jobsToTrack.forEach(job => {
+        let rowHtml = `<tr><td>${job.toUpperCase()}</td>`;
+        
+        hoursArray.forEach(hourStart => {
+            let qtyInThisHour = 0;
+
+            todayData.forEach(d => {
+                if (d.job === job) {
+                    // Coba ambil jam dari string date (kalau formatnya dari new Date() Apps Script)
+                    // Biasanya 'Mon Mar 02 2026 07:15:00 GMT+0700'
+                    let submitHour = -1;
+                    try {
+                        let dt = new Date(d.date);
+                        if (!isNaN(dt.getTime())) {
+                            submitHour = dt.getHours();
+                        }
+                    } catch(e) {}
+
+                    // Cocokkan apakah jam submit masuk di slot ini (contoh: jam 6 itu untuk slot 06-07)
+                    if (submitHour === hourStart) {
+                        let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
+                        items.forEach(i => {
+                            let q = parseInt(i.q);
+                            if (!isNaN(q)) qtyInThisHour += q;
+                        });
+                    }
+                }
+            });
+
+            // Warnai sel kalau ada isinya, pudar kalau kosong
+            let cssClass = qtyInThisHour > 0 ? 'h-isi' : 'h-kosong';
+            let displayQty = qtyInThisHour > 0 ? qtyInThisHour.toLocaleString('id-ID') : '-';
+            
+            rowHtml += `<td class="${cssClass}">${displayQty}</td>`;
+        });
+
+        rowHtml += `</tr>`;
+        tbody.innerHTML += rowHtml;
+    });
+}
 </script>
 </body>
 </html>
