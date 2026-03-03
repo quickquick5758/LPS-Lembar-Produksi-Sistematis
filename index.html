@@ -1035,7 +1035,7 @@ let USER = null;
 let currentRole = ""; 
 let tempAction = null;
 let EXPORT_KARU_LIST = [];
-let ALL_JOB_LIST = ["Bahan Baku Masuk", "Garuk Dacron", "Pengecekan", "Jahit Bulatan", "Pengisian", "Jahit Tutup", "Penyarungan", "Packing", "Ikat/Ball"];
+let ALL_JOB_LIST = ["Masuk Dacron", "Garuk Dacron", "Pengecekan", "Jahit Bulatan", "Pengisian", "Jahit Tutup", "Penyarungan", "Packing", "Ikat/Ball"];
 
 const KIRIMAN_KATEGORI = [
     "ALAS STROLLER", "BANTAL ANAK", "BANTAL BALITA", "BANTAL GULING SET", "BANTAL IBU HAMIL",
@@ -1203,7 +1203,7 @@ function openInputJobSelect() {
     if(document.getElementById('btnInputJob').classList.contains('disabled')) return;
 
     let roleVIP = ['Admin', 'Staff', 'PPIC', 'Supervisor', 'Author'];
-    let filteredJobs = ALL_JOB_LIST.filter(j => (j === 'Bahan Baku Masuk') ? roleVIP.includes(currentRole) : true);
+    let filteredJobs = ALL_JOB_LIST.filter(j => (j === 'Masuk Dacron') ? roleVIP.includes(currentRole) : true);
     let items = filteredJobs.map(j => ({value: j, label: j}));
 
     openSelectionModal("Pilih Pekerjaan", items, document.getElementById('selJobValue').value, (val, label) => {
@@ -1211,7 +1211,7 @@ function openInputJobSelect() {
         document.getElementById('labelInputJob').innerText = label;
         document.getElementById('labelInputJob').style.color = "var(--ig-text)";
 
-        let isBahanBaku = (val === 'Bahan Baku Masuk');
+        let isBahanBaku = (val === 'Masuk Dacron');
         let btnKaru = document.getElementById('btnInputKaru');
 
         if (isBahanBaku) {
@@ -1936,7 +1936,7 @@ function addRow(n = '', q = '') {
     
     // Pecah kerjaan saat ini buat nentuin tampilan awal baris
     let currentJob = document.getElementById('selJobValue').value;
-    let isDakronJob = (currentJob === 'Garuk Dacron' || currentJob === 'Bahan Baku Masuk');
+    let isDakronJob = (currentJob === 'Garuk Dacron' || currentJob === 'Masuk Dacron');
     let pName = isDakronJob ? 'Cari Master Garuk...' : 'Nama Barang';
     let pQty = isDakronJob ? 'Berat' : 'Qty';
     let sSatuan = isDakronJob ? 'KG' : 'Pcs';
@@ -1965,7 +1965,7 @@ function addRow(n = '', q = '') {
         // --- FILTER AUTOCOMPLETE BUNGLON ---
         let jobVal = document.getElementById('selJobValue').value;
         let isGarukJob = (jobVal === "Garuk Dacron");
-        let isBahanMasuk = (jobVal === "Bahan Baku Masuk"); // <--- Tambahan baru
+        let isBahanMasuk = (jobVal === "Masuk Dacron"); // <--- Tambahan baru
 
         for(let m of DATA.master) {
             let isGarukItem = m.kode.toUpperCase().startsWith("GARUK-");
@@ -2123,7 +2123,7 @@ async function saveData(status, type = 'PRD') {
     // ... di dalam fungsi saveData ...
     if(type === 'PRD') {
         let jobVal = document.getElementById('selJobValue').value;
-        let isBahanBaku = (jobVal === "Bahan Baku Masuk");
+        let isBahanBaku = (jobVal === "Masuk Dacron");
 
         let selectedOps = []; 
         document.querySelectorAll('.op-btn.selected').forEach(b => selectedOps.push(b.innerText));
@@ -2188,17 +2188,11 @@ async function saveData(status, type = 'PRD') {
     
     // Update cache view data kalau data baru masuk
     buildViewDataCache();
-
-    fetch(CLOUD_API_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) })
+fetch(CLOUD_API_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) })
     .then(() => {
-        hideLoading();
+        showLoading();
         showSuccessAnim();
         openLaporanList(); 
-        
-        // --- TARIK DATA FRESH DARI SERVER BIAR JAMNYA UPDATE ---
-        setTimeout(() => {
-            refreshData(); 
-        }, 1000); // Kasih jeda 1 detik biar Google Sheet kelar nyatet waktunya
     })
     .catch(err => {
         hideLoading();
@@ -2853,16 +2847,16 @@ function checkWIP(newItems, job, currentId) {
     // Normalisasi nama kerjaan (buang spasi & bikin huruf kecil semua)
     let normalizedJob = job.trim().toLowerCase();
 
-    // --- JALUR TOL: Bahan Baku Masuk BEBAS 100% ---
+    // --- JALUR TOL: Masuk Dacron BEBAS 100% ---
     // Karena ini proses awal, gak perlu cek stok ke belakang.
-    if (normalizedJob === "bahan baku masuk") return { aman: true };
+    if (normalizedJob === "masuk dacron") return { aman: true };
 
     newItems.forEach(item => {
         let kodeBarang = item.n;
         let qtyMauDiinput = Number(item.q) || 0;
 
         // --- 1. LOGIKA KHUSUS DAKRON (GARUK) ---
-        // Garuk Dacron HANYA bisa diinput kalau stok di 'Bahan Baku Masuk' mencukupi
+        // Garuk Dacron HANYA bisa diinput kalau stok di 'Masuk Dacron' mencukupi
         if (normalizedJob === "garuk dacron") {
             let totalMasuk = 0;
             let totalGarukLain = 0;
@@ -2875,7 +2869,7 @@ function checkWIP(newItems, job, currentId) {
                         hItems.forEach(hi => {
                             if (hi.n === kodeBarang) {
                                 let hJob = h.job.trim().toLowerCase();
-                                if (hJob === 'bahan baku masuk') totalMasuk += (Number(hi.q) || 0);
+                                if (hJob === 'masuk dacron') totalMasuk += (Number(hi.q) || 0);
                                 if (hJob === 'garuk dacron') totalGarukLain += (Number(hi.q) || 0);
                             }
                         });
@@ -2920,7 +2914,7 @@ function checkWIP(newItems, job, currentId) {
         let sisaBisaInput = totalSetoran - totalSudahDikerjakan;
         if (qtyMauDiinput > sisaBisaInput) {
             isAman = false;
-            errorMsg += `- ${kodeBarang}: Max ${sisaBisaInput} Pcs (Setoran dari ${jobSebelumnya.toUpperCase()}).\n`;
+            errorMsg += `- ${kodeBarang}: Max ${sisaBisaInput} Pcs (Hasil dari ${jobSebelumnya.toUpperCase()}).\n`;
         }
     });
 
