@@ -91,13 +91,13 @@
         .material-symbols-outlined { vertical-align: middle; font-size: 18px; }
 
         #loginOverlay { position: fixed; inset: 0; background: var(--ig-bg); z-index: 9000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .login-box { background: var(--ig-bg); border: 2px solid #ffffff; padding: 40px; width: 350px; text-align: center; border-radius: 4px; box-shadow: var(--shadow-timbul); }
+        .login-box { background: var(--ig-bg); border: 2px solid #ffffff; padding: 40px; width: 350px; text-align: center; border-radius: 2px; box-shadow: var(--shadow-timbul); }
         .pass-wrapper { position: relative; width: 100%; margin-bottom: 20px; display: flex; align-items: center; }
         .pass-wrapper input { width: 100%; padding: 12px; padding-right: 40px; }
         .pass-eye { position: absolute; right: 15px; cursor: pointer; opacity: 0.6; }
 
         /* LOADING ANIMATION */
-        #loadingOverlay { position: fixed; inset: 0; background: rgba(240, 244, 249, 0.85); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(5px); }
+        #loadingOverlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.2); z-index: 9999; display: none; align-items: center; justify-content: center; }
         .sk-folding-cube { margin: 20px auto; width: 40px; height: 40px; position: relative; transform: rotateZ(45deg); }
         .sk-folding-cube .sk-cube { float: left; width: 50%; height: 50%; position: relative; transform: scale(1.1); }
         .sk-folding-cube .sk-cube:before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--ig-primary); animation: sk-foldCubeAngle 2.4s infinite linear both; transform-origin: 100% 100%; border-radius: 2px; }
@@ -110,17 +110,17 @@
         @keyframes sk-foldCubeAngle { 0%, 10% { transform: perspective(140px) rotateX(-180deg); opacity: 0; } 25%, 75% { transform: perspective(140px) rotateX(0deg); opacity: 1; } 90%, 100% { transform: perspective(140px) rotateY(180deg); opacity: 0; } }
 
         .top-bar { background: var(--ig-bg); height: 65px; border-bottom: none; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: relative; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .user-profile-box { text-align: right; cursor: pointer; padding: 5px 10px; border-radius: 4px; transition: 0.2s; }
+        .user-profile-box { text-align: right; cursor: pointer; padding: 5px 10px; border-radius: 2px; transition: 0.2s; }
         .user-profile-box:hover { background: rgba(0,0,0,0.03); }
         
-        .user-dropdown { position: absolute; top: 60px; right: 20px; background: #ffffff; border: 1px solid #ffffff; display: none; width: 180px; box-shadow: var(--shadow-timbul); z-index: 999; border-radius: 4px; overflow: hidden; }
+        .user-dropdown { position: absolute; top: 60px; right: 20px; background: #ffffff; border: 1px solid #ffffff; display: none; width: 180px; box-shadow: var(--shadow-timbul); z-index: 999; border-radius: 2px; overflow: hidden; }
         .user-dropdown.active { display: block; }
         .user-dropdown div { padding: 12px 15px; cursor: pointer; transition: 0.2s; }
         .user-dropdown div:hover { background: #f0f4f9; }
 
         .sidebar { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: var(--ig-bg); border-right: 1px solid #ffffff; transition: 0.3s; z-index: 2000; box-shadow: 5px 0 15px rgba(0,0,0,0.05); }
         .sidebar.active { left: 0; }
-        .nav-item { padding: 15px 20px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; margin: 5px 10px; border-radius: 4px; }
+        .nav-item { padding: 15px 20px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; margin: 5px 10px; border-radius: 2px; }
         .nav-item:hover { background: #ffffff; color: var(--ig-primary); box-shadow: var(--shadow-timbul); transform: translateY(-1px); }
         
         .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; overflow: hidden; position: relative; }
@@ -139,7 +139,7 @@
         .card, .confirm-box, .select-modal-box {
             background: #ffffff;
             border: 2px solid #ffffff !important;
-            border-radius: 4px !important; /* <--- JADI LEBIH LANCIP */
+            border-radius: 2px !important; /* <--- JADI LEBIH LANCIP */
             box-shadow: var(--shadow-timbul) !important;
             padding: 20px;
             margin-bottom: 20px;
@@ -148,7 +148,7 @@
 
         /* Update Shadow Melayang Tinggi untuk Stat Box */
 .stat-box {
-    border-radius: 4px !important;
+    border-radius: 2px !important;
     border: 2px solid rgba(255,255,255,0.5) !important;
     /* Efek melayang tinggi dengan blur lebih lebar */
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08) !important;
@@ -229,7 +229,7 @@
             transform: scale(0.9); 
             animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             /* Pastikan card popupnya juga timbul */
-            border-radius: 4px !important;
+            border-radius: 2px !important;
             box-shadow: var(--shadow-timbul) !important;
             padding: 20px !important; /* Padding agak gedean biar lega */
             border: 2px solid #ffffff;
@@ -242,7 +242,7 @@
             flex: 1;
             padding: 12px 15px;
             border: none;
-            border-radius: 4px !important; /* Bentuk Pil */
+            border-radius: 2px !important; /* Bentuk Pil */
             font-weight: 700; font-size: 14px; cursor: pointer;
             background: #f0f4f9; /* Warna dasar agak abu terang */
             /* Efek Bayangan Timbul yang Lembut */
@@ -424,13 +424,15 @@
 <body>
 
 <div id="loadingOverlay">
-    <div class="sk-folding-cube">
-        <div class="sk-cube1 sk-cube"></div>
-        <div class="sk-cube2 sk-cube"></div>
-        <div class="sk-cube4 sk-cube"></div>
-        <div class="sk-cube3 sk-cube"></div>
+    <div class="confirm-box" style="padding: 30px; width: auto; min-width: 250px;">
+        <div class="sk-folding-cube">
+            <div class="sk-cube1 sk-cube"></div>
+            <div class="sk-cube2 sk-cube"></div>
+            <div class="sk-cube4 sk-cube"></div>
+            <div class="sk-cube3 sk-cube"></div>
+        </div>
+        <p style="margin-top: 25px; font-weight: bold; color: var(--ig-primary); font-size: 14px; margin-bottom: 0;">Mohon tunggu sebentar...</p>
     </div>
-    <p style="margin-top: 15px; font-weight: bold; color: var(--ig-primary); font-size: 14px;">Mohon tunggu sebentar...</p>
 </div>
 
 <div id="successAnim">
@@ -871,7 +873,7 @@
                         </div>
                     </div> 
                     <input type="hidden" id="editId">
-                    <div id="reviewHeaderPRD" class="hidden" style="background: #f0f4f9; padding: 15px; border-radius: 4px; margin-top: 15px; border: 1px solid #d2e3fc; display: flex; flex-direction: column; gap: 8px;">
+                    <div id="reviewHeaderPRD" class="hidden" style="background: #f0f4f9; padding: 15px; border-radius: 2px; margin-top: 15px; border: 1px solid #d2e3fc; display: flex; flex-direction: column; gap: 8px;">
                         <div style="font-size:13px; color:#1a73e8;"><strong><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">tag</span> ID Laporan:</strong> <span id="rh-id-prd"></span></div>
                         <div style="font-size:13px; color:#444;"><strong><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">person</span> Karu:</strong> <span id="rh-karu-prd"></span></div>
                         <div style="font-size:13px; color:#444;"><strong><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">groups</span> Operator:</strong> <span id="rh-op-prd"></span></div>
@@ -930,7 +932,7 @@
                     </div>
                     
                     <input type="hidden" id="editBSId">
-                    <div id="reviewHeaderBS" class="hidden" style="background: #fef2f2; padding: 15px; border-radius: 4px; margin-top: 15px; border: 1px solid #fecaca; display: flex; flex-direction: column; gap: 8px;">
+                    <div id="reviewHeaderBS" class="hidden" style="background: #fef2f2; padding: 15px; border-radius: 2px; margin-top: 15px; border: 1px solid #fecaca; display: flex; flex-direction: column; gap: 8px;">
                         <div style="font-size:13px; color:#dc2626;"><strong><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">tag</span> ID Laporan:</strong> <span id="rh-id-bs"></span></div>
                         <div style="font-size:13px; color:#444;"><strong><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">person</span> Karu / User:</strong> <span id="rh-karu-bs"></span></div>
                     </div>
@@ -2189,7 +2191,7 @@ async function saveData(status, type = 'PRD') {
     buildViewDataCache();
 fetch(CLOUD_API_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) })
     .then(() => {
-        showLoading();
+        hideLoading();
         showSuccessAnim();
         openLaporanList(); 
     })
