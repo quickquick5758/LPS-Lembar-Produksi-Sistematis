@@ -1025,7 +1025,7 @@
 
 <script>
 // --- URL API TERBARU DARI SCRIPT GOOGLE ---
-const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbyWPgXVugthK9gGIkx7ANBwyqhTrBdHYW0tdfsnx-sjt54NXWQeDR7I9RR1vaOCmaUzSw/exec"; 
+const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbyjyyMNiQ1Jiiny_LqYn9KREIsWFIAAe66C_MMwOUMbQxkorgFW6Z8FwdZjv73KnzKG5Q/exec"; 
 
 let DATA = {};
 let currentPageLaporan = 1; let rowsPerPageLaporan = 15;
@@ -1091,7 +1091,6 @@ async function initSystem() {
     }
     finally { hideLoading(); }
 }
-initSystem();
 
 function getLocalDrafts() { return JSON.parse(localStorage.getItem('lps_drafts') || '[]'); }
 function saveLocalDraft(payload) {
@@ -2780,65 +2779,7 @@ function openPelangganSelect() {
 // Panggil fungsi ini saat aplikasi pertama kali dimuat (setelah DATA terisi)
 // updateGlobalSupplierTable();
 // === FUNGSI RENDER TABEL PER JAM ===
-function renderHourlyTable() {
-    if (!DATA.history) return;
-    const tbody = document.getElementById('hourlyTableBody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
 
-    const today = new Date().toISOString().split('T')[0];
-    let filterP = document.getElementById('filterPelangganValue') ? document.getElementById('filterPelangganValue').value : 'ALL';
-
-    // Urutan pekerjaan disamakan persis dengan gambar referensi
-    let jobsToTrack = ["Pengisian", "Jahit Bulatan", "Jahit Tutup", "Penyarungan", "Packing", "Ikat/Ball"];
-    let hoursArray = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
-
-    let todayData = DATA.history.filter(d => 
-        d.date.startsWith(today) && 
-        d.status !== 'Draft' && 
-        d.type === 'PRD' &&
-        (filterP === "ALL" || d.customer === filterP)
-    );
-
-    let tableContent = '';
-    jobsToTrack.forEach(job => {
-        let rowHtml = `<tr><td style="font-weight: 800; color: var(--ig-text);">${job.toUpperCase()}</td>`;
-        
-        hoursArray.forEach(hourStart => {
-            let qtyInThisHour = 0;
-
-            todayData.forEach(d => {
-                if (d.job && d.job.toUpperCase() === job.toUpperCase()) {
-                    let submitHour = -1;
-                    try {
-                        let dt = new Date(d.date);
-                        if (!isNaN(dt.getTime())) {
-                            submitHour = dt.getHours();
-                        }
-                    } catch(e) {}
-
-                    if (submitHour === hourStart) {
-                        let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
-                        items.forEach(i => {
-                            let q = parseInt(i.q);
-                            if (!isNaN(q)) qtyInThisHour += q;
-                        });
-                    }
-                }
-            });
-
-            let cssClass = qtyInThisHour > 0 ? 'h-isi' : 'h-kosong';
-            let displayQty = qtyInThisHour > 0 ? qtyInThisHour.toLocaleString('id-ID') : '-';
-            
-            rowHtml += `<td class="${cssClass}">${displayQty}</td>`;
-        });
-
-        rowHtml += `</tr>`;
-        tableContent += rowHtml;
-    });
-    
-    tbody.innerHTML = tableContent;
-}
 // === FUNGSI VALIDASI STOK (SATPAM WIP) ===
 function checkWIP(newItems, job, currentId) {
     let errorMsg = "";
@@ -2923,6 +2864,46 @@ function checkWIP(newItems, job, currentId) {
 // === SISTEM KEAMANAN: AUTO LOGOUT INACTIVITY (1 JAM) ===
 let inactivityTimer;
 
+// === FUNGSI RENDER TABEL PER JAM (DARI TABEL_STATISTIK) ===
+function renderHourlyTable() {
+    const tbody = document.getElementById('hourlyTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    // Pastikan data dari sheet TABEL_STATISTIK sudah terkirim dari server (Apps Script)
+    if (!DATA.tabelStatistik || DATA.tabelStatistik.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding:15px; color:var(--ig-sec-text);">Data performa per jam belum ditarik dari server. Klik tombol Refresh di atas.</td></tr>';
+        return;
+    }
+
+    // List kolom jam yang sesuai dengan tabel HTML kamu
+    let hoursArray = ["06-07", "07-08", "08-09", "09-10", "10-11", "11-12", "12-13", "13-14", "14-15", "15-16", "16-17", "17-18", "18-19", "19-20", "20-21", "21-22"];
+
+    let tableContent = '';
+    
+    // Looping data yang dilempar dari sheet TABEL_STATISTIK
+    DATA.tabelStatistik.forEach(row => {
+        // Asumsi header kolom pertamanya bernama "Proses" atau "PROSES" di Excel/Sheet kamu
+        let jobName = row["Proses"] || row["PROSES"] || "-";
+        
+        let rowHtml = `<tr><td style="font-weight: 800; color: var(--ig-text);">${jobName}</td>`;
+        
+        hoursArray.forEach(jam => {
+            // Ambil angka dari kolom jam, kalau kosong/error jadikan 0
+            let qty = parseInt(row[jam]) || 0;
+            
+            let cssClass = qty > 0 ? 'h-isi' : 'h-kosong';
+            let displayQty = qty > 0 ? qty.toLocaleString('id-ID') : '-';
+            
+            rowHtml += `<td class="${cssClass}">${displayQty}</td>`;
+        });
+
+        rowHtml += `</tr>`;
+        tableContent += rowHtml;
+    });
+    
+    tbody.innerHTML = tableContent;
+}
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     
@@ -2942,68 +2923,10 @@ function resetInactivityTimer() {
 ['mousemove', 'mousedown', 'keypress', 'touchmove', 'touchstart', 'scroll'].forEach(evt => {
     document.addEventListener(evt, resetInactivityTimer, true);
 });
-function renderHourlyTable() {
-    if (!DATA.history) return;
-    const tbody = document.getElementById('hourlyTableBody');
-    tbody.innerHTML = '';
 
-    const today = new Date().toISOString().split('T')[0];
-    let filterP = document.getElementById('filterPelangganValue')?.value || 'ALL';
+// ==== TAMBAHKAN KODE INI BIAR DATA DITARIK SAAT WEB DIBUKA ====
+initSystem();
 
-    // List Pekerjaan yang mau kita pantau per jamnya
-    let jobsToTrack = ["Jahit Bulatan", "Pengisian", "Jahit Tutup", "Penyarungan", "Packing"];
-    
-    // Rentang Jam (06 sampai 21)
-    let hoursArray = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
-
-    // Filter data khusus hari ini & status Approved/Submitted
-    let todayData = DATA.history.filter(d => 
-        d.date.startsWith(today) && 
-        d.status !== 'Draft' && 
-        d.type === 'PRD' &&
-        (filterP === "ALL" || d.customer === filterP)
-    );
-
-    jobsToTrack.forEach(job => {
-        let rowHtml = `<tr><td>${job.toUpperCase()}</td>`;
-        
-        hoursArray.forEach(hourStart => {
-            let qtyInThisHour = 0;
-
-            todayData.forEach(d => {
-                if (d.job === job) {
-                    // Coba ambil jam dari string date (kalau formatnya dari new Date() Apps Script)
-                    // Biasanya 'Mon Mar 02 2026 07:15:00 GMT+0700'
-                    let submitHour = -1;
-                    try {
-                        let dt = new Date(d.date);
-                        if (!isNaN(dt.getTime())) {
-                            submitHour = dt.getHours();
-                        }
-                    } catch(e) {}
-
-                    // Cocokkan apakah jam submit masuk di slot ini (contoh: jam 6 itu untuk slot 06-07)
-                    if (submitHour === hourStart) {
-                        let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
-                        items.forEach(i => {
-                            let q = parseInt(i.q);
-                            if (!isNaN(q)) qtyInThisHour += q;
-                        });
-                    }
-                }
-            });
-
-            // Warnai sel kalau ada isinya, pudar kalau kosong
-            let cssClass = qtyInThisHour > 0 ? 'h-isi' : 'h-kosong';
-            let displayQty = qtyInThisHour > 0 ? qtyInThisHour.toLocaleString('id-ID') : '-';
-            
-            rowHtml += `<td class="${cssClass}">${displayQty}</td>`;
-        });
-
-        rowHtml += `</tr>`;
-        tbody.innerHTML += rowHtml;
-    });
-}
 </script>
 </body>
 </html>
