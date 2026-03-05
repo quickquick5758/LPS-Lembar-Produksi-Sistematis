@@ -328,28 +328,45 @@
             white-space: normal !important; 
             word-wrap: break-word; 
             line-height: 1.3; 
-            padding: 5px 10px !important; /* Ini jurus rahasia biar barisnya rapet! */
+            padding: 5px 8px !important; /* Ini jurus rahasia biar barisnya rapet! */
         }
-        /* ==== KELAS BARU UNTUK DASHBOARD ==== */
-        .top-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .grafik-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; width: 100%; }
+/* ==== KELAS GRID DASHBOARD ==== */
+.top-stats-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 15px; 
+    margin-bottom: 25px; 
+}
 
-        /* ==== PENGUNCI LAYAR AGAR TIDAK BOCOR KE KANAN ==== */
-        body, .main-content, .view-container {
-            max-width: 100vw !important;
-            overflow-x: hidden !important; /* Gembok layar ke kanan */
-        }
+.main-cards-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+    gap: 20px; 
+    align-items: start; 
+    width: 100%; 
+}
 
-        /* ==== KELAS GRID DASHBOARD ==== */
-        .top-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .main-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; align-items: start; width: 100%; }
-        .grafik-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; width: 100%; }
+/* PEMBAGIAN KANAN KIRI 1fr 1fr UNTUK GRAFIK */
+.grafik-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px; 
+    align-items: start; 
+    width: 100%; 
+}
 
-        /* KUNCI UTAMA BIAR CHART.JS NGGAK MAKAN TEMPAT KE KANAN */
-        .grafik-grid > div {
-            min-width: 0 !important; 
-            max-width: 100%;
-        }
+/* KUNCI UTAMA BIAR CHART.JS NGGAK MAKAN TEMPAT KE KANAN */
+.grafik-grid > div {
+    min-width: 0 !important; 
+    max-width: 100%;
+}
+
+/* ==== PENGUNCI LAYAR AGAR TIDAK BOCOR KE KANAN ==== */
+body, .main-content, .view-container {
+    max-width: 100vw !important;
+    overflow-x: hidden !important; 
+}
+
 
         /* ==== EFEK RESPONSIVE KHUSUS MOBILE (HP) ==== */
         @media (max-width: 768px) {
@@ -365,10 +382,8 @@
             .excel-table { font-size: 11px !important; }
             .excel-table th, .excel-table td { padding: 8px !important; }
             .swipe-wrapper { gap: 10px; margin-right: -12px; padding-right: 12px; }
-            input[type="date"], .custom-select-btn { width: 100% !important; }
+            input[type="date"] { width: 100% !important; }
         }
-        /* ==== KUNCI ANTI BOCOR KANAN (MOBILE) ==== */
-        body, .main-content, .view-container { max-width: 100vw !important; overflow-x: hidden !important; }
         
         .top-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
         .main-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: start; width: 100%; }
@@ -419,6 +434,11 @@
         /* Efek untuk sel yang ada isinya vs kosong */
         .h-isi { color: var(--ig-primary); background: rgba(0, 149, 246, 0.05); }
         .h-kosong { color: #d4d4d4; font-weight: 400; }
+        /* ==== ANIMASI & WARNA ICON SYNC ==== */
+        @keyframes spinSync { 100% { transform: rotate(360deg); } }
+        .icon-syncing { color: #0095f6; animation: spinSync 1.5s linear infinite; }
+        .icon-cloud { color: #8e8e8e; }
+        .icon-synced { color: var(--success); }
     </style>
 </head>
 <body>
@@ -646,18 +666,18 @@
 
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; align-items: start;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; align-items: start;">
                 
                 <div class="card" style="padding: 0; border: 1px solid var(--border); margin-bottom: 20px;">
                     <div style="padding: 12px 15px; background: #fafafa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
                         <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: var(--ig-text);">
                             <span class="material-symbols-outlined" style="color:#f59e0b">schedule</span> Performa Per Jam (Hari Ini)
                         </h4>
-                        <span style="font-size:10px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 4px 8px; border-radius: 2px;">
-                            <span class="material-symbols-outlined" style="font-size:14px;">swipe</span> Geser
+                        <span style="font-size:12px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 2px 4px; border-radius: 2px;">
+                            <span class="material-symbols-outlined" style="font-size:12px;">swipe</span> Geser
                         </span>
                     </div>
-                    <div style="padding: 2px;">
+                    <div style="padding:2px;">
                         <div class="hourly-wrapper">
                             <table class="excel-table hourly-table">
                                 <thead>
@@ -784,9 +804,12 @@
             
             <div style="font-size:12px; font-weight:600; color:var(--ig-text); text-transform: uppercase; margin-bottom: 6px;">Performa Tim</div>
             
-            <select id="selectKaruChart" onchange="updateKaruChart()" style="padding: 6px 12px; font-size: 11px; width: auto; min-width: 120px; border-radius: 2px !important; background: #ffffff; border: 1px solid var(--border) !important; font-weight: 600; color: var(--ig-primary); cursor: pointer; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.02); text-align: center; margin: 0;">
-                <option value="ALL">Semua Karu</option>
-            </select>
+           <input type="hidden" id="valKaruChart" value="ALL">
+<div class="custom-select-btn" onclick="openKaruChartSelect()" style="padding: 6px 12px; font-size: 11px; width: auto; min-width: 120px; border-radius: 2px !important; background: #ffffff; border: 1px solid var(--border) !important; font-weight: 600; color: var(--ig-primary); cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); text-align: center; margin: 0; display:flex; justify-content:space-between; align-items:center;">
+    <span id="labelKaruChart">Semua Karu</span>
+    <span class="material-symbols-outlined" style="font-size: 16px; color: #888; margin-left: 5px;">expand_more</span>
+</div>
+
             
         </div>
         
@@ -1027,7 +1050,7 @@
 
 <script>
 // --- URL API TERBARU DARI SCRIPT GOOGLE ---
-const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbyjyyMNiQ1Jiiny_LqYn9KREIsWFIAAe66C_MMwOUMbQxkorgFW6Z8FwdZjv73KnzKG5Q/exec"; 
+const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbxEQVxYtdx9Qs2V4R7M_TXT6I6oYlthAXJlX8bRK8xpDk01ivDtx4kymq7GXJFCF5Wa1g/exec"; 
 
 let DATA = {};
 let currentPageLaporan = 1; let rowsPerPageLaporan = 15;
@@ -1177,6 +1200,25 @@ function openSelectionModal(title, items, currentValue, onSelectCallback) {
     });
     document.getElementById('selectionModal').style.display = 'flex';
 }
+// FUNGSI POP-UP GRAFIK KARU
+function openKaruChartSelect() {
+    // Siapkan daftar karu
+    let items = [{value: 'ALL', label: 'Semua Karu'}];
+    // Masukkan data karu dari server
+    if(EXPORT_KARU_LIST && EXPORT_KARU_LIST.length > 0) {
+        EXPORT_KARU_LIST.forEach(k => items.push({value: k, label: k}));
+    }
+    
+    // Buka Pop-up
+    let currentVal = document.getElementById('valKaruChart').value;
+    openSelectionModal("Filter Grafik", items, currentVal, (val, label) => {
+        // Saat dipilih, simpan nilai & update grafik
+        document.getElementById('valKaruChart').value = val;
+        document.getElementById('labelKaruChart').innerText = label;
+        updateKaruChart(); 
+    });
+}
+
 function closeSelectionModal() { document.getElementById('selectionModal').style.display = 'none'; }
 
 function openRoleSelect() {
@@ -1486,6 +1528,7 @@ function loadLaporanTable() {
     const body = document.getElementById('laporanTableBody'); body.innerHTML = '';
     let drafts = getLocalDrafts();
     let serverData = DATA.history || [];
+    let syncQueue = getSyncQueue(); // Ambil data antrean
     
     if(currentRole === 'Karu') {
         drafts = drafts.filter(d => d.karu === USER.name || d.user === USER.name);
@@ -1494,9 +1537,17 @@ function loadLaporanTable() {
         drafts = drafts.filter(d => d.user === USER.name); 
     } else { drafts = []; }
     
+    // Gabungkan data dan filter
     let myData = [...drafts, ...serverData];
     myData = myData.filter(d => d.id !== "ID_Laporan" && d.id !== "ID_Laporan BS" && d.date !== "Tanggal" && d.user !== "User Pembuat");
-    myData.sort((a,b) => b.id.localeCompare(a.id)); 
+    
+    // Unikkan data berdasarkan ID (Biar yang di antrean dan server gak double)
+    let uniqueData = [];
+    let mapId = new Map();
+    for (const item of myData) {
+        if(!mapId.has(item.id)){ mapId.set(item.id, true); uniqueData.push(item); }
+    }
+    myData = uniqueData.sort((a,b) => b.id.localeCompare(a.id)); 
 
     let query = document.getElementById('findLaporan').value.toLowerCase();
     let dateFrom = document.getElementById('laporanDateFrom').value;
@@ -1542,20 +1593,46 @@ function loadLaporanTable() {
         let typeBadge = d.type === 'BS' ? `<span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">BS</span>` : `<span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">PRD</span>`;
         let userDisplay = d.type === 'BS' ? d.user : d.karu;
 
+        // ==== LOGIKA ICON SYNC ====
+        let isPendingSync = syncQueue.some(q => q.id === d.id);
+        let syncIndicator = "";
+
+        if (d.status === 'Draft') {
+            syncIndicator = `<span class="material-symbols-outlined" style="font-size:16px; color:#888;" title="Draft Lokal">save</span>`;
+        } else if (isPendingSync) {
+            if (isSyncing && syncQueue[0].id === d.id) {
+                 syncIndicator = `<span class="material-symbols-outlined icon-syncing" style="font-size:16px;" title="Sedang Mengirim...">sync</span>`;
+            } else {
+                 syncIndicator = `<span class="material-symbols-outlined icon-cloud" style="font-size:16px;" title="Menunggu Antrean">cloud_upload</span>`;
+            }
+        } else {
+            syncIndicator = `<span class="material-symbols-outlined icon-synced" style="font-size:16px;" title="Tersimpan di Server">cloud_done</span>`;
+        }
+
         let aksiBtn = "";
         let iconViewLocal = `<span class="action-icon" onclick='openViewModal("${d.id}", "local")' title="Lihat Detail"><span class="material-symbols-outlined">visibility</span></span>`;
         let iconViewServer = `<span class="action-icon" onclick='openViewModal("${d.id}", "server")' title="Lihat Detail"><span class="material-symbols-outlined">visibility</span></span>`;
         let iconEdit = `<span class="action-icon" onclick='openForm("${d.id}", "edit_draft")' title="Edit Dokumen"><span class="material-symbols-outlined" style="color:var(--ig-primary);">edit_square</span></span>`;
         let iconReview = `<span class="action-icon icon-success" onclick='openForm("${d.id}", "review_staff")' title="Review Dokumen"><span class="material-symbols-outlined">check_circle</span></span>`;
+        let iconDelete = currentRole === 'Author' ? `<span class="action-icon" onclick='cancelDokumen("${d.id}", "${d.type}")' title="Batal/Hapus Dokumen" style="color:var(--danger);"><span class="material-symbols-outlined">delete_forever</span></span>` : "";
 
-        if(d.status === 'Draft') { aksiBtn = `${iconViewLocal} ${iconEdit}`; } 
+        if(d.status === 'Draft') { 
+            aksiBtn = `${iconViewLocal} ${iconEdit} ${iconDelete}`; 
+        } 
         else if(d.status === 'Submitted') {
-            if(['Staff','PPIC','Supervisor','Author'].includes(currentRole)) { aksiBtn = `${iconReview} ${iconViewServer} ${iconEdit}`; } 
-            else if (currentRole === 'Admin') { aksiBtn = `${iconViewServer} ${iconEdit}`; } 
-            else { aksiBtn = `${iconViewServer}`; }
+            if(['Staff','PPIC','Supervisor','Author'].includes(currentRole)) { 
+                aksiBtn = `${iconReview} ${iconViewServer} ${iconEdit} ${iconDelete}`; 
+            } 
+            else if (currentRole === 'Admin') { 
+                aksiBtn = `${iconViewServer} ${iconEdit}`; 
+            } 
+            else { 
+                aksiBtn = `${iconViewServer}`; 
+            }
         } else {
+            // Untuk status Approved / Rejected
             aksiBtn = `${iconViewServer}`;
-            if(currentRole === 'Author') aksiBtn += ` ${iconEdit}`;
+            if(currentRole === 'Author') aksiBtn += ` ${iconEdit} ${iconDelete}`;
         }
 
         let opDisplay = d.ops ? d.ops : "-"; let jobDisplay = d.job ? d.job : "-";
@@ -1563,7 +1640,9 @@ function loadLaporanTable() {
         body.innerHTML += `<tr>
             <td style="font-weight:600; font-size:11px;">${d.id}</td><td align="center">${typeBadge}</td><td>${d.date.substr(0,10)}</td>
             <td>${userDisplay}</td><td style="max-width:200px; white-space:normal; word-wrap:break-word;">${opDisplay}</td>
-            <td>${jobDisplay}</td><td><span class="badge ${badgeClass}">${d.status}</span></td><td align="center" style="white-space:nowrap;">${aksiBtn}</td>
+            <td>${jobDisplay}</td>
+            <td><div style="display:flex; align-items:center; gap:6px;"><span class="badge ${badgeClass}">${d.status}</span> ${syncIndicator}</div></td>
+            <td align="center" style="white-space:nowrap;">${aksiBtn}</td>
         </tr>`;
     });
 
@@ -2076,6 +2155,76 @@ function showConfirm(title, msg, action) {
 }
 function closeConfirm(isYes) { document.getElementById('confirmPopup').style.display = 'none'; if(isYes && tempAction) tempAction(); }
 
+// --- SISTEM BACKGROUND SYNC ---
+// 1. Ambil antrean dari memori HP
+function getSyncQueue() { return JSON.parse(localStorage.getItem('lps_sync_queue') || '[]'); }
+
+// 2. Masukkan data ke antrean & Trigger kirim
+function addToSyncQueue(payload) {
+    let q = getSyncQueue();
+    // Kalau ID sama sudah ada, update datanya. Kalau belum, tambah baru.
+    let idx = q.findIndex(x => x.id === payload.id);
+    if (idx >= 0) q[idx] = payload;
+    else q.push(payload);
+    
+    localStorage.setItem('lps_sync_queue', JSON.stringify(q));
+    processSyncQueue(); // Langsung coba kirim
+}
+
+// 3. Hapus dari antrean kalau sukses
+function removeFromSyncQueue(id) {
+    let q = getSyncQueue().filter(x => x.id !== id);
+    localStorage.setItem('lps_sync_queue', JSON.stringify(q));
+}
+
+// 4. Proses kirim data di latar belakang (Gak bikin loading stuck)
+let isSyncing = false; // "Gembok" pelindung biar antrean nggak tabrakan
+
+async function processSyncQueue() {
+    if (isSyncing) return; 
+    
+    let q = getSyncQueue();
+    if (q.length === 0) return; 
+
+    isSyncing = true; 
+    let item = q[0]; 
+    console.log("Mencoba mengirim background: " + item.id);
+    
+    // Update tabel sesaat biar icon muter (syncing) kelihatan
+    if (!document.getElementById('viewLaporan').classList.contains('hidden')) { loadLaporanTable(); }
+
+    try {
+        let response = await fetch(CLOUD_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(item)
+        });
+
+        if(response.ok) {
+            console.log("Terkirim: " + item.id);
+            removeFromSyncQueue(item.id); 
+            
+            // --- INI KUNCINYA ---
+            // Refresh tabel biar centang hijau muncul
+            if (!document.getElementById('viewLaporan').classList.contains('hidden')) {
+                loadLaporanTable();
+            }
+        } else {
+            console.log("Gagal diproses server, status: " + response.status);
+        }
+    } catch (e) {
+        console.log("Pending (Offline/Error jaringan): " + item.id);
+    } finally {
+        isSyncing = false; 
+        
+        // Refresh tabel sekali lagi kalau error biar ikon balik jadi awan abu
+        if (!document.getElementById('viewLaporan').classList.contains('hidden')) { loadLaporanTable(); }
+        
+        if (getSyncQueue().length > 0) {
+            setTimeout(processSyncQueue, 1500); 
+        }
+    }
+}
 async function saveData(status, type = 'PRD') {
     let id = type === 'PRD' ? document.getElementById('editId').value : document.getElementById('editBSId').value;
     
@@ -2158,48 +2307,55 @@ async function saveData(status, type = 'PRD') {
         payload = { action: 'saveDataBS', type: 'BS', id: id, date: document.getElementById('inputBSDate').value, karu: "-", job: "BS Produksi", ops: "-", items: items, status: status, user: originalCreator };
     }
 
-    if(status === 'Draft') {
+        // ... (Bagian atas kode saveData kamu JANGAN DIUBAH biar data gak kosong) ...
+    // ... (Pastikan variabel 'payload' sudah terbentuk di kode aslimu) ...
+    
+    // --- MULAI PERUBAHAN DI SINI ---
+    
+    // 1. Simpan Draft Lokal (Sama kayak dulu)
+    if (status === 'Draft') {
         saveLocalDraft(payload);
-        
-        // Panggil animasi dengan ID Laporan
-        showSuccessAnim(id); 
-        
-        // Kunci form-nya
+        showSuccessAnim(id);
         toggleFormLock(true, type);
-        
-        // UPDATE TOMBOL: Sembunyikan "Simpan", Munculkan "Edit" & "Kirim"
-        if(type === 'PRD') {
+        // Atur tombol
+        if (type === 'PRD') {
             document.getElementById('btnSimpanDraft').classList.add('hidden');
-            document.getElementById('btnEditDraft').classList.remove('hidden'); 
+            document.getElementById('btnEditDraft').classList.remove('hidden');
             document.getElementById('btnKirim').classList.remove('hidden');
         } else {
             document.getElementById('btnSimpanBSDraft').classList.add('hidden');
             document.getElementById('btnEditBSDraft').classList.remove('hidden');
             document.getElementById('btnKirimBS').classList.remove('hidden');
         }
-        return; 
+        return;
     }
-
-    showLoading(); // Tampilkan loading sebelum proses berat
-
-    removeLocalDraft(id); 
     
+    // 2. UNTUK SUBMIT / APPROVE / REJECT (LOGIKA BARU)
+    // Hapus draft lokal karena sudah mau dikirim
+    removeLocalDraft(id);
+    
+    // Update tampilan data di layar (biar user lihat perubahannya instan)
     let existingIdx = DATA.history.findIndex(x => x.id === payload.id);
-    if(existingIdx >= 0) DATA.history[existingIdx] = payload; else DATA.history.push(payload);
+    if (existingIdx >= 0) DATA.history[existingIdx] = payload;
+    else DATA.history.push(payload);
     
-    // Update cache view data kalau data baru masuk
-    buildViewDataCache();
-fetch(CLOUD_API_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) })
-    .then(() => {
-        hideLoading();
-        showSuccessAnim();
-        openLaporanList(); 
-    })
-    .catch(err => {
-        hideLoading();
-        showAlert("Gagal Simpan", "Terjadi kesalahan koneksi saat mengirim data.");
-    });
-}
+    // Update cache view data
+    if (typeof buildViewDataCache === "function") buildViewDataCache();
+    
+    // --- INI KUNCINYA BIAR GAK STUCK LOADING ---
+    // A. Masukkan ke Antrean Background
+    addToSyncQueue(payload);
+    
+    // B. Langsung kasih tau user "Berhasil" TANPA nunggu server
+    hideLoading();
+    showSuccessAnim(id);
+    openLaporanList();
+    
+    // C. Refresh tabel biar data yang baru disubmit muncul
+    loadLaporanTable();
+    
+    // Selesai! Data dikirim oleh fungsi processSyncQueue di latar belakang.
+    }
 
 function showSuccessAnim(reportId = "") {
     let anim = document.getElementById('successAnim');
@@ -2359,12 +2515,7 @@ function renderDashboard() {
         });
     });
     document.getElementById('statTotalQty').innerText = totalQty.toLocaleString('id-ID');
-
-    let selectKaru = document.getElementById('selectKaruChart');
-    if(selectKaru.options.length <= 1) { // Biar ngga dobel saat di-refresh
-        selectKaru.innerHTML = '<option value="ALL">Semua Karu</option>';
-        EXPORT_KARU_LIST.forEach(k => { selectKaru.innerHTML += `<option value="${k}">${k}</option>`; });
-    }
+    
     updateKaruChart();
 
     // --- AMBIL NILAI FILTER PELANGGAN ---
@@ -2430,20 +2581,22 @@ function renderDashboard() {
                 }
             ] 
         },
-        options: { 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            plugins: { legend: { display: false } }, 
-            scales: { 
-                x: { grid: { display: false } }, 
-                y: { 
-                    beginAtZero: true, 
-                    max: yAxisMax, // Konsisten tinggi
-                    ticks: { stepSize: Math.ceil(yAxisMax / 5) },
-                    border: { dash: [5, 5] } 
-                } 
-            } 
-        }
+options: { 
+    responsive: true, 
+    maintainAspectRatio: false, 
+    plugins: { legend: { display: false } }, 
+    scales: { 
+        x: { grid: { display: false } }, 
+        y: { 
+            beginAtZero: true, 
+            // INI YANG BIKIN KELIPATAN 500 (Max menyesuaikan data, minimal 1000)
+            suggestedMax: 7000, 
+            ticks: { stepSize: 500 },
+            border: { dash: [3, 3] } 
+        } 
+    } 
+}
+
     });
 
     // --- UPDATE TABEL CYCLES & GLOBAL BAWAH ---
@@ -2653,7 +2806,7 @@ function printReport(tipe) {
 // === FUNGSI UPDATE GRAFIK KARU (X: Proses, Y: Qty) ===
 function updateKaruChart() {
     if (!DATA.history) return;
-    let selectedKaru = document.getElementById('selectKaruChart').value;
+    let selectedKaru = document.getElementById('valKaruChart').value;
     const today = new Date().toISOString().split('T')[0];
     
     // SUMBU X: 5 Proses
@@ -2693,25 +2846,22 @@ function updateKaruChart() {
                 barThickness: 45 // Lebar tiang pas, nggak kekurusan
             }] 
         },
-        options: { 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            plugins: { 
-                legend: { display: false },
-                tooltip: { backgroundColor: '#262626', titleFont: { family: 'Inter' }, bodyFont: { weight: 'bold', family: 'Inter' }, padding: 10, cornerRadius: 0 }
-            }, 
-            scales: { 
-                x: { 
-                    grid: { display: false }, // Bersihkan garis latar belakang
-                    ticks: { font: { family: 'Inter', size: 10, weight: '500' } } 
-                }, 
-                y: { 
-                    grid: { display: false }, // Bersihkan garis latar belakang
-                    ticks: { font: { weight: '600', family: 'Inter' } }, 
-                    beginAtZero: true 
-                } 
-            } 
+        options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+        x: { grid: { display: false } },
+        y: {
+            beginAtZero: true,
+            // INI YANG BIKIN KELIPATAN 500 (Max menyesuaikan data, minimal 1000)
+            suggestedMax: 7000,
+            ticks: { stepSize: 500 },
+            border: { dash: [3, 3] }
         }
+    }
+}
+
     });
 }
 // === FUNGSI UPDATE TABEL GLOBAL (SUPPLIER) ===
@@ -2926,6 +3076,45 @@ function resetInactivityTimer() {
     document.addEventListener(evt, resetInactivityTimer, true);
 });
 
+// === FUNGSI KHUSUS AUTHOR: BATAL/HAPUS DOKUMEN ===
+function cancelDokumen(id, type) {
+    showConfirm("⚠️ Hapus Dokumen", `Yakin ingin membatalkan dan menghapus permanen dokumen ${id} dari database? Data yang dihapus tidak bisa dikembalikan lho, Beb!`, async () => {
+        showLoading();
+        try {
+            // Siapkan paket pembatalan ke server
+            let payload = { action: 'deleteData', id: id, type: type };
+            
+            let response = await fetch(CLOUD_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+            
+            let resText = await response.text();
+            
+            if(resText.trim() === 'success') {
+                // Buang data dari memori HP/Browser biar langsung hilang tanpa nunggu refresh server
+                DATA.history = DATA.history.filter(d => d.id !== id);
+                if(typeof buildViewDataCache === 'function') buildViewDataCache(); // Update cache tabel
+                
+                // Refresh tampilan tabel
+                loadLaporanTable();
+                
+                // Update statistik di Dashboard
+                renderDashboard();
+                
+                hideLoading();
+                showAlert("Berhasil! 🗑️", `Dokumen ${id} sudah hangus tanpa sisa.`);
+            } else {
+                hideLoading();
+                showAlert("Gagal Menghapus", "Kata server: " + resText);
+            }
+        } catch(e) {
+            hideLoading();
+            showAlert("Error Koneksi", "Gagal menghubungi server: " + e.message);
+        }
+    });
+}
 // ==== TAMBAHKAN KODE INI BIAR DATA DITARIK SAAT WEB DIBUKA ====
 initSystem();
 
