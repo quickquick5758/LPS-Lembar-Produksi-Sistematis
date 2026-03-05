@@ -1819,7 +1819,7 @@ function openViewModal(id, source) {
 function openLaporanList() { showView('laporan'); switchLaporanMode('list'); }
 
 function startInputNew() {
-    // 1. Reset Judul & Icon (Biar gak 'EDIT PRODUKSI')
+    // 1. Reset Judul & Icon
     document.getElementById('inputTitle').innerHTML = `<span class="material-symbols-outlined" style="color:var(--ig-primary);">add_box</span> INPUT PRODUKSI BARU`;
 
     // 2. Reset ID & Metadata
@@ -1834,19 +1834,23 @@ function startInputNew() {
     document.getElementById('labelInputJob').style.color = "#888";
 
     // 4. Reset Karu via applyRoleLogic
-    // (Kalau Login sebagai Karu dia otomatis keisi, kalau Admin/Staff dia kosong)
     applyRoleLogic(); 
 
-    // 5. Bersihkan Area Input (Sembunyikan dulu sampai Pekerjaan dipilih)
+    // 5. Bersihkan Area Input
     document.getElementById('opArea').classList.add('hidden');
     document.getElementById('itemArea').classList.add('hidden'); 
     document.getElementById('rowContainer').innerHTML = ''; 
-    addRow(); // Kasih 1 baris kosong
+    addRow(); 
+
+    // ==== INI OBATNYA BEB: Munculin lagi kotak tombolnya! ====
+    document.getElementById('btnGroupKaru').classList.remove('hidden');
+    // ==========================================================
 
     // 6. Atur Tombol Sesuai Permintaan (Hanya Bersihkan & Simpan)
     document.getElementById('btnSimpanDraft').classList.remove('hidden');
     document.getElementById('btnResetForm').classList.remove('hidden');
     
+    // Tombol Kirim dan Edit disembunyikan dulu pas awal bikin
     document.getElementById('btnKirim').classList.add('hidden');
     document.getElementById('btnEditDraft').classList.add('hidden');
     document.getElementById('btnGroupStaff').classList.add('hidden');
