@@ -770,7 +770,7 @@ body, .main-content, .view-container {
                                         <thead>
                                             <tr>
                                                 <th style="text-align: left;">NAMA PELANGGAN / SUPPLIER</th>
-                                                <th style="text-align: center; width: 100px;">QTY</th>
+                                                <th style="text-align: right; width: 80px;">QTY</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tableSupplierBody"></tbody>
@@ -923,8 +923,17 @@ body, .main-content, .view-container {
                     </div>
 
                     <div id="opArea" class="hidden" style="margin-bottom:15px;">
-                        <label style="font-weight:bold; display:flex; align-items:center; gap:5px; margin-bottom:8px;"><span class="material-symbols-outlined" style="font-size:18px;">group</span> OPERATOR:</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <label style="font-weight:bold; display:flex; align-items:center; gap:5px;"><span class="material-symbols-outlined" style="font-size:18px;">group</span> OPERATOR:</label>
+                            
+                            <label style="font-size:12px; font-weight:bold; color:var(--ig-primary); cursor:pointer; display:flex; align-items:center; gap:5px; background:#e0f2fe; padding:4px 8px; border-radius:2px;">
+                                <input type="checkbox" id="chkPerbantuan" onchange="togglePerbantuan()"> Form Perbantuan
+                            </label>
+                        </div>
+                        
                         <div id="opGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap:5px;"></div>
+                        
+                        <input type="text" id="txtOpManual" class="hidden" placeholder="Ketik nama operator perbantuan di sini..." style="width:100%; padding:12px; border:1px solid var(--border); border-radius:2px;">
                     </div>
 
                     <div id="itemArea" class="hidden" style="margin-top:20px; padding-top:15px; border-top:2px dashed #eee;">
@@ -1050,7 +1059,7 @@ body, .main-content, .view-container {
 
 <script>
 // --- URL API TERBARU DARI SCRIPT GOOGLE ---
-const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbxEQVxYtdx9Qs2V4R7M_TXT6I6oYlthAXJlX8bRK8xpDk01ivDtx4kymq7GXJFCF5Wa1g/exec"; 
+const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbxme5rIMd74Z05ypOOyWH3XX9Zy5gQEAF5Dpb7LMiRg2wxphLB12llo3G4qQ0FJ-nmljg/exec"; 
 
 let DATA = {};
 let currentPageLaporan = 1; let rowsPerPageLaporan = 15;
@@ -1060,8 +1069,7 @@ let USER = null;
 let currentRole = ""; 
 let tempAction = null;
 let EXPORT_KARU_LIST = [];
-let ALL_JOB_LIST = ["Masuk Dacron", "Garuk Dacron", "Pengecekan", "Jahit Bulatan", "Pengisian", "Jahit Tutup", "Penyarungan", "Packing", "Ikat/Ball"];
-
+let ALL_JOB_LIST = ["Bahan Baku Masuk", "Garuk Dacron", "Pengecekan", "Jahit Bulatan", "Pengisian", "Jahit Tutup", "Penyarungan", "Packing", "Ikat/Ball"];
 const KIRIMAN_KATEGORI = [
     "ALAS STROLLER", "BANTAL ANAK", "BANTAL BALITA", "BANTAL GULING SET", "BANTAL IBU HAMIL",
     "BANTAL IBU MENYUSUI", "BANTAL LENGAN", "BANTAL PEANG", "BANTAL SOFA", "BANTAL SOFA MULTIFUNGSI",
@@ -1190,9 +1198,19 @@ function openSelectionModal(title, items, currentValue, onSelectCallback) {
     document.getElementById('selModalTitle').innerText = title;
     let body = document.getElementById('selModalBody');
     body.innerHTML = '';
+    
     items.forEach(item => {
         let div = document.createElement('div');
         div.className = 'select-item' + (item.value === currentValue ? ' selected' : '');
+        
+        // ==== PEWARNAAN KHUSUS "BAHAN BAKU MASUK" ====
+        if (item.value === 'Bahan Baku Masuk') {
+            div.style.backgroundColor = '#fef08a'; // Warna kuning cerah
+            div.style.color = '#854d0e'; // Teks cokelat tua biar kebaca jelas
+            div.style.fontWeight = 'bold';
+            div.style.border = '1px solid #fde047';
+        }
+        
         let iconHtml = item.value === currentValue ? `<span class="material-symbols-outlined" style="font-size:18px;">radio_button_checked</span>` : `<span class="material-symbols-outlined" style="font-size:18px; color:#ccc;">radio_button_unchecked</span>`;
         div.innerHTML = `${iconHtml} <span>${item.label}</span>`;
         div.onclick = () => { onSelectCallback(item.value, item.label); closeSelectionModal(); };
@@ -1245,8 +1263,9 @@ function openInputKaruSelect() {
 function openInputJobSelect() {
     if(document.getElementById('btnInputJob').classList.contains('disabled')) return;
 
-    let roleVIP = ['Admin', 'Staff', 'PPIC', 'Supervisor', 'Author'];
-    let filteredJobs = ALL_JOB_LIST.filter(j => (j === 'Masuk Dacron') ? roleVIP.includes(currentRole) : true);
+    // Karu nggak masuk di daftar VIP ini, jadi dia nggak bakal bisa lihat "Bahan Baku Masuk"
+    let roleVIP = ['Admin', 'Staff', 'PPIC', 'Supervisor', 'Author']; 
+    let filteredJobs = ALL_JOB_LIST.filter(j => (j === 'Bahan Baku Masuk') ? roleVIP.includes(currentRole) : true);
     let items = filteredJobs.map(j => ({value: j, label: j}));
 
     openSelectionModal("Pilih Pekerjaan", items, document.getElementById('selJobValue').value, (val, label) => {
@@ -1254,7 +1273,8 @@ function openInputJobSelect() {
         document.getElementById('labelInputJob').innerText = label;
         document.getElementById('labelInputJob').style.color = "var(--ig-text)";
 
-        let isBahanBaku = (val === 'Masuk Dacron');
+        // Pastikan pengecekan pakai nama yang baru
+        let isBahanBaku = (val === 'Bahan Baku Masuk'); 
         let btnKaru = document.getElementById('btnInputKaru');
 
         if (isBahanBaku) {
@@ -1289,6 +1309,7 @@ function openInputJobSelect() {
         });
     });
 }
+
 function openExTypeSelect() {
     let items = [
         {value: 'ALL', label: 'Semua Laporan'},
@@ -1589,7 +1610,7 @@ function loadLaporanTable() {
     let paginatedData = myData.slice(start, start + rowsPerPageLaporan);
 
     paginatedData.forEach(d => {
-        let badgeClass = d.status==='Approved' ? 'st-approved' : (d.status==='Submitted' ? 'st-submitted' : (d.status==='Rejected'?'st-rejected':'st-draft'));
+        let badgeClass = d.status==='Approved' ? 'st-approved' : (d.status==='Submitted' ? 'st-submitted' : (d.status==='Rejected' || d.status==='Batal' ? 'st-rejected' : 'st-draft'));
         let typeBadge = d.type === 'BS' ? `<span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">BS</span>` : `<span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">PRD</span>`;
         let userDisplay = d.type === 'BS' ? d.user : d.karu;
 
@@ -2010,6 +2031,19 @@ function loadOps(karu) {
         document.getElementById('opArea').classList.add('hidden'); 
     }
 }
+function togglePerbantuan() {
+    let isBantu = document.getElementById('chkPerbantuan').checked;
+    if (isBantu) {
+        document.getElementById('opGrid').classList.add('hidden');
+        document.getElementById('txtOpManual').classList.remove('hidden');
+        // Kosongkan pilihan operator normal
+        document.querySelectorAll('.op-btn.selected').forEach(b => b.classList.remove('selected'));
+    } else {
+        document.getElementById('opGrid').classList.remove('hidden');
+        document.getElementById('txtOpManual').classList.add('hidden');
+        document.getElementById('txtOpManual').value = ""; // Reset teks
+    }
+}
 
 function removeRow(btn) { btn.closest('.input-row-wrapper').remove(); if(document.getElementById('rowContainer').children.length === 0) addRow(); }
 function removeBSRow(btn) { btn.closest('.input-bs-row-wrapper').remove(); if(document.getElementById('rowBSContainer').children.length === 0) addBSRow(); }
@@ -2186,15 +2220,13 @@ let isSyncing = false; // "Gembok" pelindung biar antrean nggak tabrakan
 
 async function processSyncQueue() {
     if (isSyncing) return; 
-    
     let q = getSyncQueue();
     if (q.length === 0) return; 
 
     isSyncing = true; 
     let item = q[0]; 
-    console.log("Mencoba mengirim background: " + item.id);
+    console.log("Mencoba mengirim di background: " + item.id);
     
-    // Update tabel sesaat biar icon muter (syncing) kelihatan
     if (!document.getElementById('viewLaporan').classList.contains('hidden')) { loadLaporanTable(); }
 
     try {
@@ -2205,13 +2237,21 @@ async function processSyncQueue() {
         });
 
         if(response.ok) {
-            console.log("Terkirim: " + item.id);
-            removeFromSyncQueue(item.id); 
+            // INI KUNCINYA BEB: Kita baca balasan dari Google Sheet-nya!
+            let resText = await response.text(); 
             
-            // --- INI KUNCINYA ---
-            // Refresh tabel biar centang hijau muncul
-            if (!document.getElementById('viewLaporan').classList.contains('hidden')) {
-                loadLaporanTable();
+            if(resText.trim() === "success") {
+                console.log("Terkirim: " + item.id);
+                removeFromSyncQueue(item.id); 
+                if (!document.getElementById('viewLaporan').classList.contains('hidden')) {
+                    loadLaporanTable();
+                }
+            } else {
+                // KALAU GOOGLE SHEET NOLAK, BAKAL MUNCUL POP-UP ERRORNYA
+                console.error("Ditolak Sheet:", resText);
+                isSyncing = false; 
+                showAlert("Gagal Masuk Sheet ❌", "Google Sheet nolak! Pesan error: \n\n" + resText);
+                return; // Stop antrean biar errornya ketahuan
             }
         } else {
             console.log("Gagal diproses server, status: " + response.status);
@@ -2220,8 +2260,6 @@ async function processSyncQueue() {
         console.log("Pending (Offline/Error jaringan): " + item.id);
     } finally {
         isSyncing = false; 
-        
-        // Refresh tabel sekali lagi kalau error biar ikon balik jadi awan abu
         if (!document.getElementById('viewLaporan').classList.contains('hidden')) { loadLaporanTable(); }
         
         if (getSyncQueue().length > 0) {
@@ -2229,6 +2267,7 @@ async function processSyncQueue() {
         }
     }
 }
+
 async function saveData(status, type = 'PRD') {
     let id = type === 'PRD' ? document.getElementById('editId').value : document.getElementById('editBSId').value;
     
@@ -2274,16 +2313,21 @@ async function saveData(status, type = 'PRD') {
     if(items.length === 0) return showAlert("Peringatan", "Barang tidak boleh kosong!");
     
     let payload = {};
-    // ... di dalam fungsi saveData ...
     if(type === 'PRD') {
         let jobVal = document.getElementById('selJobValue').value;
         let isBahanBaku = (jobVal === "Masuk Dacron");
-
-        let selectedOps = []; 
-        document.querySelectorAll('.op-btn.selected').forEach(b => selectedOps.push(b.innerText));
-        
-        // Kalau Bahan Baku, Operatornya kita kasih strip saja
-        let ops = isBahanBaku ? "-" : (selectedOps.join(', ') || "-"); 
+        let ops = "-";
+        if (!isBahanBaku) {
+            if (document.getElementById('chkPerbantuan').checked) {
+                // Ambil dari ketikan manual
+                ops = document.getElementById('txtOpManual').value.trim() || "-";
+            } else {
+                // Ambil dari tombol grid
+                let selectedOps = []; 
+                document.querySelectorAll('.op-btn.selected').forEach(b => selectedOps.push(b.innerText));
+                ops = selectedOps.length > 0 ? selectedOps.join(', ') : "-";
+            }
+        }
         
         let originalCreator = document.getElementById('originalUser').value || USER.name;
         let karuVal = document.getElementById('selKaruValue').value;
@@ -2311,10 +2355,6 @@ async function saveData(status, type = 'PRD') {
         payload = { action: 'saveDataBS', type: 'BS', id: id, date: document.getElementById('inputBSDate').value, karu: "-", job: "BS Produksi", ops: "-", items: items, status: status, user: originalCreator };
     }
 
-        // ... (Bagian atas kode saveData kamu JANGAN DIUBAH biar data gak kosong) ...
-    // ... (Pastikan variabel 'payload' sudah terbentuk di kode aslimu) ...
-    
-    // --- MULAI PERUBAHAN DI SINI ---
     
     // 1. Simpan Draft Lokal (Sama kayak dulu)
     if (status === 'Draft') {
@@ -2429,7 +2469,8 @@ async function processExport() {
         }
 
         let filteredData = DATA.history.filter(d => {
-            if(d.status === 'Draft') return false;
+            if(d.status === 'Draft' || d.status === 'Batal') return false;
+            
             if(d.date === "Tanggal" || d.id === "ID_Laporan") return false; 
             
             let docDateStr = ""; 
@@ -2936,82 +2977,94 @@ function openPelangganSelect() {
 // updateGlobalSupplierTable();
 // === FUNGSI RENDER TABEL PER JAM ===
 
-// === FUNGSI VALIDASI STOK (SATPAM WIP) ===
+// === FUNGSI VALIDASI STOK (SATPAM WIP) BIKINAN BEBY ===
+
+// === FUNGSI VALIDASI STOK (SATPAM WIP) BIKINAN BEBY ===
 function checkWIP(newItems, job, currentId) {
     let errorMsg = "";
     let isAman = true;
 
-    // Normalisasi nama kerjaan (buang spasi & bikin huruf kecil semua)
+    // Normalisasi nama kerjaan (huruf kecil semua)
     let normalizedJob = job.trim().toLowerCase();
 
-    // --- JALUR TOL: Masuk Dacron BEBAS 100% ---
-    // Karena ini proses awal, gak perlu cek stok ke belakang.
-    if (normalizedJob === "masuk dacron") return { aman: true };
+    // --- JALUR TOL 1: Bahan Baku Masuk BEBAS INPUT 100% ---
+    if (normalizedJob === "bahan baku masuk") return { aman: true, msg: "" };
+
+    // --- JALUR TOL 2: Jahit Bulatan UNLIMITED (Bebas Input) ---
+    if (normalizedJob === "jahit bulatan") return { aman: true, msg: "" };
 
     newItems.forEach(item => {
         let kodeBarang = item.n;
         let qtyMauDiinput = Number(item.q) || 0;
 
-        // --- 1. LOGIKA KHUSUS DAKRON (GARUK) ---
-        // Garuk Dacron HANYA bisa diinput kalau stok di 'Masuk Dacron' mencukupi
-        if (normalizedJob === "garuk dacron") {
-            let totalMasuk = 0;
-            let totalGarukLain = 0;
-
-            if (DATA.history) {
-                DATA.history.forEach(h => {
-                    // Abaikan draft/reject dan dokumen yang sedang diedit (biar gak double hitung)
-                    if (h.status !== 'Draft' && h.status !== 'Rejected' && h.id !== currentId) {
-                        let hItems = typeof h.items === 'string' ? JSON.parse(h.items) : h.items;
-                        hItems.forEach(hi => {
-                            if (hi.n === kodeBarang) {
-                                let hJob = h.job.trim().toLowerCase();
-                                if (hJob === 'masuk dacron') totalMasuk += (Number(hi.q) || 0);
-                                if (hJob === 'garuk dacron') totalGarukLain += (Number(hi.q) || 0);
-                            }
-                        });
-                    }
-                });
-            }
-            let sisaStokDakron = totalMasuk - totalGarukLain;
-            if (qtyMauDiinput > sisaStokDakron) {
-                isAman = false;
-                errorMsg += `- ${kodeBarang}: Kurang! Sisa di Gudang cuma ${sisaStokDakron} KG.\n`;
-            }
-            return; // Selesai cek dakron
-        }
-
-        // --- 2. LOGIKA BARANG PRODUKSI BIASA (BERANTAI) ---
+        // Cari di master data alur si barang ini
         let master = DATA.master.find(m => m.kode === kodeBarang);
-        if (!master || !master.alur) return; // Barang aneh/tanpa alur dibebasin
+        if (!master || !master.alur) return; 
 
         let alurArray = master.alur.split(',').map(s => s.trim().toLowerCase());
+        
+        // --- BYPASS RANTAI JAHIT BULATAN ---
+        // Kita keluarkan "jahit bulatan" dari memori si satpam untuk sementara.
+        // Efeknya: Kalau kerjaannya "Jahit Tutup", dia bakal ngira proses sebelumnya adalah "Pengisian".
+        alurArray = alurArray.filter(j => j !== "jahit bulatan");
+
         let myIndex = alurArray.indexOf(normalizedJob);
+        if (myIndex < 0) return; // Abaikan kalau kerjaan gak ada di alur master
 
-        if (myIndex <= 0) return; // Kalau proses pertama di alur (misal Jahit), bebaskan
+        let jobSebelumnya = "";
 
-        let jobSebelumnya = alurArray[myIndex - 1];
+        // PENTING: Jika ini proses pertama setelah bahan baku (Misal Pengisian)
+        if (myIndex === 0) {
+            jobSebelumnya = "bahan baku masuk"; 
+        } else {
+            jobSebelumnya = alurArray[myIndex - 1]; // Tarik dari proses sebelumnya (yang sudah di-bypass)
+        }
+
         let totalSetoran = 0;
         let totalSudahDikerjakan = 0;
 
+        // JIKA PROSES SEBELUMNYA ADALAH BAHAN BAKU MASUK (Ambil dari sheet BAHAN_BAKU_MASUK)
+        if (jobSebelumnya === "bahan baku masuk") {
+            if (DATA.bahanBaku) {
+                DATA.bahanBaku.forEach(bb => {
+                    let kodeSheet = bb.kode.toUpperCase().trim();
+                    let kodeInput = kodeBarang.toUpperCase().trim();
+                    // Logika kebal typo panjang/pendek
+                    if (kodeSheet === kodeInput || kodeInput.includes(kodeSheet) || kodeSheet.includes(kodeInput)) {
+                        totalSetoran += bb.qty;
+                    }
+                });
+            }
+        } 
+        
+        // JIKA PROSES SEBELUMNYA BUKAN BAHAN BAKU, ATAU UNTUK MENGHITUNG PENGELUARAN LOKAL
         if (DATA.history) {
             DATA.history.forEach(h => {
-                if (h.status !== 'Draft' && h.status !== 'Rejected' && h.id !== currentId) {
+                if (h.status !== 'Draft' && h.status !== 'Rejected' && h.status !== 'Batal' && h.id !== currentId) {
                     let hItems = typeof h.items === 'string' ? JSON.parse(h.items) : h.items;
                     hItems.forEach(hi => {
                         if (hi.n === kodeBarang) {
                             let hJob = h.job.trim().toLowerCase();
-                            if (hJob === jobSebelumnya) totalSetoran += (Number(hi.q) || 0);
-                            if (hJob === normalizedJob) totalSudahDikerjakan += (Number(hi.q) || 0);
+                            
+                            // Hitung Setoran (Hanya jika proses sebelumnya bukan bahan baku)
+                            if (hJob === jobSebelumnya && jobSebelumnya !== "bahan baku masuk") {
+                                totalSetoran += (Number(hi.q) || 0);
+                            }
+                            // Hitung Pengeluaran yang sudah dikerjakan di proses ini
+                            if (hJob === normalizedJob) {
+                                totalSudahDikerjakan += (Number(hi.q) || 0);
+                            }
                         }
                     });
                 }
             });
         }
+        
         let sisaBisaInput = totalSetoran - totalSudahDikerjakan;
         if (qtyMauDiinput > sisaBisaInput) {
             isAman = false;
-            errorMsg += `- ${kodeBarang}: Max ${sisaBisaInput} Pcs (Hasil dari ${jobSebelumnya.toUpperCase()}).\n`;
+            let namaSumber = jobSebelumnya === "bahan baku masuk" ? "Bahan Baku Gudang" : jobSebelumnya.toUpperCase();
+            errorMsg += `- ${kodeBarang}: Max ${sisaBisaInput} Pcs (Sisa dari ${namaSumber}).\n`;
         }
     });
 
@@ -3080,45 +3133,48 @@ function resetInactivityTimer() {
     document.addEventListener(evt, resetInactivityTimer, true);
 });
 
-// === FUNGSI KHUSUS AUTHOR: BATAL/HAPUS DOKUMEN ===
+// === FUNGSI KHUSUS AUTHOR: BATAL DOKUMEN (TETAP ADA DI EXCEL) ===
 function cancelDokumen(id, type) {
-    showConfirm("⚠️ Hapus Dokumen", `Yakin ingin membatalkan dan menghapus permanen dokumen ${id} dari database? Data yang dihapus tidak bisa dikembalikan lho, Beb!`, async () => {
+    showConfirm("⚠️ Batal Dokumen", `Yakin ingin membatalkan dokumen ${id}? Data akan berstatus "Batal", tetap ada di Excel tapi tidak ikut ke-Export.`, () => {
         showLoading();
-        try {
-            // Siapkan paket pembatalan ke server
-            let payload = { action: 'deleteData', id: id, type: type };
-            
-            let response = await fetch(CLOUD_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload)
-            });
-            
-            let resText = await response.text();
-            
-            if(resText.trim() === 'success') {
-                // Buang data dari memori HP/Browser biar langsung hilang tanpa nunggu refresh server
-                DATA.history = DATA.history.filter(d => d.id !== id);
-                if(typeof buildViewDataCache === 'function') buildViewDataCache(); // Update cache tabel
-                
-                // Refresh tampilan tabel
-                loadLaporanTable();
-                
-                // Update statistik di Dashboard
-                renderDashboard();
-                
-                hideLoading();
-                showAlert("Berhasil! 🗑️", `Dokumen ${id} sudah hangus tanpa sisa.`);
-            } else {
-                hideLoading();
-                showAlert("Gagal Menghapus", "Kata server: " + resText);
-            }
-        } catch(e) {
-            hideLoading();
-            showAlert("Error Koneksi", "Gagal menghubungi server: " + e.message);
+        
+        // Cari data aslinya di memori browser
+        let doc = DATA.history.find(d => d.id === id);
+        if(!doc) {
+            hideLoading(); return showAlert("Error", "Dokumen tidak ditemukan!");
         }
+        
+        // Ubah statusnya secara paksa jadi "Batal"
+        doc.status = "Batal";
+        
+        // Rakit ulang paket datanya untuk dikirim ke Google Sheet (Menimpa data lama)
+        let payload = { 
+            action: type === 'PRD' ? 'saveDataPRD' : 'saveDataBS', 
+            type: doc.type, 
+            id: doc.id, 
+            date: typeof doc.date === 'string' ? doc.date.substr(0,10) : new Date(doc.date).toISOString().split('T')[0], 
+            karu: doc.karu, 
+            job: doc.job, 
+            ops: doc.ops, 
+            items: typeof doc.items === 'string' ? JSON.parse(doc.items) : doc.items, 
+            status: "Batal", 
+            user: doc.user,
+            customer: doc.customer
+        };
+        
+        // Lempar ke satpam Background Sync biar dikirim tanpa loading lama
+        addToSyncQueue(payload);
+        
+        // Segarkan layar tabel
+        if(typeof buildViewDataCache === 'function') buildViewDataCache();
+        loadLaporanTable();
+        renderDashboard();
+        
+        hideLoading();
+        showAlert("Berhasil! 🚫", `Dokumen ${id} berhasil dibatalkan dan dikunci.`);
     });
 }
+
 // ==== TAMBAHKAN KODE INI BIAR DATA DITARIK SAAT WEB DIBUKA ====
 initSystem();
 
