@@ -1782,8 +1782,13 @@ function loadViewDataTable() {
 function filterViewData() { currentPageView = 1; loadViewDataTable(); }
 // === FUNGSI VIEW MODAL (DENGAN TAMBAHAN TOTAL QTY) ===
 function openViewModal(id, source) {
-    let d = source === 'local' ? getLocalDrafts().find(x => x.id === id) : DATA.history.find(x => x.id === id);
-    if(!d) return;
+    // --- ADJUSTMENT 3: Cari di draft lokal, kalau nggak ada cari di server atau antrean ---
+    let d = getLocalDrafts().find(x => x.id === id) || DATA.history.find(x => x.id === id) || getSyncQueue().find(x => x.id === id);
+    
+    if(!d) {
+        showAlert("Error", "Gagal membuka data. Dokumen tidak ditemukan.");
+        return;
+    }
 
     document.getElementById('vi-id').innerText = d.id;
     document.getElementById('vi-type').innerHTML = d.type === 'BS' ? '<span style="color:#b91c1c; font-weight:bold;">BS Produksi</span>' : '<span style="color:#0369a1; font-weight:bold;">Produksi</span>';
@@ -1895,7 +1900,10 @@ function startInputBS() {
     document.getElementById('btnGroupBSUser').classList.remove('hidden');
     document.getElementById('btnSimpanBSDraft').classList.remove('hidden');
     document.getElementById('btnEditBSDraft').classList.add('hidden');
-    document.getElementById('btnKirimBS').classList.remove('hidden');
+    
+    // --- ADJUSTMENT 2: Tombol Kirim disembunyikan dulu di awal (Wajib Draft) ---
+    document.getElementById('btnKirimBS').classList.add('hidden'); 
+    
     document.getElementById('btnGroupBSStaff').classList.add('hidden');
 
     showView('laporan'); switchLaporanMode('bs');
@@ -2431,7 +2439,17 @@ function showView(v) {
     if(v === 'home') renderDashboard(); 
 }
 
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('sidebarOverlay').style.display = document.getElementById('sidebarOverlay').style.display === 'block' ? 'none' : 'block'; }
+function toggleSidebar() { 
+    let sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('active'); 
+    document.getElementById('sidebarOverlay').style.display = document.getElementById('sidebarOverlay').style.display === 'block' ? 'none' : 'block'; 
+    
+    // --- ADJUSTMENT 1: Tutup sub-menu otomatis kalau sidebar ditutup ---
+    if (!sidebar.classList.contains('active')) {
+        document.querySelectorAll('.sub-menu').forEach(menu => menu.classList.remove('active'));
+        document.querySelectorAll('[id$="SubMenuIcon"]').forEach(icon => icon.innerText = 'chevron_right');
+    }
+}
 function toggleUserMenu() { document.getElementById('userDropdown').classList.toggle('active'); }
 function confirmLogout() { location.reload(); }
 function doChangePass() { showAlert("Info", "Fitur Ganti Password sedang dalam pengembangan."); }
