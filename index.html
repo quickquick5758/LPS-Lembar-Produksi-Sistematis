@@ -142,33 +142,17 @@
             border-radius: 2px !important; /* <--- JADI LEBIH LANCIP */
             box-shadow: var(--shadow-timbul) !important;
             padding: 20px;
-            margin-bottom: 20px;
             transition: all 0.3s ease !important;
         }
 
-        /* Update Shadow Melayang Tinggi untuk Stat Box */
-.stat-box {
-    border-radius: 2px !important;
-    border: 2px solid rgba(255,255,255,0.5) !important;
-    /* Efek melayang tinggi dengan blur lebih lebar */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.08) !important;
-    overflow: hidden;
-    position: relative;
-    transition: transform 0.3s ease;
-}
-
-.stat-box:hover {
-    transform: translateY(-5px); /* Efek makin melayang pas disentuh */
-}
-
-/* Style tombol kalau lagi dikunci */
-.custom-select-btn.disabled {
-    background: #eef2f6 !important;
-    color: #888 !important;
-    cursor: not-allowed !important;
-    box-shadow: none !important;
-    border: 1px solid #ddd !important;
-}
+        /* Style tombol kalau lagi dikunci */
+        .custom-select-btn.disabled {
+            background: #eef2f6 !important;
+            color: #888 !important;
+            cursor: not-allowed !important;
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
 
         /* Tombol Mengapung (Pill Shape) */
         .btn-primary, .btn-success, .btn-outline, .btn-outline-danger, .custom-select-btn {
@@ -308,7 +292,6 @@
         .bg-blue { background: linear-gradient(135deg, #1a73e8, #4285f4); color: white; }
         .bg-red { background: linear-gradient(135deg, #d93025, #ea4335); color: white; }
         .bg-green { background: linear-gradient(135deg, #1e8e3e, #34a853); color: white; }
-        .stat-val { font-size: 38px; font-weight: 800; margin-top: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
 
         .swipe-wrapper { display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:15px; scrollbar-width:none; }
         .swipe-wrapper::-webkit-scrollbar { display:none; }
@@ -330,74 +313,177 @@
             line-height: 1.3; 
             padding: 5px 8px !important; /* Ini jurus rahasia biar barisnya rapet! */
         }
-/* ==== KELAS GRID DASHBOARD ==== */
-.top-stats-grid { 
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 15px; 
-    margin-bottom: 25px; 
-}
 
-.main-cards-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
-    gap: 20px; 
-    align-items: start; 
-    width: 100%; 
-}
+        /* ==============================================================
+           UPDATE DASHBOARD: FLOATING STATS & ASYMMETRIC GRID
+           ============================================================== */
 
-/* PEMBAGIAN KANAN KIRI 1fr 1fr UNTUK GRAFIK */
-.grafik-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 20px; 
-    align-items: start; 
-    width: 100%; 
-}
+        /* 1. CONTAINER HOME */
+        #viewHome {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-/* KUNCI UTAMA BIAR CHART.JS NGGAK MAKAN TEMPAT KE KANAN */
-.grafik-grid > div {
-    min-width: 0 !important; 
-    max-width: 100%;
-}
+        /* 2. FLOATING STATS (TIGA KOTAK NOTIFIKASI) */
+        .floating-stats-wrapper {
+            position: relative; /* DIUBAH: Dulu absolute, sekarang relative biar gak nimpa bawahnya */
+            display: flex;
+            gap: 15px;
+            z-index: 50;
+            width: 100%;
+        }
 
-/* ==== PENGUNCI LAYAR AGAR TIDAK BOCOR KE KANAN ==== */
-body, .main-content, .view-container {
-    max-width: 100vw !important;
-    overflow-x: hidden !important; 
-}
+        .float-stat-box {
+            flex: 1;
+            border-radius: 8px !important;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15) !important;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s ease;
+        }
 
+        .float-stat-box:hover {
+            transform: translateY(-5px);
+        }
 
-        /* ==== EFEK RESPONSIVE KHUSUS MOBILE (HP) ==== */
-        @media (max-width: 768px) {
-            .view-container { padding: 12px !important; padding-bottom: 80px !important; }
-            
-            /* Tumpuk semua ke bawah biar rapi di HP */
-            .top-stats-grid { grid-template-columns: 1fr !important; gap: 10px !important; margin-bottom: 15px; }
-            .main-cards-grid { grid-template-columns: 1fr !important; }
+        .float-stat-info {
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+
+        .float-stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .float-stat-val {
+            font-size: 28px;
+            font-weight: 900;
+            line-height: 1.2;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .float-stat-icon {
+            font-size: 40px !important;
+            color: white;
+            opacity: 0.25;
+        }
+
+        /* 3. BANTALAN (Dihapus tinggi fix-nya biar responsif) */
+        .view-home-inner {
+            padding-top: 0;
+            width: 100%;
+        }
+
+        /* 4. DASHBOARD GRID (SISTEM 12 KOLOM SUPER LENTUR) */
+        .dashboard-grid { 
+            display: grid; 
+            grid-template-columns: repeat(12, 1fr); /* Layar dibagi 12 potongan sama besar */
+            gap: 20px; 
+            align-items: start; 
+            width: 100%; 
+        }
+
+        /* INI KUNCI PENTING: Rem pakem biar tabel/grafik nggak ngejebol memotong layar */
+        .dashboard-grid > div {
+            min-width: 0 !important; 
+            overflow: hidden; 
+        }
+
+        .card-kiriman { 
+            grid-column: span 5; /* Kiri ambil 5 kolom */
+            grid-row: span 2;    /* Panjang ke bawah sebanyak 2 baris (sejajar jam & grafik) */
+            margin-bottom: 0 !important; 
+            height: 100%;
+        }
+        
+        .card-jam { 
+            grid-column: span 7; /* Kanan ambil 7 kolom sisanya */
+            margin-bottom: 0 !important; 
+        }
+        
+        .card-grafik { 
+            grid-column: span 7; /* Kanan ambil 7 kolom sisanya */
+            margin-bottom: 0 !important; 
+        }
+
+        /* PEMBAGIAN 2 GRAFIK DI DALAM CARD GRAFIK */
+        .grafik-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* Dibagi 2 sama rata */
+            gap: 20px; 
+            width: 100%; 
+        }
+        .grafik-grid > div {
+            min-width: 0 !important; 
+        }
+        
+        /* ==== FOOTER ALA INSTAGRAM (SLIM & CLEAN) ==== */
+        .footer-bar {
+            background: var(--ig-bg);
+            height: 40px; /* Sengaja dibikin tipis biar nggak makan layar */
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 11px;
+            color: var(--ig-sec-text);
+            font-weight: 500;
+            z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
+        }
+
+        /* ==== PENGUNCI LAYAR AGAR TIDAK BOCOR KE KANAN ==== */
+        body, .main-content, .view-container {
+            max-width: 100vw !important;
+            overflow-x: hidden !important; 
+        }
+
+        /* ==== EFEK RESPONSIVE BERTAHAP (DESKTOP -> TABLET -> HP) ==== */
+        @media (max-width: 1200px) {
+            /* Di layar Laptop kecil/Tablet, kita kasih ruang lebih buat tabel jam */
+            .card-kiriman { grid-column: span 4; }
+            .card-jam, .card-grafik { grid-column: span 8; }
+        }
+
+        @media (max-width: 992px) {
+            /* Di layar HP, semuanya numpuk ke bawah full 12 kolom (100%) */
+            .card-kiriman, .card-jam, .card-grafik { 
+                grid-column: span 12; 
+                grid-row: auto; 
+            }
             .grafik-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
             
-            .stat-box { min-height: 80px !important; padding: 15px !important; }
+            /* Box melayang diubah jadi bisa di-swipe */
+            .floating-stats-wrapper {
+                position: relative;
+                overflow-x: auto;
+                padding-bottom: 15px;
+                scroll-snap-type: x mandatory;
+                scrollbar-width: none;
+            }
+            .floating-stats-wrapper::-webkit-scrollbar { display: none; }
+            .float-stat-box {
+                min-width: 250px;
+                scroll-snap-align: start;
+            }
+            .view-home-inner { padding-top: 0; }
             .card { padding: 12px !important; width: 100%; box-sizing: border-box; }
-            .excel-table { font-size: 11px !important; }
-            .excel-table th, .excel-table td { padding: 8px !important; }
             .swipe-wrapper { gap: 10px; margin-right: -12px; padding-right: 12px; }
-            input[type="date"] { width: 100% !important; }
-        }
-        
-        .top-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .main-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: start; width: 100%; }
-        .grafik-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; width: 100%; }
-        .grafik-grid > div { min-width: 0 !important; max-width: 100%; }
-        
-        @media (max-width: 768px) {
             .view-container { padding: 12px !important; padding-bottom: 80px !important; }
-            .top-stats-grid { grid-template-columns: 1fr !important; gap: 10px !important; margin-bottom: 15px; }
-            .main-cards-grid, .grafik-grid { grid-template-columns: 1fr !important; gap: 15px !important; }
-            .stat-box { min-height: 80px !important; padding: 15px !important; }
-            .card { padding: 12px !important; width: 100%; box-sizing: border-box; }
-            .swipe-wrapper { gap: 10px; margin-right: -12px; padding-right: 12px; }
         }
+        /* ==== BATAS REPLACE (Jangan replace yang bawah ini) ==== */
         /* ==== FIX TANGGAL MELELEH DI FORM INPUT (MOBILE) ==== */
         @media (max-width: 768px) {
             #inputDate, #inputBSDate {
@@ -643,188 +729,188 @@ body, .main-content, .view-container {
     <div class="view-container" id="viewContainer">
         
         <div id="viewHome" class="hidden stagger-anim">
-            
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
+            <div style="position: relative;">
                 
-                <div class="stat-box bg-blue" style="padding: 25px; border: 1px solid #0056b3; min-height: 120px;">
-                    <div class="stat-label" style="font-size: 11px; letter-spacing: 1px; opacity: 0.9;">DOKUMEN HARI INI</div>
-                    <div class="stat-val" id="statTotalToday" style="font-size: 36px; line-height: 1;">0</div>
-                    <span class="material-symbols-outlined" style="position:absolute; right:10px; bottom:-10px; font-size:100px; opacity:0.15;">description</span>
-                </div>
-                
-                <div class="stat-box bg-red" style="padding: 25px; border: 1px solid #b91c1c; min-height: 120px;">
-                    <div class="stat-label" style="font-size: 11px; letter-spacing: 1px; opacity: 0.9;">MENUNGGU APPROVE</div>
-                    <div class="stat-val" id="statPending" style="font-size: 36px; line-height: 1;">0</div>
-                    <span class="material-symbols-outlined" style="position:absolute; right:10px; bottom:-10px; font-size:100px; opacity:0.15;">pending_actions</span>
-                </div>
-                
-                <div class="stat-box bg-green" style="padding: 25px; border: 1px solid #166534; min-height: 120px;">
-                    <div class="stat-label" style="font-size: 11px; letter-spacing: 1px; opacity: 0.9;">QTY PRODUKSI (PACKING)</div>
-                    <div class="stat-val" id="statTotalQty" style="font-size: 36px; line-height: 1;">0</div>
-                    <span class="material-symbols-outlined" style="position:absolute; right:10px; bottom:-10px; font-size:100px; opacity:0.15;">inventory_2</span>
-                </div>
-
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; align-items: start;">
-                
-                <div class="card" style="padding: 0; border: 1px solid var(--border); margin-bottom: 20px;">
-                    <div style="padding: 12px 15px; background: #fafafa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                        <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: var(--ig-text);">
-                            <span class="material-symbols-outlined" style="color:#f59e0b">schedule</span> Performa Per Jam (Hari Ini)
-                        </h4>
-                        <span style="font-size:12px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 2px 4px; border-radius: 2px;">
-                            <span class="material-symbols-outlined" style="font-size:12px;">swipe</span> Geser
-                        </span>
-                    </div>
-                    <div style="padding:2px;">
-                        <div class="hourly-wrapper">
-                            <table class="excel-table hourly-table">
-                                <thead>
-                                    <tr>
-                                        <th>PROSES
-                                        <th>06-07</th><th>07-08</th><th>08-09</th><th>09-10</th><th>10-11</th><th>11-12</th><th>12-13</th><th>13-14</th>
-                                        <th>14-15</th><th>15-16</th><th>16-17</th><th>17-18</th><th>18-19</th><th>19-20</th><th>20-21</th><th>21-22</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="hourlyTableBody">
-                                    </tbody>
-                            </table>
+                <div class="floating-stats-wrapper">
+                    
+                    <div class="float-stat-box bg-blue">
+                        <div class="float-stat-info">
+                            <div class="float-stat-label">DOKUMEN HARI INI</div>
+                            <div class="float-stat-val" id="statTotalToday">0</div>
                         </div>
-                    </div>
-                </div>
-                <div class="card" style="padding: 0; border: 1px solid var(--border);">
-                    <div style="padding: 12px 15px; background: #fafafa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                        <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: var(--ig-text);">
-                            <span class="material-symbols-outlined" style="color:var(--success)">local_shipping</span> Monitor Kiriman
-                        </h4>
-                        <span style="font-size:10px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 4px 8px; border-radius: 2px;"><span class="material-symbols-outlined" style="font-size:14px;">swipe</span> Geser</span>
+                        <span class="material-symbols-outlined float-stat-icon">description</span>
                     </div>
                     
-                    <div style="padding: 15px;">
-                        <div class="swipe-wrapper">
+                    <div class="float-stat-box bg-red">
+                        <div class="float-stat-info">
+                            <div class="float-stat-label">MENUNGGU APPROVE</div>
+                            <div class="float-stat-val" id="statPending">0</div>
+                        </div>
+                        <span class="material-symbols-outlined float-stat-icon">pending_actions</span>
+                    </div>
+                    
+                    <div class="float-stat-box bg-green">
+                        <div class="float-stat-info">
+                            <div class="float-stat-label">QTY PRODUKSI (PACKING)</div>
+                            <div class="float-stat-val" id="statTotalQty">0</div>
+                        </div>
+                        <span class="material-symbols-outlined float-stat-icon">inventory_2</span>
+                    </div>
+
+                </div>
+
+                <div class="view-home-inner">
+                    <div class="dashboard-grid">
+                        
+                        <div class="card card-kiriman" style="padding: 0; border: 1px solid var(--border);">
+                            <div style="padding: 12px 15px; background: #fafafa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                                <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: var(--ig-text);">
+                                    <span class="material-symbols-outlined" style="color:var(--success)">local_shipping</span> Monitor Kiriman
+                                </h4>
+                                <span style="font-size:10px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 4px 8px; border-radius: 2px;"><span class="material-symbols-outlined" style="font-size:14px;">swipe</span> Geser</span>
+                            </div>
                             
-                            <div class="swipe-item" style="padding-top: 5px;">
-                                
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:0 5px;">
-                                    <div style="font-size:13px; font-weight:800; color:var(--ig-primary); text-transform: uppercase; letter-spacing: 1px;">
-                                        &mdash; HARI INI &mdash;
+                            <div style="padding: 15px;">
+                                <div class="swipe-wrapper">
+                                    
+                                    <div class="swipe-item" style="padding-top: 5px;">
+                                        
+                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:0 5px;">
+                                            <div style="font-size:13px; font-weight:800; color:var(--ig-primary); text-transform: uppercase; letter-spacing: 1px;">
+                                                &mdash; HARI INI &mdash;
+                                            </div>
+                                            
+                                            <input type="hidden" id="filterPelangganValue" value="ALL">
+                                            <div class="custom-select-btn" id="btnFilterPelanggan" onclick="openPelangganSelect()" style="padding: 6px 12px !important; font-size: 11px; width: auto; max-width: 150px; border-radius: 2px !important; background: #ffffff; border: 1px solid var(--border) !important; margin: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;">
+                                                <span id="labelFilterPelanggan" style="font-weight: 600; color: var(--ig-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Semua Pelanggan</span>
+                                                <span class="material-symbols-outlined" style="font-size: 16px; color: #888; margin-left: 5px;">expand_more</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-bottom: 15px; border-radius: 2px; overflow: hidden; border: 1px solid var(--border);">
+                                            <div style="background: white; padding: 15px 5px; text-align: center;">
+                                                <div style="font-size: 10px; color: var(--ig-sec-text); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Cycle 1</div>
+                                                <div id="valCycle1" style="font-size: 20px; font-weight: 800; color: var(--ig-text); margin-top: 5px;">0</div>
+                                            </div>
+                                            <div style="background: white; padding: 15px 5px; text-align: center;">
+                                                <div style="font-size: 10px; color: var(--ig-sec-text); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Cycle 2</div>
+                                                <div id="valCycle2" style="font-size: 20px; font-weight: 800; color: var(--ig-text); margin-top: 5px;">0</div>
+                                            </div>
+                                            <div style="background: white; padding: 15px 5px; text-align: center;">
+                                                <div style="font-size: 10px; color: var(--ig-sec-text); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Cycle 3</div>
+                                                <div id="valCycle3" style="font-size: 20px; font-weight: 800; color: var(--ig-text); margin-top: 5px;">0</div>
+                                            </div>
+                                        </div>
+
+                                        <div style="background: rgba(88, 195, 34, 0.1); border: 1px solid rgba(88, 195, 34, 0.3); border-radius: 2px; padding: 15px; text-align: center; margin-bottom: 15px;">
+                                            <div style="font-size: 11px; color: var(--success); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Total Kiriman Hari Ini</div>
+                                            <div id="valCycleTotal" style="font-size: 26px; font-weight: 800; color: var(--success); margin-top: 5px;">0</div>
+                                        </div>
+
+                                        <h5 style="margin: 0 0 10px 0; color:var(--ig-sec-text); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Rincian per Kategori Barang</h5>
+                                        <div style="overflow-y: auto; max-height: 270px; border-radius: 2px; border: 1px solid var(--border);">
+                                            <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align: left;">KATEGORI</th>
+                                                        <th style="text-align: center;">CYC 1</th>
+                                                        <th style="text-align: center;">CYC 2</th>
+                                                        <th style="text-align: center;">CYC 3</th>
+                                                        <th style="text-align: right;">TOTAL</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tableKirimanBody"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="swipe-item" style="padding-top: 5px;">
+                                        <div style="text-align:center; font-size:13px; font-weight:800; color:var(--ig-primary); margin-bottom:15px; text-transform: uppercase; letter-spacing: 1px;">
+                                            &mdash; GLOBAL (ALL SUPPLIER) &mdash;
+                                        </div>
+                                        
+                                        <div style="background: rgba(0, 149, 246, 0.1); border: 1px solid rgba(0, 149, 246, 0.3); border-radius: 2px; padding: 15px; text-align: center; margin-bottom: 15px;">
+                                            <div style="font-size: 11px; color: var(--ig-primary); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Total Kiriman Global</div>
+                                            <div id="valGlobalTotal" style="font-size: 26px; font-weight: 800; color: var(--ig-primary); margin-top: 5px;">0</div>
+                                        </div>
+
+                                        <div style="overflow-y: auto; max-height: 300px; border-radius: 2px; border: 1px solid var(--border);">
+                                            <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align: left;">NAMA PELANGGAN / SUPPLIER</th>
+                                                        <th style="text-align: right; width: 80px;">QTY</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tableSupplierBody"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-jam" style="padding: 0; border: 1px solid var(--border);">
+                            <div style="padding: 12px 15px; background: #fafafa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                                <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: var(--ig-text);">
+                                    <span class="material-symbols-outlined" style="color:#f59e0b">schedule</span> Performa Per Jam (Hari Ini)
+                                </h4>
+                                <span style="font-size:12px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 2px 4px; border-radius: 2px;">
+                                    <span class="material-symbols-outlined" style="font-size:12px;">swipe</span> Geser
+                                </span>
+                            </div>
+                            <div style="padding:2px;">
+                                <div class="hourly-wrapper">
+                                    <table class="excel-table hourly-table">
+                                        <thead>
+    <tr>
+        <th>PROSES</th>
+        <th>06.00-07.00</th><th>07.00-08.00</th><th>08.00-09.00</th><th>09.00-10.00</th><th>10.00-11.00</th><th>11.00-12.00</th><th>12.00-13.00</th><th>13.00-14.00</th>
+        <th>14.00-15.00</th><th>15.00-16.00</th><th>16.00-17.00</th><th>17.00-18.00</th><th>18.00-19.00</th><th>19.00-20.00</th><th>20.00-21.00</th><th>21.00-22.00</th>
+    </tr>
+</thead>
+                                        <tbody id="hourlyTableBody">
+                                            </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-grafik" style="padding: 0 !important; border: 1px solid var(--border); width: 100%; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column;">
+                            <div style="padding: 12px 15px; background: #f8f9fa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                                <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: #333;">
+                                    <span class="material-symbols-outlined" style="color:var(--ig-primary)">show_chart</span> Grafik Performa
+                                </h4>
+                            </div>
+                            
+                            <div style="padding: 15px; width: 100%; box-sizing: border-box; flex: 1;">
+                                <div class="grafik-grid">
+                                    
+                                    <div style="width: 100%; min-width: 0; box-sizing: border-box; position: relative;">
+                                        <div style="text-align:center; font-size:12px; font-weight:600; color:var(--ig-text); margin-bottom:10px; text-transform: uppercase;">Produksi 7 Hari Terakhir</div>
+                                        <div style="position: relative; height: 230px; width: 100%;">
+                                            <canvas id="lineChartProduksi"></canvas>
+                                        </div>
                                     </div>
                                     
-                                    <input type="hidden" id="filterPelangganValue" value="ALL">
-                                    <div class="custom-select-btn" id="btnFilterPelanggan" onclick="openPelangganSelect()" style="padding: 6px 12px !important; font-size: 11px; width: auto; max-width: 150px; border-radius: 2px !important; background: #ffffff; border: 1px solid var(--border) !important; margin: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;">
-                                        <span id="labelFilterPelanggan" style="font-weight: 600; color: var(--ig-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Semua Pelanggan</span>
-                                        <span class="material-symbols-outlined" style="font-size: 16px; color: #888; margin-left: 5px;">expand_more</span>
+                                    <div style="width: 100%; min-width: 0; box-sizing: border-box; position: relative;">
+                                        <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 12px;">
+                                            <div style="font-size:12px; font-weight:600; color:var(--ig-text); text-transform: uppercase; margin-bottom: 6px;">Performa Tim</div>
+                                            <input type="hidden" id="valKaruChart" value="ALL">
+                                            <div class="custom-select-btn" onclick="openKaruChartSelect()" style="padding: 6px 12px; font-size: 11px; min-width: 120px; border-radius: 2px !important; background: #ffffff; border: 1px solid var(--border) !important; color: var(--ig-primary); cursor: pointer; display:flex; justify-content:space-between; align-items:center; box-sizing: border-box; margin: 0;">
+                                                <span id="labelKaruChart">Semua Karu</span>
+                                                <span class="material-symbols-outlined" style="font-size: 16px; color: #888; margin-left: 5px;">expand_more</span>
+                                            </div>
+                                        </div>
+                                        <div style="position: relative; height: 230px; width: 100%;">
+                                            <canvas id="barChartKaru"></canvas>
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-bottom: 15px; border-radius: 2px; overflow: hidden; border: 1px solid var(--border);">
-                                    <div style="background: white; padding: 15px 5px; text-align: center;">
-                                        <div style="font-size: 10px; color: var(--ig-sec-text); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Cycle 1</div>
-                                        <div id="valCycle1" style="font-size: 20px; font-weight: 800; color: var(--ig-text); margin-top: 5px;">0</div>
-                                    </div>
-                                    <div style="background: white; padding: 15px 5px; text-align: center;">
-                                        <div style="font-size: 10px; color: var(--ig-sec-text); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Cycle 2</div>
-                                        <div id="valCycle2" style="font-size: 20px; font-weight: 800; color: var(--ig-text); margin-top: 5px;">0</div>
-                                    </div>
-                                    <div style="background: white; padding: 15px 5px; text-align: center;">
-                                        <div style="font-size: 10px; color: var(--ig-sec-text); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Cycle 3</div>
-                                        <div id="valCycle3" style="font-size: 20px; font-weight: 800; color: var(--ig-text); margin-top: 5px;">0</div>
-                                    </div>
-                                </div>
 
-                                <div style="background: rgba(88, 195, 34, 0.1); border: 1px solid rgba(88, 195, 34, 0.3); border-radius: 2px; padding: 15px; text-align: center; margin-bottom: 15px;">
-                                    <div style="font-size: 11px; color: var(--success); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Total Kiriman Hari Ini</div>
-                                    <div id="valCycleTotal" style="font-size: 26px; font-weight: 800; color: var(--success); margin-top: 5px;">0</div>
-                                </div>
-
-                                <h5 style="margin: 0 0 10px 0; color:var(--ig-sec-text); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Rincian per Kategori Barang</h5>
-                                <div style="overflow-y: auto; max-height: 270px; border-radius: 2px; border: 1px solid var(--border);">
-                                    <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
-                                        <thead>
-                                            <tr>
-                                                <th style="text-align: left;">KATEGORI</th>
-                                                <th style="text-align: center;">CYC 1</th>
-                                                <th style="text-align: center;">CYC 2</th>
-                                                <th style="text-align: center;">CYC 3</th>
-                                                <th style="text-align: right;">TOTAL</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tableKirimanBody"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="swipe-item" style="padding-top: 5px;">
-                                <div style="text-align:center; font-size:13px; font-weight:800; color:var(--ig-primary); margin-bottom:15px; text-transform: uppercase; letter-spacing: 1px;">
-                                    &mdash; GLOBAL (ALL SUPPLIER) &mdash;
-                                </div>
-                                
-                                <div style="background: rgba(0, 149, 246, 0.1); border: 1px solid rgba(0, 149, 246, 0.3); border-radius: 2px; padding: 15px; text-align: center; margin-bottom: 15px;">
-                                    <div style="font-size: 11px; color: var(--ig-primary); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Total Kiriman Global</div>
-                                    <div id="valGlobalTotal" style="font-size: 26px; font-weight: 800; color: var(--ig-primary); margin-top: 5px;">0</div>
-                                </div>
-
-                                <div style="overflow-y: auto; max-height: 300px; border-radius: 2px; border: 1px solid var(--border);">
-                                    <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
-                                        <thead>
-                                            <tr>
-                                                <th style="text-align: left;">NAMA PELANGGAN / SUPPLIER</th>
-                                                <th style="text-align: right; width: 80px;">QTY</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tableSupplierBody"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" style="padding: 0; border: 1px solid var(--border);">
-                    <div style="padding: 8px 15px; background: #f8f9fa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                        <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: #333;">
-                            <span class="material-symbols-outlined" style="color:var(--ig-primary)">show_chart</span> Grafik Performa
-                        </h4>
-                        <span style="font-size:10px; color:#888; display:flex; align-items:center; gap:3px; background: #e2e8f0; padding: 3px 8px;"><span class="material-symbols-outlined" style="font-size:14px;">swipe</span> Geser</span>
-                    </div>
-                    
-                    <div style="padding: 10px;">
-                        <div class="grafik-grid">
-    <div style="width: 100%;">
-        <div style="text-align:center; font-size:12px; font-weight:600; color:var(--ig-text); margin-bottom:10px; text-transform: uppercase;">Produksi 7 Hari Terakhir</div>
-        <div style="position: relative; height: 200px; width: 100%;">
-            <canvas id="lineChartProduksi"></canvas>
-        </div>
-    </div>
-    
-    <div style="width: 100%;">
-        <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 12px;">
-            
-            <div style="font-size:12px; font-weight:600; color:var(--ig-text); text-transform: uppercase; margin-bottom: 6px;">Performa Tim</div>
-            
-           <input type="hidden" id="valKaruChart" value="ALL">
-<div class="custom-select-btn" onclick="openKaruChartSelect()" style="padding: 6px 12px; font-size: 11px; width: auto; min-width: 120px; border-radius: 2px !important; background: #ffffff; border: 1px solid var(--border) !important; font-weight: 600; color: var(--ig-primary); cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); text-align: center; margin: 0; display:flex; justify-content:space-between; align-items:center;">
-    <span id="labelKaruChart">Semua Karu</span>
-    <span class="material-symbols-outlined" style="font-size: 16px; color: #888; margin-left: 5px;">expand_more</span>
-</div>
-
-            
-        </div>
-        
-        <div style="position: relative; height: 180px; width: 100%;">
-            <canvas id="barChartKaru"></canvas>
-        </div>
-    </div>
-</div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div id="viewMaster" class="hidden stagger-anim">
+                                </div> 
+                            </div> 
+                        </div> </div> </div> </div> </div> <div id="viewMaster" class="hidden stagger-anim">
             <div class="card">
                 <div style="position: relative; margin-bottom: 15px;">
                     <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; color: #888;">search</span>
@@ -1054,12 +1140,15 @@ body, .main-content, .view-container {
             </div>
         </div>
 
+    </div> <div class="footer-bar">
+        <span>&copy; 2026 LPS System</span>
+        <span style="display:flex; align-items:center; gap:4px;">
+            Designed by Robert <span class="material-symbols-outlined" style="font-size:12px; color:var(--ig-primary);">verified</span>
+        </span>
     </div>
-</div>
-
-<script>
+    </div> <script>
 // --- URL API TERBARU DARI SCRIPT GOOGLE ---
-const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbxme5rIMd74Z05ypOOyWH3XX9Zy5gQEAF5Dpb7LMiRg2wxphLB12llo3G4qQ0FJ-nmljg/exec"; 
+const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbxOUivcK3XqG_-QMlmGFlUJpbRog8Xpv9oiAyGkLNRGvsijjdyvtXrH0igDTZ1tXyoEEQ/exec"; 
 
 let DATA = {};
 let currentPageLaporan = 1; let rowsPerPageLaporan = 15;
@@ -1590,7 +1679,7 @@ function loadLaporanTable() {
     if(query) {
         let keywords = query.split(' ').filter(k => k.trim() !== '');
         myData = myData.filter(d => {
-            let itemsStr = typeof d.items === 'string' ? d.items : JSON.stringify(d.items || []);
+            let itemsStr = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
             let textToSearch = `${d.id || ''} ${d.karu || ''} ${d.user || ''} ${d.job || ''} ${d.ops || ''} ${itemsStr}`.toLowerCase();
             return keywords.every(kw => textToSearch.includes(kw));
         });
@@ -2560,641 +2649,273 @@ async function processExport() {
 }
 
 let lineChart = null; let barChart = null;
+
+// Fungsi pembantu buat ngebaca tanggal dari Google Sheet biar singkron sama jam HP/Laptop
+// Fungsi pembantu buat ngebaca tanggal dari Google Sheet biar singkron sama jam HP/Laptop
+function parseDocDate(dateStr) {
+    if (!dateStr) return null;
+    // Paling aman: Ambil 10 karakter pertama (YYYY-MM-DD)
+    if (typeof dateStr === 'string' && dateStr.length >= 10) {
+        let prefix = dateStr.substr(0, 10);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(prefix)) return prefix;
+    }
+    // Fallback kalau aneh formatnya
+    try {
+        let d = new Date(dateStr);
+        if (!isNaN(d.getTime())) {
+            let y = d.getFullYear(); let m = String(d.getMonth() + 1).padStart(2, '0'); let day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+    } catch(e) {}
+    return null;
+}
+
 function renderDashboard() {
     if (!DATA.history) return;
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
     
-    // --- UPDATE KOTAK STATISTIK HARI INI ---
-    const laporanHariIni = DATA.history.filter(d => d.date.startsWith(today));
+    // --- 1. UPDATE KOTAK STATISTIK HARI INI ---
+    const laporanHariIni = DATA.history.filter(d => {
+        let docDate = parseDocDate(d.date);
+        return docDate === todayStr;
+    });
     document.getElementById('statTotalToday').innerText = laporanHariIni.length;
     document.getElementById('statPending').innerText = DATA.history.filter(d => d.status === 'Submitted').length;
 
+    // HITUNG TOTAL QTY (KOTAK HIJAU) - LOGIKA FILTER PELANGI
     let totalQty = 0;
-    DATA.history.filter(d => d.type === 'PRD' && d.job === 'Packing' && d.status !== 'Draft').forEach(d => {
-        let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
-        items.forEach(i => {
-            let qty = parseInt(i.q);
-            if (!isNaN(qty)) totalQty += qty;
-        });
+    DATA.history.filter(d => d.type === 'PRD' && d.status !== 'Draft' && d.status !== 'Batal').forEach(d => {
+        let isTirai = (d.customer === "PT. TIRAI PELANGI NUSANTARA");
+        let isValidJob = isTirai ? (d.job === 'Pengisian') : (d.job === 'Packing');
+        
+        if (isValidJob) {
+            let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
+            items.forEach(i => {
+                let qty = parseInt(i.q);
+                if (!isNaN(qty)) totalQty += qty;
+            });
+        }
     });
     document.getElementById('statTotalQty').innerText = totalQty.toLocaleString('id-ID');
     
+    // Panggil grafik Karu
     updateKaruChart();
 
-    // --- AMBIL NILAI FILTER PELANGGAN ---
+    // ==========================================================
+    // 2. UPDATE TABEL MONITOR KIRIMAN (CYCLE)
+    // ==========================================================
+    let tbodyKiriman = document.getElementById('tableKirimanBody');
+    if (tbodyKiriman) tbodyKiriman.innerHTML = '';
+    let totalC1 = 0, totalC2 = 0, totalC3 = 0;
+
+    if (DATA.statistik) {
+        KIRIMAN_KATEGORI.forEach(kat => {
+            let stat = DATA.statistik[kat];
+            if (stat) {
+                totalC1 += stat.c1; totalC2 += stat.c2; totalC3 += stat.c3;
+                let t = stat.c1 + stat.c2 + stat.c3;
+                tbodyKiriman.innerHTML += `<tr><td style="text-align:left; font-weight:600;">${kat}</td><td style="text-align:center;">${stat.c1}</td><td style="text-align:center;">${stat.c2}</td><td style="text-align:center;">${stat.c3}</td><td style="text-align:right; font-weight:bold; color:var(--ig-primary);">${t}</td></tr>`;
+            } else {
+                tbodyKiriman.innerHTML += `<tr><td style="text-align:left; font-weight:600;">${kat}</td><td style="text-align:center;">0</td><td style="text-align:center;">0</td><td style="text-align:center;">0</td><td style="text-align:right; font-weight:bold; color:var(--ig-primary);">0</td></tr>`;
+            }
+        });
+    }
+    document.getElementById('valCycle1').innerText = totalC1.toLocaleString('id-ID');
+    document.getElementById('valCycle2').innerText = totalC2.toLocaleString('id-ID');
+    document.getElementById('valCycle3').innerText = totalC3.toLocaleString('id-ID');
+    document.getElementById('valCycleTotal').innerText = (totalC1 + totalC2 + totalC3).toLocaleString('id-ID');
+
+    // ==========================================================
+    // 3. UPDATE TABEL PERFORMA PER JAM
+    // ==========================================================
+    let tbodyJam = document.getElementById('hourlyTableBody');
+    if (tbodyJam) {
+        tbodyJam.innerHTML = '';
+        if (DATA.tabelStatistik && DATA.tabelStatistik.length > 0) {
+            DATA.tabelStatistik.forEach(row => {
+                let tr = document.createElement('tr');
+                let tdProses = document.createElement('td');
+                tdProses.innerText = row['PROSES'] || '-';
+                tr.appendChild(tdProses);
+
+                const jamList = ["06.00-07.00","07.00-08.00","08.00-09.00","09.00-10.00","10.00-11.00","11.00-12.00","12.00-13.00","13.00-14.00","14.00-15.00","15.00-16.00","16.00-17.00","17.00-18.00","18.00-19.00","19.00-20.00","20.00-21.00","21.00-22.00"];
+                jamList.forEach(jam => {
+                    let val = row[jam];
+                    let td = document.createElement('td');
+                    if (val && val !== "" && val !== 0) {
+                        td.innerText = val;
+                        td.className = "h-isi";
+                    } else {
+                        td.innerText = "-";
+                        td.className = "h-kosong";
+                    }
+                    tr.appendChild(td);
+                });
+                tbodyJam.appendChild(tr);
+            });
+        }
+    }
+
+    // --- 4. AMBIL TARGET HARIAN ---
     let filterPelangganElement = document.getElementById('filterPelangganValue');
     let filterP = filterPelangganElement ? filterPelangganElement.value : 'ALL';
 
-    // --- LOGIKA TARGET HARIAN (AKURAT) ---
     let targetHarian = 0;
     if (filterP === "ALL") {
-        if(DATA.supplierStats) {
-            targetHarian = DATA.supplierStats.reduce((sum, s) => sum + s.target, 0);
-        }
+        if(DATA.supplierStats) targetHarian = DATA.supplierStats.reduce((sum, s) => sum + s.target, 0);
     } else {
         let supplier = DATA.supplierStats ? DATA.supplierStats.find(s => s.name === filterP) : null;
         targetHarian = supplier ? supplier.target : 0;
     }
 
-    // --- LOGIKA JOB BERDASARKAN PELANGGAN ---
-    let targetJob = (filterP === "PT. TIRAI PELANGI NUSANTARA") ? "Pengisian" : "Packing";
+    // --- 5. HITUNG DATA GRAFIK 7 HARI (SINGKRON LOGIC) ---
+    const last7Days = Array.from({length: 7}, (_, i) => { 
+        const d = new Date(); d.setDate(d.getDate() - i); 
+        let y = d.getFullYear(); let m = String(d.getMonth() + 1).padStart(2, '0'); let day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`; 
+    }).reverse();
 
-    // --- 2. HITUNG DATA GRAFIK 7 HARI ---
-    const last7Days = Array.from({length: 7}, (_, i) => { const d = new Date(); d.setDate(d.getDate() - i); return d.toISOString().split('T')[0]; }).reverse();
     const dataTrenQty = last7Days.map(tgl => {
         let dailyQty = 0;
-        DATA.history.filter(d => 
-            d.date.startsWith(tgl) && 
-            d.status !== 'Draft' && 
-            d.type === 'PRD' && 
-            d.job === targetJob && 
-            (filterP === "ALL" || d.customer === filterP)
-        ).forEach(d => {
-            let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
-            items.forEach(i => {
-                let qty = parseInt(i.q);
-                if (!isNaN(qty)) dailyQty += qty;
-            });
+        
+        DATA.history.forEach(d => {
+            // JURUS ANTI GAGAL: Pakai fungsi parse yang baru
+            let docDate = parseDocDate(d.date);
+            
+            if (docDate === tgl && d.status !== 'Draft' && d.status !== 'Batal' && d.type === 'PRD') {
+                // JURUS MEKAR: Jumlahkan SEMUA proses performa tim, jangan cuma Packing!
+                let jobName = (d.job || "").trim();
+                let validJobs = ['Pengisian', 'Jahit Tutup', 'Penyarungan', 'Packing'];
+                
+                if (validJobs.includes(jobName)) {
+                    try {
+                        let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
+                        if (Array.isArray(items)) {
+                            items.forEach(i => {
+                                let qty = parseInt(i.q);
+                                if (!isNaN(qty)) dailyQty += qty;
+                            });
+                        }
+                    } catch (e) { }
+                }
+            }
         });
         return dailyQty;
     });
 
-    // --- LOGIKA CERDAS SUMBU Y (Y-AXIS) ---
-    // Cari nilai tertinggi: apakah data produksinya, atau target hariannya?
-    let maxHasilProduksi = Math.max(...dataTrenQty);
+    let maxHasilProduksi = Math.max(...dataTrenQty, 0);
     let baseMax = Math.max(targetHarian, maxHasilProduksi);
-    // Beri rongga kosong 20% di atasnya biar garis ngga nyundul atap layar
-    let yAxisMax = baseMax > 0 ? Math.ceil(baseMax * 1.2) : 1000;
+    let yAxisMax = baseMax > 0 ? Math.ceil(baseMax * 1.2) : 500;
 
-    if (lineChart) lineChart.destroy();
-    lineChart = new Chart(document.getElementById('lineChartProduksi'), {
-        type: 'line',
-        data: { 
-            labels: last7Days.map(t => t.split('-')[2] + '/' + t.split('-')[1]), 
-            datasets: [
-                { 
-                    label: `Qty (${targetJob})`, 
-                    data: dataTrenQty, 
-                    borderColor: '#16a34a', backgroundColor: 'rgba(22, 163, 74, 0.1)', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#16a34a', pointBorderColor: '#ffffff', pointBorderWidth: 2
-                },
-                { 
-                    label: 'Target Harian', 
-                    data: Array(7).fill(targetHarian), 
-                    borderColor: '#ed4956', borderDash: [5, 5], borderWidth: 2, pointRadius: 0, fill: false 
-                }
-            ] 
-        },
-options: { 
-    responsive: true, 
-    maintainAspectRatio: false, 
-    plugins: { legend: { display: false } }, 
-    scales: { 
-        x: { grid: { display: false } }, 
-        y: { 
-            beginAtZero: true, 
-            // INI YANG BIKIN KELIPATAN 500 (Max menyesuaikan data, minimal 1000)
-            suggestedMax: 7000, 
-            ticks: { stepSize: 500 },
-            border: { dash: [3, 3] } 
-        } 
-    } 
+    // --- 6. RENDER LINE CHART DENGAN REFRESH ---
+    setTimeout(() => {
+        if (lineChart) lineChart.destroy(); 
+        const ctxLine = document.getElementById('lineChartProduksi');
+        if(!ctxLine) return;
+        
+        lineChart = new Chart(ctxLine, {
+            type: 'line',
+            data: { 
+                labels: last7Days.map(t => t.split('-')[2] + '/' + t.split('-')[1]), 
+                datasets: [
+                    { label: `Qty`, data: dataTrenQty, borderColor: '#16a34a', backgroundColor: 'rgba(22, 163, 74, 0.05)', borderWidth: 1.5, fill: true, tension: 0.3, pointRadius: 3, pointBackgroundColor: '#16a34a', pointBorderColor: '#ffffff', pointBorderWidth: 1.5 },
+                    { label: 'Target', data: Array(7).fill(targetHarian), borderColor: '#ed4956', borderDash: [3, 3], borderWidth: 1.5, pointRadius: 0, fill: false }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Wajib false biar nurut sama tinggi div HP
+                plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
+                scales: { y: { beginAtZero: true, max: yAxisMax, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9 } } } }
+            }
+        });
+    }, 300);
 }
 
-    });
-
-    // --- UPDATE TABEL CYCLES & GLOBAL BAWAH ---
-    const tbody = document.getElementById('tableKirimanBody'); tbody.innerHTML = '';
-    let totalC1 = 0, totalC2 = 0, totalC3 = 0, grandTotal = 0;
-    let statData = DATA.statistik || {};
-
-    KIRIMAN_KATEGORI.forEach(kat => {
-        let d = statData[kat] || {c1: 0, c2: 0, c3: 0};
-        let c1 = d.c1, c2 = d.c2, c3 = d.c3;
-
-        if (filterP !== "ALL" && filterP !== "CV. KARYA KREASI NUSANTARA") {
-            c1 = 0; c2 = 0; c3 = 0;
-            if(DATA.history) {
-                DATA.history.forEach(h => {
-                    if(h.date.startsWith(today) && h.status === 'Approved' && h.customer === filterP) {
-                        let items = typeof h.items === 'string' ? JSON.parse(h.items) : h.items;
-                        items.forEach(it => {
-                            if(it.n.toUpperCase().includes(kat.toUpperCase())) {
-                                c1 += (parseInt(it.q) || 0); 
-                            }
-                        });
-                    }
-                });
-            }
-        }
-
-        let rowTotal = c1 + c2 + c3;
-        totalC1 += c1; totalC2 += c2; totalC3 += c3; grandTotal += rowTotal;
-
-        tbody.innerHTML += `
-            <tr style="height: 35px;">
-                <td class="dash-table-kat" style="padding: 5px 10px !important; font-size: 11px;">${kat}</td>
-                <td style="text-align: center;">${c1}</td>
-                <td style="text-align: center;">${c2}</td>
-                <td style="text-align: center;">${c3}</td>
-                <td style="text-align: center; font-weight: 800; background: #f8f9fa;">${rowTotal}</td>
-            </tr>`;
-    });
-
-    document.getElementById('valCycle1').innerText = totalC1.toLocaleString('id-ID');
-    document.getElementById('valCycle2').innerText = totalC2.toLocaleString('id-ID');
-    document.getElementById('valCycle3').innerText = totalC3.toLocaleString('id-ID');
-    document.getElementById('valCycleTotal').innerText = grandTotal.toLocaleString('id-ID');
-
-    updateGlobalSupplierTable();
-    renderHourlyTable(); // <--- INI SAKLARNYA BIAR TABELNYA JALAN!
-}
-
-function processOCR(input) {
-    if (!input.files || !input.files[0]) return; 
-    let file = input.files[0];
-    
-    showAlert("AI Scanner Aktif", "Memproses foto... Proses 3-5 detik! ⏳🤖");
-    showLoading(); 
-    
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        let img = new Image();
-        img.onload = function() {
-            let canvas = document.createElement('canvas');
-            let ctx = canvas.getContext('2d');
-            
-            // Kompres ekstrim biar upload sekejap mata (Max 800px)
-            let MAX_WIDTH = 800;
-            let MAX_HEIGHT = 800;
-            let width = img.width;
-            let height = img.height;
-
-            if (width > height) {
-                if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-            } else {
-                if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // Kualitas foto ditekan 50% (Ukuran file jadi sekecil semut)
-            let base64Compressed = canvas.toDataURL("image/jpeg", 0.5); 
-
-            google.script.run
-            .withSuccessHandler(function(res) {
-                closeAlert();
-                hideLoading();
-                
-                if(res.startsWith("ERROR:")) { 
-                    showAlert("Gagal Scan", res); 
-                    input.value = ""; 
-                    return; 
-                }
-                
-                try {
-                    let items = JSON.parse(res);
-                    if(items.length > 0) {
-                        document.getElementById('rowContainer').innerHTML = ''; 
-                        
-                        // --- PENCOCOKAN INSTAN DI HP/BROWSER ---
-                        items.forEach(item => {
-                            let kodeCari = item.kode.toUpperCase().trim();
-                            let namaDitemukan = kodeCari; 
-                            
-                            // Cari otomatis dari memory (tanpa nanya server)
-                            let m = DATA.master.find(x => x.kode.toUpperCase() === kodeCari);
-                            if(m) {
-                                // Gabungkan Kategori + Motif + Varian
-                                let varian = item.varian ? " (" + item.varian + ")" : "";
-                                namaDitemukan = m.kat + " " + m.motif + varian;
-                            }
-                            
-                            addRow(namaDitemukan, item.qty);
-                        });
-
-                        showAlert("Sukses!", "Data berhasil masuk form! ⚡");
-                    } else {
-                        showAlert("Info", "Tidak ada teks berpola yang terbaca AI. Coba foto lagi.");
-                        if(document.getElementById('rowContainer').children.length === 0) addRow();
-                    }
-                } catch(error) {
-                    showAlert("Error AI", "Respon sistem gagal dibaca: " + error.message);
-                    if(document.getElementById('rowContainer').children.length === 0) addRow();
-                }
-                input.value = ""; 
-            })
-            .withFailureHandler(function(err) { 
-                closeAlert(); 
-                hideLoading(); 
-                showAlert("Koneksi Putus", "Gagal menghubungi server: " + err.message); 
-                input.value = ""; 
-            })
-            .prosesFotoOCR(base64Compressed);
-        };
-        img.src = e.target.result;
-    }; 
-    
-    reader.readAsDataURL(file);
-}
-
-// --- FUNGSI CETAK LAPORAN (PDF / HVS) ---
-function printReport(tipe) {
-    let id = document.getElementById('vi-id').innerText;
-    let type = document.getElementById('vi-type').innerText;
-    let isBS = type.includes('BS');
-    let karu = document.getElementById('vi-karu').innerText;
-    let ops = document.getElementById('vi-ops').innerText;
-    let job = document.getElementById('vi-job').innerText; 
-    let tbody = document.getElementById('vi-body').innerHTML;
-    
-    let title = isBS ? 'LAPORAN BS PRODUKSI' : 'LAPORAN PRODUKSI';
-    let ukuranKertas = tipe === 'hvs' ? 'A4' : 'auto'; 
-    
-    let printWindow = window.open('', '_blank');
-    let html = `
-    <html>
-    <head>
-        <title>Cetak ${id}</title>
-        <style>
-            body { font-family: 'Arial', sans-serif; font-size: 11px; padding: 10px; color: #000; }
-            h2 { text-align: center; margin-bottom: 10px; font-size: 20px; text-transform: uppercase; }
-            .info-box { margin-bottom: 10px; border: 1px solid #000; padding: 5px 8px; display: inline-block; width: 100%; box-sizing: border-box;}
-            .info-box div { margin-bottom: 2px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th, td { border: 1px solid #000; padding: 4px 6px; text-align: left; font-size: 11px; }
-            th { background-color: #f2f2f2; text-align: center; font-weight: bold; }
-            @media print {
-                @page { size: ${ukuranKertas}; margin: 10mm; }
-                body { -webkit-print-color-adjust: exact; }
-            }
-        </style>
-    </head>
-    <body>
-        <h2>${title}</h2>
-        <div class="info-box">
-            <div><strong>ID Laporan :</strong> ${id}</div>
-            <div><strong>Karu / User :</strong> ${karu}</div>
-            <div><strong>Pekerjaan :</strong> ${job}</div>
-            ${!isBS ? `<div><strong>Operator :</strong> ${ops}</div>` : ''}
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th style="width:50px;">NO</th>
-                    <th>NAMA BARANG</th>
-                    <th style="width:80px;">QTY</th>
-                    ${isBS ? '<th>KETERANGAN</th>' : ''}
-                </tr>
-            </thead>
-            <tbody>
-                ${tbody}
-            </tbody>
-        </table>
-        <div style="margin-top: 30px; width: 100%; text-align: right;">
-            <p>Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
-        </div>
-        <script>
-            window.onload = function() { 
-                window.print(); 
-            }
-        <\/script>
-    </body>
-    </html>`;
-    
-    printWindow.document.write(html);
-    printWindow.document.close();
-}
-// === FUNGSI UPDATE GRAFIK KARU (X: Proses, Y: Qty) ===
 function updateKaruChart() {
-    if (!DATA.history) return;
+    if (!DATA || !DATA.history) return;
+
     let selectedKaru = document.getElementById('valKaruChart').value;
-    const today = new Date().toISOString().split('T')[0];
     
-    // SUMBU X: 5 Proses
-    let targetJobs = ["Jahit Bulatan", "Pengisian", "Jahit Tutup", "Penyarungan", "Packing"];
-    let jobStats = { "Jahit Bulatan": 0, "Pengisian": 0, "Jahit Tutup": 0, "Penyarungan": 0, "Packing": 0 };
+    // Inisialisasi data untuk 4 jenis pekerjaan yang jadi Sumbu X
+    let chartData = {
+        'Pengisian': 0,
+        'Jahit Tutup': 0,
+        'Penyarungan': 0,
+        'Packing': 0
+    };
 
-    // Tarik data produksi khusus HARI INI
-    DATA.history.filter(d => 
-        d.type === 'PRD' && 
-        d.status !== 'Draft' && 
-        d.date.startsWith(today) &&
-        (selectedKaru === "ALL" || d.karu === selectedKaru) // Filter Dropdown
-    ).forEach(d => {
-        if(targetJobs.includes(d.job)) {
-            let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
-            items.forEach(i => {
-                let qty = parseInt(i.q);
-                if (!isNaN(qty)) jobStats[d.job] += qty; // SUMBU Y: Akumulasi Qty
-            });
-        }
-    });
+    const targetJobsList = Object.keys(chartData);
 
-    // Siapkan data untuk Chart.js
-    let chartData = targetJobs.map(j => jobStats[j]);
+    DATA.history.forEach(d => {
+        if (d.type === 'PRD' && d.status !== 'Draft' && d.status !== 'Batal') {
+            // Filter Karu: Kalau bukan 'ALL' dan namanya beda, lewati!
+            if (selectedKaru !== 'ALL' && d.karu !== selectedKaru) return;
 
-    // Render Ulang Grafiknya
-    if (barChart) barChart.destroy();
-    barChart = new Chart(document.getElementById('barChartKaru'), {
-        type: 'bar', // Bar vertikal (tiang berdiri)
-        data: { 
-            labels: targetJobs, // Label Sumbu X
-            datasets: [{ 
-                label: 'Qty Hasil Hari Ini', 
-                data: chartData, // Data Sumbu Y
-                backgroundColor: '#0095f6', // Biru solid Instagram
-                borderRadius: 0, // Ujung tiang melengkung
-                barThickness: 45 // Lebar tiang pas, nggak kekurusan
-            }] 
-        },
-        options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-        x: { grid: { display: false } },
-        y: {
-            beginAtZero: true,
-            // INI YANG BIKIN KELIPATAN 500 (Max menyesuaikan data, minimal 1000)
-            suggestedMax: 7000,
-            ticks: { stepSize: 500 },
-            border: { dash: [3, 3] }
-        }
-    }
-}
-
-    });
-}
-// === FUNGSI UPDATE TABEL GLOBAL (SUPPLIER) ===
-function updateGlobalSupplierTable() {
-    const tbody = document.getElementById('tableSupplierBody');
-    const totalGlobalElement = document.getElementById('valGlobalTotal');
-    
-    if (!DATA.supplierStats || DATA.supplierStats.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="2" align="center" style="padding:20px; color:#999;">Data tidak ditemukan</td></tr>';
-        return;
-    }
-
-    let html = '';
-    let grandTotal = 0;
-
-    DATA.supplierStats.forEach(item => {
-        let nameRaw = String(item.name || "").trim();
-        let nameUpper = nameRaw.toUpperCase();
-        
-        // KUNCI: Abaikan baris yang namanya "TOTAL", "PELANGGAN", atau kosong
-        if (nameRaw !== "" && nameUpper !== "TOTAL" && nameUpper !== "PELANGGAN") {
-            let total = parseInt(item.total) || 0;
-            grandTotal += total;
-
-            html += `
-                <tr>
-                    <td style="font-weight: 600; color: var(--ig-text); font-size: 12px;">${nameRaw}</td>
-                    <td style="text-align: center; font-weight: 800; background: #fdfdfd; color: var(--ig-primary); font-size: 14px;">
-                        ${total.toLocaleString('id-ID')}
-                    </td>
-                </tr>`;
-        }
-    });
-
-    tbody.innerHTML = html;
-    
-    // Sekarang grandTotal hanya menjumlahkan supplier saja, tidak termasuk baris total dari sheet
-    totalGlobalElement.innerText = grandTotal.toLocaleString('id-ID');
-}
-// === FUNGSI BUKA POP-UP PILIH PELANGGAN ===
-function openPelangganSelect() {
-    // Tolak mentah-mentah kalau bukan Author!
-    if (currentRole !== 'Author') {
-        showAlert("Terkunci", "Hanya Author yang dapat memfilter pelanggan lain untuk saat ini.");
-        return;
-    }
-
-    let items = [{value: 'ALL', label: 'Semua Pelanggan'}];
-    
-    if(DATA.supplierStats) {
-        DATA.supplierStats.forEach(s => {
-            let nUpper = (s.name || "").toUpperCase();
-            if(s.name && nUpper !== "PELANGGAN" && !nUpper.includes("TOTAL")) {
-                items.push({value: s.name, label: s.name});
-            }
-        });
-    }
-
-    openSelectionModal("Pilih Pelanggan", items, document.getElementById('filterPelangganValue').value, (val, label) => {
-        document.getElementById('filterPelangganValue').value = val;
-        document.getElementById('labelFilterPelanggan').innerText = label;
-        closeSelectionModal();
-        renderDashboard(); 
-    });
-}
-
-// Panggil fungsi ini saat aplikasi pertama kali dimuat (setelah DATA terisi)
-// updateGlobalSupplierTable();
-// === FUNGSI RENDER TABEL PER JAM ===
-
-// === FUNGSI VALIDASI STOK (SATPAM WIP) BIKINAN BEBY ===
-
-// === FUNGSI VALIDASI STOK (SATPAM WIP) BIKINAN BEBY ===
-function checkWIP(newItems, job, currentId) {
-    let errorMsg = "";
-    let isAman = true;
-
-    // Normalisasi nama kerjaan (huruf kecil semua)
-    let normalizedJob = job.trim().toLowerCase();
-
-    // --- JALUR TOL 1: Bahan Baku Masuk BEBAS INPUT 100% ---
-    if (normalizedJob === "bahan baku masuk") return { aman: true, msg: "" };
-
-    // --- JALUR TOL 2: Jahit Bulatan UNLIMITED (Bebas Input) ---
-    if (normalizedJob === "jahit bulatan") return { aman: true, msg: "" };
-
-    newItems.forEach(item => {
-        let kodeBarang = item.n;
-        let qtyMauDiinput = Number(item.q) || 0;
-
-        // Cari di master data alur si barang ini
-        let master = DATA.master.find(m => m.kode === kodeBarang);
-        if (!master || !master.alur) return; 
-
-        let alurArray = master.alur.split(',').map(s => s.trim().toLowerCase());
-        
-        // --- BYPASS RANTAI JAHIT BULATAN ---
-        // Kita keluarkan "jahit bulatan" dari memori si satpam untuk sementara.
-        // Efeknya: Kalau kerjaannya "Jahit Tutup", dia bakal ngira proses sebelumnya adalah "Pengisian".
-        alurArray = alurArray.filter(j => j !== "jahit bulatan");
-
-        let myIndex = alurArray.indexOf(normalizedJob);
-        if (myIndex < 0) return; // Abaikan kalau kerjaan gak ada di alur master
-
-        let jobSebelumnya = "";
-
-        // PENTING: Jika ini proses pertama setelah bahan baku (Misal Pengisian)
-        if (myIndex === 0) {
-            jobSebelumnya = "bahan baku masuk"; 
-        } else {
-            jobSebelumnya = alurArray[myIndex - 1]; // Tarik dari proses sebelumnya (yang sudah di-bypass)
-        }
-
-        let totalSetoran = 0;
-        let totalSudahDikerjakan = 0;
-
-        // JIKA PROSES SEBELUMNYA ADALAH BAHAN BAKU MASUK (Ambil dari sheet BAHAN_BAKU_MASUK)
-        if (jobSebelumnya === "bahan baku masuk") {
-            if (DATA.bahanBaku) {
-                DATA.bahanBaku.forEach(bb => {
-                    let kodeSheet = bb.kode.toUpperCase().trim();
-                    let kodeInput = kodeBarang.toUpperCase().trim();
-                    // Logika kebal typo panjang/pendek
-                    if (kodeSheet === kodeInput || kodeInput.includes(kodeSheet) || kodeSheet.includes(kodeInput)) {
-                        totalSetoran += bb.qty;
-                    }
+            // LOGIKA PENGELOMPOKAN BERDASARKAN PEKERJAAN
+            if (targetJobsList.includes(d.job)) {
+                let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
+                let totalQtyPerDoc = 0;
+                
+                items.forEach(i => {
+                    let qty = parseInt(i.q);
+                    if (!isNaN(qty)) totalQtyPerDoc += qty; 
                 });
+                
+                // Tambahkan Qty ke ember kerjaan yang sesuai
+                chartData[d.job] += totalQtyPerDoc; 
             }
-        } 
-        
-        // JIKA PROSES SEBELUMNYA BUKAN BAHAN BAKU, ATAU UNTUK MENGHITUNG PENGELUARAN LOKAL
-        if (DATA.history) {
-            DATA.history.forEach(h => {
-                if (h.status !== 'Draft' && h.status !== 'Rejected' && h.status !== 'Batal' && h.id !== currentId) {
-                    let hItems = typeof h.items === 'string' ? JSON.parse(h.items) : h.items;
-                    hItems.forEach(hi => {
-                        if (hi.n === kodeBarang) {
-                            let hJob = h.job.trim().toLowerCase();
-                            
-                            // Hitung Setoran (Hanya jika proses sebelumnya bukan bahan baku)
-                            if (hJob === jobSebelumnya && jobSebelumnya !== "bahan baku masuk") {
-                                totalSetoran += (Number(hi.q) || 0);
-                            }
-                            // Hitung Pengeluaran yang sudah dikerjakan di proses ini
-                            if (hJob === normalizedJob) {
-                                totalSudahDikerjakan += (Number(hi.q) || 0);
-                            }
-                        }
-                    });
+        }
+    });
+
+    // Labelnya sekarang adalah 4 Pekerjaan itu
+    let labels = Object.keys(chartData);
+    let dataValues = Object.values(chartData);
+
+    // --- RENDER BAR CHART TIM ---
+    setTimeout(() => {
+        if (barChart) barChart.destroy();
+        const ctxBar = document.getElementById('barChartKaru');
+        if (!ctxBar) return;
+
+        barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Qty',
+                    data: dataValues,
+                    // Aku kasih 4 warna beda biar grafiknya makin cakep sayang!
+                    backgroundColor: [
+                        'rgba(250, 204, 21, 0.85)', // Kuning Pengisian
+                        'rgba(56, 189, 248, 0.85)', // Biru Jahit Tutup
+                        'rgba(167, 139, 250, 0.85)', // Ungu Penyarungan
+                        'rgba(74, 222, 128, 0.85)'  // Hijau Packing
+                    ],
+                    borderColor: [
+                        '#eab308', '#0ea5e9', '#8b5cf6', '#22c55e'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { font: { size: 9 }, precision: 0 } },
+                    x: { ticks: { font: { size: 9 }, maxRotation: 0, minRotation: 0 } }
                 }
-            });
-        }
-        
-        let sisaBisaInput = totalSetoran - totalSudahDikerjakan;
-        if (qtyMauDiinput > sisaBisaInput) {
-            isAman = false;
-            let namaSumber = jobSebelumnya === "bahan baku masuk" ? "Bahan Baku Gudang" : jobSebelumnya.toUpperCase();
-            errorMsg += `- ${kodeBarang}: Max ${sisaBisaInput} Pcs (Sisa dari ${namaSumber}).\n`;
-        }
-    });
-
-    return { aman: isAman, msg: errorMsg };
-}
-// === SISTEM KEAMANAN: AUTO LOGOUT INACTIVITY (1 JAM) ===
-let inactivityTimer;
-
-// === FUNGSI RENDER TABEL PER JAM (DARI TABEL_STATISTIK) ===
-function renderHourlyTable() {
-    const tbody = document.getElementById('hourlyTableBody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-
-    // Pastikan data dari sheet TABEL_STATISTIK sudah terkirim dari server (Apps Script)
-    if (!DATA.tabelStatistik || DATA.tabelStatistik.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding:15px; color:var(--ig-sec-text);">Data performa per jam belum ditarik dari server. Klik tombol Refresh di atas.</td></tr>';
-        return;
-    }
-
-    // List kolom jam yang sesuai dengan tabel HTML kamu
-    let hoursArray = ["06-07", "07-08", "08-09", "09-10", "10-11", "11-12", "12-13", "13-14", "14-15", "15-16", "16-17", "17-18", "18-19", "19-20", "20-21", "21-22"];
-
-    let tableContent = '';
-    
-    // Looping data yang dilempar dari sheet TABEL_STATISTIK
-    DATA.tabelStatistik.forEach(row => {
-        // Asumsi header kolom pertamanya bernama "Proses" atau "PROSES" di Excel/Sheet kamu
-        let jobName = row["Proses"] || row["PROSES"] || "-";
-        
-        let rowHtml = `<tr><td style="font-weight: 800; color: var(--ig-text);">${jobName}</td>`;
-        
-        hoursArray.forEach(jam => {
-            // Ambil angka dari kolom jam, kalau kosong/error jadikan 0
-            let qty = parseInt(row[jam]) || 0;
-            
-            let cssClass = qty > 0 ? 'h-isi' : 'h-kosong';
-            let displayQty = qty > 0 ? qty.toLocaleString('id-ID') : '-';
-            
-            rowHtml += `<td class="${cssClass}">${displayQty}</td>`;
+            }
         });
-
-        rowHtml += `</tr>`;
-        tableContent += rowHtml;
-    });
-    
-    tbody.innerHTML = tableContent;
+    }, 300);
 }
-function resetInactivityTimer() {
-    clearTimeout(inactivityTimer);
-    
-    // Jangan mulai timer kalau user belum login
-    if (!USER) return; 
-    
-    // Setel ulang timer: 1 Jam = 3.600.000 milidetik
-    inactivityTimer = setTimeout(() => {
-        // Hapus variabel USER dan kembalikan ke layar login
-        USER = null;
-        alert("Sesi kamu telah habis karena tidak ada aktivitas selama 1 jam. Silakan login kembali demi keamanan.");
-        location.reload(); 
-    }, 3600000); 
-}
-
-// Pasang mata-mata (pendeteksi) ke seluruh aktivitas di layar
-['mousemove', 'mousedown', 'keypress', 'touchmove', 'touchstart', 'scroll'].forEach(evt => {
-    document.addEventListener(evt, resetInactivityTimer, true);
-});
-
-// === FUNGSI KHUSUS AUTHOR: BATAL DOKUMEN (TETAP ADA DI EXCEL) ===
-function cancelDokumen(id, type) {
-    showConfirm("⚠️ Batal Dokumen", `Yakin ingin membatalkan dokumen ${id}? Data akan berstatus "Batal", tetap ada di Excel tapi tidak ikut ke-Export.`, () => {
-        showLoading();
-        
-        // Cari data aslinya di memori browser
-        let doc = DATA.history.find(d => d.id === id);
-        if(!doc) {
-            hideLoading(); return showAlert("Error", "Dokumen tidak ditemukan!");
-        }
-        
-        // Ubah statusnya secara paksa jadi "Batal"
-        doc.status = "Batal";
-        
-        // Rakit ulang paket datanya untuk dikirim ke Google Sheet (Menimpa data lama)
-        let payload = { 
-            action: type === 'PRD' ? 'saveDataPRD' : 'saveDataBS', 
-            type: doc.type, 
-            id: doc.id, 
-            date: typeof doc.date === 'string' ? doc.date.substr(0,10) : new Date(doc.date).toISOString().split('T')[0], 
-            karu: doc.karu, 
-            job: doc.job, 
-            ops: doc.ops, 
-            items: typeof doc.items === 'string' ? JSON.parse(doc.items) : doc.items, 
-            status: "Batal", 
-            user: doc.user,
-            customer: doc.customer
-        };
-        
-        // Lempar ke satpam Background Sync biar dikirim tanpa loading lama
-        addToSyncQueue(payload);
-        
-        // Segarkan layar tabel
-        if(typeof buildViewDataCache === 'function') buildViewDataCache();
-        loadLaporanTable();
-        renderDashboard();
-        
-        hideLoading();
-        showAlert("Berhasil! 🚫", `Dokumen ${id} berhasil dibatalkan dan dikunci.`);
-    });
-}
-
-// ==== TAMBAHKAN KODE INI BIAR DATA DITARIK SAAT WEB DIBUKA ====
-initSystem();
+window.onload = () => {
+    // Jalankan fungsi ini agar sistem mengambil data dari server
+    initSystem(); 
+};
 
 </script>
 </body>
