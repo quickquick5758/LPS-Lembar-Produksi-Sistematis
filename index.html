@@ -2180,7 +2180,7 @@ function addRow(n = '', q = '') {
         // --- FILTER AUTOCOMPLETE BUNGLON ---
         let jobVal = document.getElementById('selJobValue').value;
         let isGarukJob = (jobVal === "Garuk Dacron");
-        let isBahanMasuk = (jobVal === "Masuk Dacron"); // <--- Tambahan baru
+        let isBahanMasuk = (jobVal === "Bahan Baku Masuk");
 
         for(let m of DATA.master) {
             let isGarukItem = m.kode.toUpperCase().startsWith("GARUK-");
@@ -2412,7 +2412,7 @@ async function saveData(status, type = 'PRD') {
     let payload = {};
     if(type === 'PRD') {
         let jobVal = document.getElementById('selJobValue').value;
-        let isBahanBaku = (jobVal === "Masuk Dacron");
+        let isBahanBaku = (jobVal === "Bahan Baku Masuk");
         let ops = "-";
         if (!isBahanBaku) {
             if (document.getElementById('chkPerbantuan').checked) {
@@ -2916,7 +2916,60 @@ window.onload = () => {
     // Jalankan fungsi ini agar sistem mengambil data dari server
     initSystem(); 
 };
+// --- SATPAM CEK WIP (DENGAN SALDO) ---
+function checkWIP(itemsInput, jobVal, currentId) {
+    let res = { aman: true, msg: "" };
+    
+    // Cek Saldo HANYA aktif kalau job-nya Pengisian atau Packing
+    if (jobVal === 'Pengisian' || jobVal === 'Packing') {
+        itemsInput.forEach(item => {
+            let saldoTersedia = getSaldoBarang(item.n, currentId);
+            let qtyDiminta = parseInt(item.q) || 0;
+            
+            // Kalau yang mau diproses LEBIH BANYAK dari saldo bahan baku
+            if (qtyDiminta > saldoTersedia) {
+                res.aman = false;
+                res.msg += `📦 ${item.n}\n   Diminta: ${qtyDiminta} | Saldo Tersedia: ${saldoTersedia}\n\n`;
+            }
+        });
+    }
+    
+    return res;
+}
+// --- FITUR HITUNG SALDO BAHAN BAKU OTOMATIS ---
+function getSaldoBarang(kodeBarang, currentId = null) {
+    if(!DATA || !DATA.history) return 0;
+    
+    let totalMasuk = 0;
+    let totalKeluar = 0;
 
+    DATA.history.forEach(d => {
+        // Abaikan data yang lagi diedit, draft, atau batal
+        if(d.id === currentId || d.status === 'Draft' || d.status === 'Batal') return;
+
+        let itemsArr = [];
+        try { 
+            itemsArr = typeof d.items === 'string' ? JSON.parse(d.items) : d.items; 
+        } catch(e) {}
+
+        itemsArr.forEach(i => {
+            if(i.n === kodeBarang) {
+                let qty = parseInt(i.q) || 0;
+                // Kalau ada laporan Bahan Baku Masuk -> Saldo Nambah
+                if(d.job === 'Bahan Baku Masuk') {
+                    totalMasuk += qty;
+                }
+                // Kalau dikerjain di Pengisian / Packing -> Saldo Berkurang
+                else if(d.job === 'Pengisian' || d.job === 'Packing') {
+                    totalKeluar += qty;
+                }
+            }
+        });
+    });
+    
+    // Kembalikan sisa saldonya
+    return totalMasuk - totalKeluar;
+}
 </script>
 </body>
 </html>
