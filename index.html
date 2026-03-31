@@ -3004,12 +3004,35 @@ function checkWIP(itemsInput, jobVal, currentId) {
 function getSaldoBarangInfo(kodeBarang, jobTarget, currentId = null) {
     if(!DATA || !DATA.history) return {masuk: 0, keluar: 0, sisa: 0};
     
+    // --- 1. SATPAM MEMBACA NAMA BARANG OTOMATIS ---
+    let isNonIsi = false;
+    let namaBarang = kodeBarang.toUpperCase();
+    
+    // Daftar kata kunci ajaib. Kalau ada kata ini, otomatis dianggap NON-ISI
+    let keywordNonIsi = [
+        "PENUTUP IBU", "SARUNG", "GENDONGAN", "TAS", "PERLAK", 
+        "SELIMUT", "SLEEPING BAG", "BLANKET", "CAPE", "BURP", "KASUR BAYI BUSA", "BEDONG INSTAN",
+    ];
+    
+    if (keywordNonIsi.some(kw => namaBarang.includes(kw))) {
+        isNonIsi = true; // Ketahuan ini barang kain doang!
+    }
+
+    // --- 2. TENTUKAN SUMBER STOK (JALUR ESTAFET) ---
     let sumberStok = 'Bahan Baku Masuk';
+    
     if (jobTarget === 'Garuk Dacron') sumberStok = 'Bahan Baku Masuk';
     else if (jobTarget === 'Pengisian') sumberStok = 'Bahan Baku Masuk';
     else if (jobTarget === 'Jahit Tutup') sumberStok = 'Pengisian';
     else if (jobTarget === 'Penyarungan') sumberStok = 'Jahit Tutup';
-    else if (jobTarget === 'Packing') sumberStok = 'Penyarungan'; 
+    else if (jobTarget === 'Packing') {
+        // JIKA BARANG NON-ISI, JALUR BYPASS DIAKTIFKAN! 🚀
+        if (isNonIsi) {
+            sumberStok = 'Bahan Baku Masuk';
+        } else {
+            sumberStok = 'Penyarungan'; 
+        }
+    }
     else if (jobTarget === 'Ikat/Ball') sumberStok = 'Packing';
 
     let totalMasuk = 0;   
