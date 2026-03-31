@@ -2147,9 +2147,9 @@ function removeBSRow(btn) { btn.closest('.input-bs-row-wrapper').remove(); if(do
 
 function addRow(n = '', q = '') {
     const c = document.getElementById('rowContainer'); const r = document.createElement('div'); r.className = 'input-row-wrapper';
-    r.style = "display:flex; gap:0; margin-bottom:-1px; position:relative;";
+    // Diubah jadi flex-column biar kotak info bisa nempel di bawah inputan
+    r.style = "display:flex; flex-direction:column; gap:0; margin-bottom:12px; position:relative;";
     
-    // Pecah kerjaan saat ini buat nentuin tampilan awal baris
     let currentJob = document.getElementById('selJobValue').value;
     let isDakronJob = (currentJob === 'Garuk Dacron' || currentJob === 'Masuk Dacron');
     let pName = isDakronJob ? 'Cari Master Garuk...' : 'Nama Barang';
@@ -2157,27 +2157,46 @@ function addRow(n = '', q = '') {
     let sSatuan = isDakronJob ? 'KG' : 'Pcs';
 
     r.innerHTML = `
-        <div style="display:flex; align-items:center; background:#f9f9f9; padding:0 10px; border:1px solid var(--border); border-right:none; color:#888;">
-            <span class="material-symbols-outlined" style="font-size:16px;">drag_indicator</span>
+        <div style="display:flex; width: 100%;">
+            <div style="display:flex; align-items:center; background:#f9f9f9; padding:0 10px; border:1px solid var(--border); border-right:none; color:#888;">
+                <span class="material-symbols-outlined" style="font-size:16px;">drag_indicator</span>
+            </div>
+            <input type="text" class="i-name" placeholder="${pName}" style="flex:2; border-left:none; border-radius:0;" value="${n}">
+            <div style="flex:1; display:flex;">
+                <input type="number" class="i-qty" placeholder="${pQty}" style="width:100%; border-left:none; border-radius:0;" value="${q}">
+                <span class="satuan-label" style="background:#eee; padding:10px; border:1px solid var(--border); border-left:none; font-size:11px; color:#666; border-radius:0;">${sSatuan}</span>
+                <button onclick="removeRow(this)" class="btn-delete-row" style="background:var(--danger); color:white; border:1px solid var(--danger); padding:0 10px; cursor:pointer; border-radius: 0 2px 2px 0; display:flex; align-items:center; justify-content:center;" title="Hapus Baris"><span class="material-symbols-outlined" style="font-size:16px;">delete</span></button>
+            </div>
         </div>
-        <input type="text" class="i-name" placeholder="${pName}" style="flex:2; border-left:none; border-radius:0;" value="${n}">
-        <div style="flex:1; display:flex;">
-            <input type="number" class="i-qty" placeholder="${pQty}" style="width:100%; border-left:none; border-radius:0;" value="${q}">
-            <span class="satuan-label" style="background:#eee; padding:10px; border:1px solid var(--border); border-left:none; font-size:11px; color:#666; border-radius:0;">${sSatuan}</span>
-            <button onclick="removeRow(this)" class="btn-delete-row" style="background:var(--danger); color:white; border:1px solid var(--danger); padding:0 10px; cursor:pointer; border-radius: 0 2px 2px 0; display:flex; align-items:center; justify-content:center;" title="Hapus Baris"><span class="material-symbols-outlined" style="font-size:16px;">delete</span></button>
+        <div class="wip-info hidden" style="font-size:10px; padding: 6px 12px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; border-top: none; border-radius: 0 0 4px 4px; display: flex; justify-content: space-between; font-weight: 500; letter-spacing: 0.3px;">
+            <span>Gudang Sebelumnya: <b class="w-masuk" style="font-size:12px;">0</b></span>
+            <span>Sudah Diproses: <b class="w-keluar" style="font-size:12px;">0</b></span>
+            <span>Sisa Stok Gudang: <b class="w-sisa" style="font-size:12px; font-weight:900;">0</b></span>
         </div>`;
     c.appendChild(r);
+    
     const inp = r.querySelector('.i-name'); const qty = r.querySelector('.i-qty');
+    
+    // Kalau mode edit (udah ada nama barangnya), langsung panggil infonya
+    if(n) setTimeout(() => updateWipInfo(r, n), 200);
+
     qty.onfocus = () => { if(r === c.lastElementChild) addRow(); };
+    
+    // Deteksi kalau user ngetik manual / paste (buat ngecek WIP)
+    inp.addEventListener('change', function() { updateWipInfo(r, this.value); });
+    
     inp.oninput = function() {
         let val = this.value.toLowerCase(); let old = r.querySelector('.autocomplete-items'); if(old) old.remove();
+        
+        // Sembunyikan Info WIP pas lagi ngetik milih barang baru
+        r.querySelector('.wip-info').classList.add('hidden');
+
         if(r === c.lastElementChild && val.length > 2) addRow();
         if(val.length < 2) return;
         let l = document.createElement('div'); l.className = 'autocomplete-items';
-        l.style = "position:absolute; top:100%; left:30px; right:0; background:white; border:1px solid #ddd; z-index:9999; max-height:200px; overflow-y:auto; box-shadow:0 5px 15px rgba(0,0,0,0.1); border-radius:2px;";
+        l.style = "position:absolute; top:40px; left:30px; right:0; background:white; border:1px solid #ddd; z-index:9999; max-height:200px; overflow-y:auto; box-shadow:0 5px 15px rgba(0,0,0,0.1); border-radius:2px;";
         r.appendChild(l); let count = 0;
         
-        // --- FILTER AUTOCOMPLETE BUNGLON ---
         let jobVal = document.getElementById('selJobValue').value;
         let isGarukJob = (jobVal === "Garuk Dacron");
         let isBahanMasuk = (jobVal === "Bahan Baku Masuk");
@@ -2187,16 +2206,18 @@ function addRow(n = '', q = '') {
             let matchKeyword = m.kode.toLowerCase().includes(val);
 
             if (!matchKeyword) continue;
-            
-            // Aturan Tampil:
-            // 1. Garuk Dacron CUMA bisa lihat GARUK-
             if (isGarukJob && !isGarukItem) continue;
-            // 2. Kerja produksi biasa NGGAK BISA lihat GARUK- (Kecuali Bahan Masuk, dia bebas!)
             if (!isGarukJob && !isBahanMasuk && isGarukItem) continue;
 
             if(m.kode.toLowerCase().includes(val)) {
                 let d = document.createElement('div'); d.innerText = m.kode; d.style = "padding:10px; border-bottom:1px solid #eee; cursor:pointer;";
-                d.onclick = () => { inp.value = m.kode; l.remove(); qty.focus(); };
+                d.onclick = () => { 
+                    inp.value = m.kode; 
+                    l.remove(); 
+                    qty.focus(); 
+                    // PANGGIL MESIN INFO WIP DISINI!
+                    updateWipInfo(r, m.kode);
+                };
                 l.appendChild(d); count++; if(count>10) break;
             }
         }
@@ -2205,7 +2226,7 @@ function addRow(n = '', q = '') {
 
 function addBSRow(n = '', q = '', ket = '') {
     const c = document.getElementById('rowBSContainer'); const r = document.createElement('div'); r.className = 'input-bs-row-wrapper';
-    r.style = "display:flex; flex-direction:column; gap:5px; margin-bottom:15px; padding:10px; border:1px solid #ccc; border-radius:2px; background:white; position:relative;";
+    r.style = "display:flex; flex-direction:column; gap:0; margin-bottom:-1px; padding:10px; position:relative; border:1px solid #ccc; border-radius:2px; background:white; position:relative;";
     r.innerHTML = `
         <div style="display:flex; gap:0;">
             <input type="text" class="bs-name" placeholder="Kode/Nama Barang" style="flex:2; border-radius:2px 0 0 4px;" value="${n}">
@@ -2979,12 +3000,11 @@ function checkWIP(itemsInput, jobVal, currentId) {
 }
 
 // --- FITUR HITUNG SALDO ESTAFET (WIP) ---
-function getSaldoBarang(kodeBarang, jobTarget, currentId = null) {
-    if(!DATA || !DATA.history) return 0;
+// --- FITUR INFO WIP REALTIME DI FORM ---
+function getSaldoBarangInfo(kodeBarang, jobTarget, currentId = null) {
+    if(!DATA || !DATA.history) return {masuk: 0, keluar: 0, sisa: 0};
     
-    // 1. TENTUKAN SUMBER STOK (PROSES SEBELUMNYA)
-    let sumberStok = 'Bahan Baku Masuk'; // Default
-    
+    let sumberStok = 'Bahan Baku Masuk';
     if (jobTarget === 'Garuk Dacron') sumberStok = 'Bahan Baku Masuk';
     else if (jobTarget === 'Pengisian') sumberStok = 'Bahan Baku Masuk';
     else if (jobTarget === 'Jahit Tutup') sumberStok = 'Pengisian';
@@ -2992,11 +3012,10 @@ function getSaldoBarang(kodeBarang, jobTarget, currentId = null) {
     else if (jobTarget === 'Packing') sumberStok = 'Penyarungan'; 
     else if (jobTarget === 'Ikat/Ball') sumberStok = 'Packing';
 
-    let totalMasuk = 0;   // Hasil dari proses sebelumnya (Modal)
-    let totalKeluar = 0;  // Hasil dari proses saat ini yang udah dikerjain
+    let totalMasuk = 0;   
+    let totalKeluar = 0;  
 
     DATA.history.forEach(d => {
-        // Abaikan data yang lagi diedit, draft, atau batal
         if(d.id === currentId || d.status === 'Draft' || d.status === 'Batal') return;
 
         let itemsArr = [];
@@ -3005,21 +3024,52 @@ function getSaldoBarang(kodeBarang, jobTarget, currentId = null) {
         itemsArr.forEach(i => {
             if(i.n === kodeBarang) {
                 let qty = parseInt(i.q) || 0;
-                
-                // Jika ini adalah riwayat dari PROSES SEBELUMNYA, maka jadi Modal (Nambah Saldo)
-                if(d.job === sumberStok) {
-                    totalMasuk += qty;
-                }
-                // Jika ini adalah riwayat dari PROSES SAAT INI, maka Ngurangin Saldo
-                else if(d.job === jobTarget) {
-                    totalKeluar += qty;
-                }
+                if(d.job === sumberStok) totalMasuk += qty;
+                else if(d.job === jobTarget) totalKeluar += qty;
             }
         });
     });
     
-    // Sisa saldo WIP di tahap tersebut:
-    return totalMasuk - totalKeluar;
+    return { masuk: totalMasuk, keluar: totalKeluar, sisa: totalMasuk - totalKeluar };
+}
+
+function updateWipInfo(rowElement, kodeBarang) {
+    let jobVal = document.getElementById('selJobValue').value;
+    let currentId = document.getElementById('editId').value;
+    let wipBox = rowElement.querySelector('.wip-info');
+    
+    // Cek apakah kerjaan ini butuh estafet (Bahan Baku Masuk nggak usah dicek)
+    let prosesWajibCek = ['Garuk Dacron', 'Pengisian', 'Jahit Tutup', 'Penyarungan', 'Packing', 'Ikat/Ball'];
+    
+    if (!prosesWajibCek.includes(jobVal) || !kodeBarang) {
+        if(wipBox) wipBox.classList.add('hidden');
+        return;
+    }
+
+    let info = getSaldoBarangInfo(kodeBarang, jobVal, currentId);
+    
+    if(wipBox) {
+        wipBox.querySelector('.w-masuk').innerText = info.masuk;
+        wipBox.querySelector('.w-keluar').innerText = info.keluar;
+        wipBox.querySelector('.w-sisa').innerText = info.sisa;
+        wipBox.classList.remove('hidden');
+
+        // Kasih warna peringatan merah muda kalau sisa stoknya habis atau minus!
+        if (info.sisa <= 0) {
+            wipBox.style.background = '#fef2f2';
+            wipBox.style.color = '#dc2626';
+            wipBox.style.borderColor = '#fecaca';
+        } else {
+            wipBox.style.background = '#e0f2fe';
+            wipBox.style.color = '#0369a1';
+            wipBox.style.borderColor = '#bae6fd';
+        }
+    }
+}
+
+// --- FITUR HITUNG SALDO UNTUK SATPAM (Diambil dari Info WIP) ---
+function getSaldoBarang(kodeBarang, jobTarget, currentId = null) {
+    return getSaldoBarangInfo(kodeBarang, jobTarget, currentId).sisa;
 }
 </script>
 </body>
