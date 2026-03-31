@@ -2954,58 +2954,71 @@ window.onload = () => {
     // Jalankan fungsi ini agar sistem mengambil data dari server
     initSystem(); 
 };
-// --- SATPAM CEK WIP (DENGAN SALDO) ---
+// --- SATPAM CEK WIP (DENGAN SALDO ESTAFET) ---
 function checkWIP(itemsInput, jobVal, currentId) {
     let res = { aman: true, msg: "" };
     
-    // UPDATE: Sekarang Satpam juga jaga pintu Garuk Dacron!
-    if (jobVal === 'Pengisian' || jobVal === 'Packing' || jobVal === 'Garuk Dacron') {
+    // Daftar pintu yang sekarang dijaga ketat sama Satpam!
+    let prosesWajibCek = ['Garuk Dacron', 'Pengisian', 'Jahit Tutup', 'Penyarungan', 'Packing', 'Ikat/Ball'];
+    
+    if (prosesWajibCek.includes(jobVal)) {
         itemsInput.forEach(item => {
-            let saldoTersedia = getSaldoBarang(item.n, currentId);
+            // Sekarang kita kasih tau Satpam, ini kerjaan apa biar dia ngecek saldo yang pas
+            let saldoTersedia = getSaldoBarang(item.n, jobVal, currentId);
             let qtyDiminta = parseInt(item.q) || 0;
             
-            // Kalau yang mau diproses LEBIH BANYAK dari saldo bahan baku
+            // Kalau yang mau diproses LEBIH BANYAK dari stok proses sebelumnya
             if (qtyDiminta > saldoTersedia) {
                 res.aman = false;
-                res.msg += `📦 ${item.n}\n   Diminta: ${qtyDiminta} | Saldo Tersedia: ${saldoTersedia}\n\n`;
+                res.msg += `📦 ${item.n}\n   Diminta: ${qtyDiminta} | Saldo Tahap Sebelumnya: ${saldoTersedia}\n\n`;
             }
         });
     }
     
     return res;
 }
-// --- FITUR HITUNG SALDO BAHAN BAKU OTOMATIS ---
-function getSaldoBarang(kodeBarang, currentId = null) {
+
+// --- FITUR HITUNG SALDO ESTAFET (WIP) ---
+function getSaldoBarang(kodeBarang, jobTarget, currentId = null) {
     if(!DATA || !DATA.history) return 0;
     
-    let totalMasuk = 0;
-    let totalKeluar = 0;
+    // 1. TENTUKAN SUMBER STOK (PROSES SEBELUMNYA)
+    let sumberStok = 'Bahan Baku Masuk'; // Default
+    
+    if (jobTarget === 'Garuk Dacron') sumberStok = 'Bahan Baku Masuk';
+    else if (jobTarget === 'Pengisian') sumberStok = 'Bahan Baku Masuk';
+    else if (jobTarget === 'Jahit Tutup') sumberStok = 'Pengisian';
+    else if (jobTarget === 'Penyarungan') sumberStok = 'Jahit Tutup';
+    else if (jobTarget === 'Packing') sumberStok = 'Penyarungan'; 
+    else if (jobTarget === 'Ikat/Ball') sumberStok = 'Packing';
+
+    let totalMasuk = 0;   // Hasil dari proses sebelumnya (Modal)
+    let totalKeluar = 0;  // Hasil dari proses saat ini yang udah dikerjain
 
     DATA.history.forEach(d => {
         // Abaikan data yang lagi diedit, draft, atau batal
         if(d.id === currentId || d.status === 'Draft' || d.status === 'Batal') return;
 
         let itemsArr = [];
-        try { 
-            itemsArr = typeof d.items === 'string' ? JSON.parse(d.items) : d.items; 
-        } catch(e) {}
+        try { itemsArr = typeof d.items === 'string' ? JSON.parse(d.items) : d.items; } catch(e) {}
 
         itemsArr.forEach(i => {
             if(i.n === kodeBarang) {
                 let qty = parseInt(i.q) || 0;
-                // Kalau ada laporan Bahan Baku Masuk -> Saldo Nambah
-                if(d.job === 'Bahan Baku Masuk') {
+                
+                // Jika ini adalah riwayat dari PROSES SEBELUMNYA, maka jadi Modal (Nambah Saldo)
+                if(d.job === sumberStok) {
                     totalMasuk += qty;
                 }
-                // UPDATE: Garuk Dacron sekarang ikut ngurangin saldo!
-                else if(d.job === 'Pengisian' || d.job === 'Packing' || d.job === 'Garuk Dacron') {
+                // Jika ini adalah riwayat dari PROSES SAAT INI, maka Ngurangin Saldo
+                else if(d.job === jobTarget) {
                     totalKeluar += qty;
                 }
             }
         });
     });
     
-    // Kembalikan sisa saldonya
+    // Sisa saldo WIP di tahap tersebut:
     return totalMasuk - totalKeluar;
 }
 </script>
