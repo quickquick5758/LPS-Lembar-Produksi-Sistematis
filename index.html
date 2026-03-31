@@ -2276,7 +2276,7 @@ function askSave(status, type = 'PRD') {
         let cekWip = checkWIP(items, jobVal, currentId);
         
         if(!cekWip.aman) {
-            return showAlert("Alur Produksi Ditolak ❌", `Validasi gagal:\n\n${cekWip.msg}`);
+            return showAlert("Input Produksi Ditolak ❌", `Validasi gagal:\n\n${cekWip.msg}`);
         }
     }
     // -------------------------------------
@@ -2958,8 +2958,8 @@ window.onload = () => {
 function checkWIP(itemsInput, jobVal, currentId) {
     let res = { aman: true, msg: "" };
     
-    // Cek Saldo HANYA aktif kalau job-nya Pengisian atau Packing
-    if (jobVal === 'Pengisian' || jobVal === 'Packing') {
+    // UPDATE: Sekarang Satpam juga jaga pintu Garuk Dacron!
+    if (jobVal === 'Pengisian' || jobVal === 'Packing' || jobVal === 'Garuk Dacron') {
         itemsInput.forEach(item => {
             let saldoTersedia = getSaldoBarang(item.n, currentId);
             let qtyDiminta = parseInt(item.q) || 0;
@@ -2997,8 +2997,8 @@ function getSaldoBarang(kodeBarang, currentId = null) {
                 if(d.job === 'Bahan Baku Masuk') {
                     totalMasuk += qty;
                 }
-                // Kalau dikerjain di Pengisian / Packing -> Saldo Berkurang
-                else if(d.job === 'Pengisian' || d.job === 'Packing') {
+                // UPDATE: Garuk Dacron sekarang ikut ngurangin saldo!
+                else if(d.job === 'Pengisian' || d.job === 'Packing' || d.job === 'Garuk Dacron') {
                     totalKeluar += qty;
                 }
             }
