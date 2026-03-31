@@ -183,6 +183,27 @@
             box-shadow: var(--shadow-pressed) !important;
             border-color: transparent !important;
         }
+        /* --- STYLE KHUSUS VIEW DATA BIAR KAYAK EXCEL --- */
+#viewViewdata .excel-table {
+    border: 1px solid #d1d5db; /* Garis tepi tebal */
+}
+#viewViewdata .excel-table th {
+    background: #0ea5e9 !important; /* Biru muda cerah */
+    border-right: 1px solid #bae6fd;
+    border-bottom: 2px solid #0284c7;
+    white-space: nowrap;
+}
+#viewViewdata .excel-table td {
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px 12px !important;
+}
+/* Efek hover tiap baris (Excel feel) */
+#viewViewdata .excel-table tbody tr:hover td {
+    background-color: #f0fdf4 !important; 
+    cursor: crosshair;
+}
+
 
         /* ==== INPUT TENGGELAM (INSET) ==== */
         input[type="date"], input[type="text"], input[type="number"], input[type="password"], select {
@@ -1385,6 +1406,13 @@ function openInputJobSelect() {
                     document.getElementById('labelInputKaru').style.color = "#888";
                 }
             }
+            
+            // --- KUNCI FIX NYA DI SINI BEB! ---
+            // Begitu Karu milih kerjaan, kita suruh sistem buat manggil daftar operatornya!
+            let currentKaru = document.getElementById('selKaruValue').value;
+            if (currentKaru && currentKaru !== "-- Pilih Karu --" && currentKaru !== "(System)") {
+                loadOps(currentKaru);
+            }
         }
         
         document.getElementById('itemArea').classList.remove('hidden'); 
@@ -1398,6 +1426,7 @@ function openInputJobSelect() {
         });
     });
 }
+
 
 function openExTypeSelect() {
     let items = [
@@ -1847,6 +1876,12 @@ function loadViewDataTable() {
         return;
     }
 
+    // --- 🎯 HITUNG GRAND TOTAL QTY DARI DATA YANG DIFILTER ---
+    let grandTotalQty = 0;
+    myData.forEach(d => {
+        grandTotalQty += parseInt(d.qty) || 0;
+    });
+
     let totalPages = Math.ceil(myData.length / rowsPerPageView);
     if(currentPageView > totalPages) currentPageView = totalPages;
     if(currentPageView < 1) currentPageView = 1;
@@ -1856,18 +1891,44 @@ function loadViewDataTable() {
 
     paginatedData.forEach(d => {
         let typeBadge = d.tipe === 'BS' ? `<span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">BS</span>` : `<span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">PRD</span>`;
+        
+        // --- 🎯 LOGIKA WARNA MERAH UNTUK (System) ---
+        let tampilKaru = (d.karu === "(System)") 
+            ? `<span style="color:#dc2626; font-weight:bold;">(System)</span>` 
+            : d.karu;
+
+        // Kita cetak barisnya, perhatikan style white-space:nowrap biar kayak Excel!
         body.innerHTML += `<tr>
-            <td style="font-weight:600; font-size:11px;">${d.id}</td><td align="center">${typeBadge}</td><td>${d.tgl}</td>
-            <td>${d.karu}</td><td>${d.job}</td><td style="max-width:150px; white-space:normal; word-wrap:break-word;">${d.ops}</td>
-            <td style="font-weight:bold; color:var(--ig-primary);">${d.kode}</td><td align="center" style="font-weight:bold;">${d.qty}</td>
-            <td style="color:#c2410c; font-size:11px;">${d.ket}</td>
+            <td style="font-weight:600; font-size:11px; white-space:nowrap;">${d.id}</td>
+            <td align="center">${typeBadge}</td>
+            <td style="white-space:nowrap;">${d.tgl}</td>
+            <td style="white-space:nowrap;">${tampilKaru}</td>
+            <td style="white-space:nowrap;">${d.job}</td>
+            <td style="white-space:nowrap;">${d.ops}</td>
+            <td style="font-weight:bold; color:var(--ig-primary); white-space:nowrap;">${d.kode}</td>
+            <td align="center" style="font-weight:bold; font-size:13px; background:#f8fafc;">${d.qty}</td>
+            <td style="color:#c2410c; font-size:11px; white-space:nowrap;">${d.ket}</td>
         </tr>`;
     });
+
+    // --- 🎯 CETAK BARIS SUBTOTAL DI BAWAH ---
+    body.innerHTML += `
+        <tr style="background-color: #e0f2fe;">
+            <td colspan="7" style="text-align:right; font-weight:800; color:#0369a1; padding-right:15px; border-top:2px solid #bae6fd;">
+                TOTAL QTY (DARI ${myData.length} DATA):
+            </td>
+            <td style="text-align:center; font-weight:900; font-size:15px; color:#0369a1; border-top:2px solid #bae6fd;">
+                ${grandTotalQty.toLocaleString('id-ID')}
+            </td>
+            <td style="border-top:2px solid #bae6fd;"></td>
+        </tr>
+    `;
 
     renderSmartPagination('viewPagination', totalPages, currentPageView, (newPg) => {
         currentPageView = newPg; loadViewDataTable();
     });
 }
+
 function filterViewData() { currentPageView = 1; loadViewDataTable(); }
 // === FUNGSI VIEW MODAL (DENGAN TAMBAHAN TOTAL QTY) ===
 function openViewModal(id, source) {
