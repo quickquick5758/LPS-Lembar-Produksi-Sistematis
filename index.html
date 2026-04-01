@@ -2259,6 +2259,7 @@ function addRow(n = '', q = '') {
         r.appendChild(l); let count = 0;
         
         let jobVal = document.getElementById('selJobValue').value;
+        let currentId = document.getElementById('editId').value; // Ambil ID buat ngitung saldo
         let isGarukJob = (jobVal === "Garuk Dacron");
         let isBahanMasuk = (jobVal === "Bahan Baku Masuk");
 
@@ -2271,7 +2272,32 @@ function addRow(n = '', q = '') {
             if (!isGarukJob && !isBahanMasuk && isGarukItem) continue;
 
             if(m.kode.toLowerCase().includes(val)) {
-                let d = document.createElement('div'); d.innerText = m.kode; d.style = "padding:10px; border-bottom:1px solid #eee; cursor:pointer;";
+                
+                // --- 🎯 LOGIKA JURUS BACA SALDO DI AUTOCOMPLETE ---
+                let infoSaldo = "";
+                let prosesWajibCek = ['Garuk Dacron', 'Pengisian', 'Jahit Tutup', 'Penyarungan', 'Packing', 'Ikat/Ball'];
+                
+                if (prosesWajibCek.includes(jobVal)) {
+                    // Panggil Satpam buat ngintip sisa saldo di tahap sebelumnya
+                    let sisa = getSaldoBarang(m.kode, jobVal, currentId);
+                    
+                    // Bikin warna dinamis: Hijau kalau ada stok, Merah kalau abis/minus
+                    let warnaTeks = sisa > 0 ? '#166534' : '#991b1b'; 
+                    let bgWarna = sisa > 0 ? '#dcfce7' : '#fee2e2';
+                    
+                    infoSaldo = `<span style="background:${bgWarna}; color:${warnaTeks}; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:800; border: 1px solid ${sisa > 0 ? '#bbf7d0' : '#fecaca'};">Stok: ${sisa}</span>`;
+                }
+                // --------------------------------------------------
+
+                let d = document.createElement('div'); 
+                // Gabungin nama barang sama badge saldo-nya pakai flexbox biar rapi kiri-kanan
+                d.innerHTML = `<span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:10px; font-weight:500;">${m.kode}</span> ${infoSaldo}`; 
+                d.style = "padding:10px 12px; border-bottom:1px solid #eee; cursor:pointer; display:flex; justify-content:space-between; align-items:center;";
+                
+                // Efek hover biar mantap
+                d.onmouseover = () => d.style.backgroundColor = "#f0fdf4";
+                d.onmouseout = () => d.style.backgroundColor = "white";
+
                 d.onclick = () => { 
                     inp.value = m.kode; 
                     l.remove(); 
@@ -2283,7 +2309,6 @@ function addRow(n = '', q = '') {
             }
         }
     };
-}
 
 function addBSRow(n = '', q = '', ket = '') {
     const c = document.getElementById('rowBSContainer'); const r = document.createElement('div'); r.className = 'input-bs-row-wrapper';
