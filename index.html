@@ -1135,7 +1135,37 @@
 
                 <div style="overflow-x:auto;">
                     <table class="excel-table">
-                        <thead><tr><th>ID</th><th>TIPE</th><th>TANGGAL</th><th>KARU</th><th>PEKERJAAN</th><th>OPERATOR</th><th>KODE/BARANG</th><th>QTY</th><th>KETERANGAN</th></tr></thead>
+                       <thead>
+                            <tr>
+                                <th data-col="id" onclick="sortViewData('id')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan ID">
+                                    ID <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span>
+                                </th>
+                                <th data-col="tipe" onclick="sortViewData('tipe')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Tipe">
+                                    TIPE <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span>
+                                </th>
+                                <th data-col="tgl" onclick="sortViewData('tgl')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Tanggal">
+                                    TANGGAL <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span>
+                                </th>
+                                <th data-col="karu" onclick="sortViewData('karu')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Karu">
+                                    KARU <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span>
+                                </th>
+                                <th data-col="job" onclick="sortViewData('job')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Pekerjaan">
+                                    PEKERJAAN <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span>
+                                </th>
+                                <th data-col="ops" onclick="sortViewData('ops')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Operator">
+                                    OPERATOR <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span>
+                                </th>
+                                <th data-col="kode" onclick="sortViewData('kode')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Barang">
+                                    KODE/BARANG <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span>
+                                </th>
+                                <th data-col="qty" onclick="sortViewData('qty')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Qty">
+                                    QTY <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span>
+                                </th>
+                                <th data-col="ket" onclick="sortViewData('ket')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Keterangan">
+                                    KETERANGAN <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span>
+                                </th>
+                            </tr>
+                        </thead>
                         <tbody id="viewDataTableBody"></tbody>
                     </table>
                 </div>
@@ -1853,7 +1883,43 @@ function setDefaultViewDates() {
     document.getElementById('viewDateFrom').value = `${y}-${m}-01`;
     document.getElementById('viewDateTo').value = `${y}-${m}-${lastDay}`;
 }
+    // === VARIABEL & FUNGSI SORTING VIEW DATA ===
+let currentSortColView = '';
+let currentSortDirView = 'asc';
 
+function sortViewData(col) {
+    // Balik arah kalau klik kolom yang sama
+    if (currentSortColView === col) {
+        currentSortDirView = currentSortDirView === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSortColView = col;
+        currentSortDirView = 'asc'; // Default naik kalau baru klik
+    }
+
+    // Reset semua icon jadi panah abu-abu ganda
+    document.querySelectorAll('#viewViewdata thead th').forEach(th => {
+        let icon = th.querySelector('.material-symbols-outlined');
+        if(icon) {
+            icon.innerText = 'unfold_more';
+            icon.style.opacity = '0.5';
+        }
+    });
+
+    // Nyalakan icon untuk kolom yang aktif
+    let targetTh = document.querySelector(`#viewViewdata thead th[data-col="${col}"]`);
+    if(targetTh) {
+        let icon = targetTh.querySelector('.material-symbols-outlined');
+        if(icon) {
+            // arrow_downward (A-Z), arrow_upward (Z-A)
+            icon.innerText = currentSortDirView === 'asc' ? 'arrow_downward' : 'arrow_upward';
+            icon.style.opacity = '1';
+        }
+    }
+
+    // Render ulang ke halaman 1 setelah disortir
+    currentPageView = 1; 
+    loadViewDataTable();
+}
 function loadViewDataTable() {
     if(!VIEW_DATA_CACHE) buildViewDataCache();
 
@@ -1892,6 +1958,26 @@ function loadViewDataTable() {
         body.innerHTML = `<tr><td colspan="9" align="center" style="padding:20px; color:#888; font-weight:600;">Tidak ada data pada periode ini</td></tr>`; 
         document.getElementById('viewPagination').innerHTML = '';
         return;
+    }
+    // --- FITUR SORTING AKTIF DARI HEADER ---
+    if (currentSortColView) {
+        myData.sort((a, b) => {
+            let valA = a[currentSortColView];
+            let valB = b[currentSortColView];
+            
+            // Pastikan QTY dibaca sebagai angka, biar "2" gak disangka lebih besar dari "10"
+            if (currentSortColView === 'qty') {
+                valA = parseInt(valA) || 0;
+                valB = parseInt(valB) || 0;
+            } else {
+                valA = (valA || '').toString().toLowerCase();
+                valB = (valB || '').toString().toLowerCase();
+            }
+
+            if (valA < valB) return currentSortDirView === 'asc' ? -1 : 1;
+            if (valA > valB) return currentSortDirView === 'asc' ? 1 : -1;
+            return 0;
+        });
     }
 
     // --- 🎯 HITUNG GRAND TOTAL QTY DARI DATA YANG DIFILTER ---
