@@ -34,7 +34,7 @@
 
         /* ==== INPUT & SEARCH BAR ALA INSTAGRAM ==== */
         input[type="date"], input[type="text"], input[type="number"], input[type="password"], select {
-            border-radius: 2px !important; /* Agak membulat */
+            border-radius: 8px !important; /* Agak membulat */
             border: 1px solid var(--border) !important;
             background: #efefef !important; /* Abu-abu terang khas kolom pencarian IG */
             padding: 10px 15px;
@@ -42,10 +42,16 @@
             width: 100%; box-sizing: border-box; color: var(--ig-text);
         }
         input:focus { border: 1px solid var(--ig-sec-text) !important; background: #ffffff !important; }
+        
+        /* --- STYLE KHUSUS MASTER BARANG BIAR GAK WRAP --- */
+        #viewMaster .excel-table th,
+        #viewMaster .excel-table td {
+            white-space: nowrap !important;
+        }
 
         /* ==== TOMBOL ALA INSTAGRAM ==== */
         .btn-primary, .btn-success, .btn-outline, .btn-outline-danger, .custom-select-btn {
-            border-radius: 2px !important;
+            border-radius: 8px !important;
             box-shadow: none !important; /* Hilangkan efek timbul tebal */
             border: 1px solid transparent !important;
             transition: all 0.2s ease-in-out !important;
@@ -59,7 +65,7 @@
         /* ==== TABEL EXCEL & STICKY HEADER BIRU IG ==== */
         .excel-table { 
             width: 100%; border-collapse: separate; border-spacing: 0; 
-            border-radius: 2px; overflow: hidden; 
+            border-radius: 8px; overflow: hidden; 
             box-shadow: var(--shadow-timbul); background: #ffffff; 
             border: 1px solid var(--border); 
         }
@@ -91,7 +97,7 @@
         .material-symbols-outlined { vertical-align: middle; font-size: 18px; }
 
         #loginOverlay { position: fixed; inset: 0; background: var(--ig-bg); z-index: 9000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .login-box { background: var(--ig-bg); border: 2px solid #ffffff; padding: 40px; width: 350px; text-align: center; border-radius: 2px; box-shadow: var(--shadow-timbul); }
+        .login-box { background: var(--ig-bg); border: 2px solid #ffffff; padding: 40px; width: 350px; text-align: center; border-radius: 1px; box-shadow: var(--shadow-timbul); }
         .pass-wrapper { position: relative; width: 100%; margin-bottom: 20px; display: flex; align-items: center; }
         .pass-wrapper input { width: 100%; padding: 12px; padding-right: 40px; }
         .pass-eye { position: absolute; right: 15px; cursor: pointer; opacity: 0.6; }
@@ -100,7 +106,7 @@
         #loadingOverlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.2); z-index: 9999; display: none; align-items: center; justify-content: center; }
         .sk-folding-cube { margin: 20px auto; width: 40px; height: 40px; position: relative; transform: rotateZ(45deg); }
         .sk-folding-cube .sk-cube { float: left; width: 50%; height: 50%; position: relative; transform: scale(1.1); }
-        .sk-folding-cube .sk-cube:before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--ig-primary); animation: sk-foldCubeAngle 2.4s infinite linear both; transform-origin: 100% 100%; border-radius: 2px; }
+        .sk-folding-cube .sk-cube:before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--ig-primary); animation: sk-foldCubeAngle 2.4s infinite linear both; transform-origin: 100% 100%; border-radius: 1px; }
         .sk-folding-cube .sk-cube2 { transform: scale(1.1) rotateZ(90deg); }
         .sk-folding-cube .sk-cube3 { transform: scale(1.1) rotateZ(180deg); }
         .sk-folding-cube .sk-cube4 { transform: scale(1.1) rotateZ(270deg); }
@@ -110,17 +116,17 @@
         @keyframes sk-foldCubeAngle { 0%, 10% { transform: perspective(140px) rotateX(-180deg); opacity: 0; } 25%, 75% { transform: perspective(140px) rotateX(0deg); opacity: 1; } 90%, 100% { transform: perspective(140px) rotateY(180deg); opacity: 0; } }
 
         .top-bar { background: var(--ig-bg); height: 65px; border-bottom: none; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: relative; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .user-profile-box { text-align: right; cursor: pointer; padding: 5px 10px; border-radius: 2px; transition: 0.2s; }
+        .user-profile-box { text-align: right; cursor: pointer; padding: 5px 10px; border-radius: 8px; transition: 0.2s; }
         .user-profile-box:hover { background: rgba(0,0,0,0.03); }
         
-        .user-dropdown { position: absolute; top: 60px; right: 20px; background: #ffffff; border: 1px solid #ffffff; display: none; width: 180px; box-shadow: var(--shadow-timbul); z-index: 999; border-radius: 2px; overflow: hidden; }
+        .user-dropdown { position: absolute; top: 60px; right: 20px; background: #ffffff; border: 1px solid #ffffff; display: none; width: 180px; box-shadow: var(--shadow-timbul); z-index: 999; border-radius: 8px; overflow: hidden; }
         .user-dropdown.active { display: block; }
         .user-dropdown div { padding: 12px 15px; cursor: pointer; transition: 0.2s; }
         .user-dropdown div:hover { background: #f0f4f9; }
 
         .sidebar { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: var(--ig-bg); border-right: 1px solid #ffffff; transition: 0.3s; z-index: 2000; box-shadow: 5px 0 15px rgba(0,0,0,0.05); }
         .sidebar.active { left: 0; }
-        .nav-item { padding: 15px 20px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; margin: 5px 10px; border-radius: 2px; }
+        .nav-item { padding: 15px 20px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; margin: 5px 10px; border-radius: 8px; }
         .nav-item:hover { background: #ffffff; color: var(--ig-primary); box-shadow: var(--shadow-timbul); transform: translateY(-1px); }
         
         .main-content { flex: 1; display: flex; flex-direction: column; width: 100%; overflow: hidden; position: relative; }
@@ -139,7 +145,7 @@
         .card, .confirm-box, .select-modal-box {
             background: #ffffff;
             border: 2px solid #ffffff !important;
-            border-radius: 2px !important; /* <--- JADI LEBIH LANCIP */
+            border-radius: 8px !important; /* <--- JADI LEBIH LANCIP */
             box-shadow: var(--shadow-timbul) !important;
             padding: 20px;
             transition: all 0.3s ease !important;
@@ -156,7 +162,7 @@
 
         /* Tombol Mengapung (Pill Shape) */
         .btn-primary, .btn-success, .btn-outline, .btn-outline-danger, .custom-select-btn {
-            border-radius: 2px !important;
+            border-radius: 8px !important;
             box-shadow: 4px 4px 10px rgba(0,0,0,0.06), -4px -4px 10px rgba(255,255,255,1) !important;
             border: 2px solid #ffffff !important;
             transition: all 0.2s ease-in-out !important;
@@ -207,7 +213,7 @@
 
         /* ==== INPUT TENGGELAM (INSET) ==== */
         input[type="date"], input[type="text"], input[type="number"], input[type="password"], select {
-            border-radius: 2px !important;
+            border-radius: 8px !important;
             border: none !important;
             background: #eef2f6 !important;
             box-shadow: var(--shadow-inset) !important;
@@ -234,7 +240,7 @@
             transform: scale(0.9); 
             animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             /* Pastikan card popupnya juga timbul */
-            border-radius: 2px !important;
+            border-radius: 8px !important;
             box-shadow: var(--shadow-timbul) !important;
             padding: 20px !important; /* Padding agak gedean biar lega */
             border: 2px solid #ffffff;
@@ -247,7 +253,7 @@
             flex: 1;
             padding: 12px 15px;
             border: none;
-            border-radius: 2px !important; /* Bentuk Pil */
+            border-radius: 8px !important; /* Bentuk Pil */
             font-weight: 700; font-size: 14px; cursor: pointer;
             background: #f0f4f9; /* Warna dasar agak abu terang */
             /* Efek Bayangan Timbul yang Lembut */
@@ -276,7 +282,7 @@
         .select-modal-box { padding: 0; width: 340px; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column; }
         .select-modal-header { padding: 20px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 15px; }
         .select-modal-body { padding: 10px; overflow-y: auto; flex: 1; background: var(--ig-bg); }
-        .select-item { padding: 12px 20px; margin-bottom: 8px; border-radius: 2px; background: #ffffff; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.02); }
+        .select-item { padding: 12px 20px; margin-bottom: 8px; border-radius: 8px; background: #ffffff; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.02); }
         .select-item:hover { transform: scale(1.02); box-shadow: var(--shadow-timbul); color: var(--ig-primary); }
         .select-item.selected { background: var(--ig-primary); color: white; font-weight: bold; }
 
@@ -291,7 +297,7 @@
         /* Tabel Excel Gemini Style */
         .dash-table th, .excel-table th { font-size: 13px !important; }
         .dash-table td, .excel-table td { font-size: 14px !important; font-weight: 600; }
-        .excel-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 2px; overflow: hidden; box-shadow: var(--shadow-timbul); background: #ffffff; }
+        .excel-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-timbul); background: #ffffff; }
         .excel-table th { padding: 15px !important; background: var(--excel-header); font-weight: 700; color: #444; border-bottom: 2px solid var(--border); text-align: left; text-transform: uppercase; letter-spacing: 0.5px; }
         .excel-table td { padding: 6px 8px !important; border-bottom: 1px solid #f0f0f0; text-align: left; }
         .excel-table tr:last-child td { border-bottom: none; }
@@ -304,7 +310,7 @@
         .action-icon:hover { transform: scale(1.15); color: var(--ig-primary); box-shadow: var(--shadow-hover); }
         .icon-success { color: var(--success); } .icon-success:hover { color: #15803d; }
         
-        .badge { padding: 6px 10px; border-radius: 2px; font-weight: 700; font-size: 10px; text-transform: uppercase; box-shadow: inset 2px 2px 4px rgba(0,0,0,0.05); }
+        .badge { padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 10px; text-transform: uppercase; box-shadow: inset 2px 2px 4px rgba(0,0,0,0.05); }
         .st-draft { background: #e2e8f0; color: #475569; }
         .st-submitted { background: #fef3c7; color: #b45309; }
         .st-approved { background: #dcfce7; color: #166534; }
@@ -324,7 +330,7 @@
 
         /* Pagination Footer (Bentuk Pil/Kapsul) */
         .pagination-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 15px 20px; background: transparent; }
-        .page-limit-wrapper { display: flex; align-items: center; gap: 8px; background: #ffffff; padding: 8px 18px; border-radius: 2px !important; box-shadow: var(--shadow-timbul); cursor: pointer; transition: 0.2s; border: 2px solid #ffffff; }
+        .page-limit-wrapper { display: flex; align-items: center; gap: 8px; background: #ffffff; padding: 8px 18px; border-radius: 8px !important; box-shadow: var(--shadow-timbul); cursor: pointer; transition: 0.2s; border: 2px solid #ffffff; }
         .page-limit-wrapper:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 
         @media (max-width: 600px) { .pagination-footer { flex-direction: column; gap: 15px; } }
@@ -516,16 +522,18 @@
         .hourly-wrapper { overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .hourly-wrapper::-webkit-scrollbar { display: none; }
         
-        .hourly-table { min-width: 800px; border-radius: 2px; box-shadow: none; border: 1px solid var(--border); }
+        .hourly-table { min-width: 800px; border-radius: 8px; box-shadow: none; border: 1px solid var(--border); }
         .hourly-table th { 
             padding: 10px 4px !important; text-align: center; font-size: 10px !important; 
             background: #262626 !important; /* Warna Dark/Hitam Elegan */
             color: white !important; border-right: 1px solid #444; letter-spacing: 0.5px;
+            white-space: nowrap; /* <-- TAMBAHAN INI BIAR GAK TURUN KE BAWAH */
         }
         .hourly-table td { 
             padding: 12px 4px !important; text-align: center; font-weight: 800; 
             font-size: 13px !important; border-right: 1px solid var(--border); 
             transition: 0.2s;
+            white-space: nowrap; /* <-- TAMBAHAN INI BIAR GAK TURUN KE BAWAH */
         }
         /* UPDATE: Mengecilkan kolom Proses di tabel per jam */
         .hourly-table th:first-child, .hourly-table td:first-child { 
@@ -727,12 +735,12 @@
     <div class="top-bar">
         <div style="display:flex; align-items:center;">
             <div onclick="toggleSidebar()" style="cursor:pointer; font-size:20px; margin-right:15px;"><span class="material-symbols-outlined">menu</span></div>
-            <div onclick="showView('home')" style="cursor:pointer; font-size:18px; margin-right:10px; background:#f0f0f0; padding:4px 8px; border-radius:2px;" title="Kembali ke Home"><span class="material-symbols-outlined">home</span></div>
+            <div onclick="showView('home')" style="cursor:pointer; font-size:18px; margin-right:10px; background:#f0f0f0; padding:4px 8px; border-radius: 8px;" title="Kembali ke Home"><span class="material-symbols-outlined">home</span></div>
             
-            <div onclick="refreshData()" style="cursor:pointer; font-size:18px; margin-right:10px; background:#e0f2fe; color:#0369a1; padding:4px 8px; border-radius:2px;" title="Tarik Data Terbaru"><span class="material-symbols-outlined">sync</span></div>
+            <div onclick="refreshData()" style="cursor:pointer; font-size:18px; margin-right:10px; background:#e0f2fe; color:#0369a1; padding:4px 8px; border-radius: 8px;" title="Tarik Data Terbaru"><span class="material-symbols-outlined">sync</span></div>
             
             <input type="hidden" id="headerRoleValue">
-            <div class="custom-select-btn" id="btnHeaderRole" style="padding:3px 6px; border: none; background: #f0f0f0; border-radius: 2px; font-weight: 600; font-size: 12px; margin-left: 10px; width: auto; gap: 5px;" onclick="openRoleSelect()">
+            <div class="custom-select-btn" id="btnHeaderRole" style="padding:3px 6px; border: none; background: #f0f0f0; border-radius: 8px; font-weight: 600; font-size: 12px; margin-left: 10px; width: auto; gap: 5px;" onclick="openRoleSelect()">
                 <span id="labelHeaderRole">Role</span>
                 <span class="material-symbols-outlined" style="font-size: 14px; color: #888;">expand_more</span>
             </div>
@@ -788,7 +796,7 @@
                                 <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: var(--ig-text);">
                                     <span class="material-symbols-outlined" style="color:var(--success)">local_shipping</span> Monitor Kiriman
                                 </h4>
-                                <span style="font-size:10px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 4px 8px; border-radius: 2px;"><span class="material-symbols-outlined" style="font-size:14px;">swipe</span> Geser</span>
+                                <span style="font-size:10px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 4px 8px; border-radius: 8px;"><span class="material-symbols-outlined" style="font-size:14px;">swipe</span> Geser</span>
                             </div>
                             
                             <div style="padding: 15px;">
@@ -802,13 +810,13 @@
                                             </div>
                                             
                                             <input type="hidden" id="filterPelangganValue" value="ALL">
-                                            <div class="custom-select-btn" id="btnFilterPelanggan" onclick="openPelangganSelect()" style="padding: 6px 12px !important; font-size: 11px; width: auto; max-width: 150px; border-radius: 2px !important; background: #ffffff; border: 1px solid var(--border) !important; margin: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;">
+                                            <div class="custom-select-btn" id="btnFilterPelanggan" onclick="openPelangganSelect()" style="padding: 6px 12px !important; font-size: 11px; width: auto; max-width: 150px; border-radius: 8px !important; background: #ffffff; border: 1px solid var(--border) !important; margin: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;">
                                                 <span id="labelFilterPelanggan" style="font-weight: 600; color: var(--ig-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Semua Pelanggan</span>
                                                 <span class="material-symbols-outlined" style="font-size: 16px; color: #888; margin-left: 5px;">expand_more</span>
                                             </div>
                                         </div>
                                         
-                                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-bottom: 15px; border-radius: 2px; overflow: hidden; border: 1px solid var(--border);">
+                                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-bottom: 15px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border);">
                                             <div style="background: white; padding: 15px 5px; text-align: center;">
                                                 <div style="font-size: 10px; color: var(--ig-sec-text); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Cycle 1</div>
                                                 <div id="valCycle1" style="font-size: 20px; font-weight: 800; color: var(--ig-text); margin-top: 5px;">0</div>
@@ -823,13 +831,13 @@
                                             </div>
                                         </div>
 
-                                        <div style="background: rgba(88, 195, 34, 0.1); border: 1px solid rgba(88, 195, 34, 0.3); border-radius: 2px; padding: 15px; text-align: center; margin-bottom: 15px;">
+                                        <div style="background: rgba(88, 195, 34, 0.1); border: 1px solid rgba(88, 195, 34, 0.3); border-radius: 4px; padding: 15px; text-align: center; margin-bottom: 15px;">
                                             <div style="font-size: 11px; color: var(--success); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Total Kiriman Hari Ini</div>
                                             <div id="valCycleTotal" style="font-size: 26px; font-weight: 800; color: var(--success); margin-top: 5px;">0</div>
                                         </div>
 
                                         <h5 style="margin: 0 0 10px 0; color:var(--ig-sec-text); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Rincian per Kategori Barang</h5>
-                                        <div style="overflow-y: auto; max-height: 270px; border-radius: 2px; border: 1px solid var(--border);">
+                                        <div style="overflow-y: auto; max-height: 270px; border-radius: 4px; border: 1px solid var(--border);">
                                             <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
                                                 <thead>
                                                     <tr>
@@ -850,12 +858,12 @@
                                             &mdash; GLOBAL (ALL SUPPLIER) &mdash;
                                         </div>
                                         
-                                        <div style="background: rgba(0, 149, 246, 0.1); border: 1px solid rgba(0, 149, 246, 0.3); border-radius: 2px; padding: 15px; text-align: center; margin-bottom: 15px;">
+                                        <div style="background: rgba(0, 149, 246, 0.1); border: 1px solid rgba(0, 149, 246, 0.3); border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 15px;">
                                             <div style="font-size: 11px; color: var(--ig-primary); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Total Kiriman Global</div>
                                             <div id="valGlobalTotal" style="font-size: 26px; font-weight: 800; color: var(--ig-primary); margin-top: 5px;">0</div>
                                         </div>
 
-                                        <div style="overflow-y: auto; max-height: 300px; border-radius: 2px; border: 1px solid var(--border);">
+                                        <div style="overflow-y: auto; max-height: 300px; border-radius: 8px; border: 1px solid var(--border);">
                                             <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
                                                 <thead>
                                                     <tr>
@@ -877,7 +885,7 @@
                                 <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: var(--ig-text);">
                                     <span class="material-symbols-outlined" style="color:#f59e0b">schedule</span> Performa Per Jam (Hari Ini)
                                 </h4>
-                                <span style="font-size:12px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 2px 4px; border-radius: 2px;">
+                                <span style="font-size:12px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 2px 4px; border-radius: 4px;">
                                     <span class="material-symbols-outlined" style="font-size:12px;">swipe</span> Geser
                                 </span>
                             </div>
@@ -919,7 +927,7 @@
                                         <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 12px;">
                                             <div style="font-size:12px; font-weight:600; color:var(--ig-text); text-transform: uppercase; margin-bottom: 6px;">Performa Tim</div>
                                             <input type="hidden" id="valKaruChart" value="ALL">
-                                            <div class="custom-select-btn" onclick="openKaruChartSelect()" style="padding: 6px 12px; font-size: 11px; min-width: 120px; border-radius: 2px !important; background: #ffffff; border: 1px solid var(--border) !important; color: var(--ig-primary); cursor: pointer; display:flex; justify-content:space-between; align-items:center; box-sizing: border-box; margin: 0;">
+                                            <div class="custom-select-btn" onclick="openKaruChartSelect()" style="padding: 6px 12px; font-size: 11px; min-width: 120px; border-radius: 8px !important; background: #ffffff; border: 1px solid var(--border) !important; color: var(--ig-primary); cursor: pointer; display:flex; justify-content:space-between; align-items:center; box-sizing: border-box; margin: 0;">
                                                 <span id="labelKaruChart">Semua Karu</span>
                                                 <span class="material-symbols-outlined" style="font-size: 16px; color: #888; margin-left: 5px;">expand_more</span>
                                             </div>
@@ -960,9 +968,9 @@
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; width: 100%; overflow-x: auto; padding-bottom: 5px;">
                         <div style="position: relative; flex: 1; min-width: 180px;">
                             <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; color: #888; font-size: 18px;">search</span>
-                            <input type="text" id="findLaporan" placeholder="Cari laporan..." onkeyup="filterLaporan()" style="width:100%; padding: 10px 10px 10px 35px; margin: 0; box-sizing: border-box; border-radius: 2px;">
+                            <input type="text" id="findLaporan" placeholder="Cari laporan..." onkeyup="filterLaporan()" style="width:100%; padding: 10px 10px 10px 35px; margin: 0; box-sizing: border-box; border-radius: 8px;">
                         </div>
-                        <div style="display: flex; align-items: center; gap: 5px; background: #eef2f6; border: 1px solid var(--border); border-radius: 2px; padding: 0 10px; height: 38px; white-space: nowrap;">
+                        <div style="display: flex; align-items: center; gap: 5px; background: #eef2f6; border: 1px solid var(--border); border-radius: 8px; padding: 0 10px; height: 38px; white-space: nowrap;">
                             <span class="material-symbols-outlined" style="color: var(--ig-primary); font-size: 18px;">calendar_month</span>
                             <input type="date" id="laporanDateFrom" onchange="filterLaporan()" style="border: none !important; background: transparent !important; padding: 0 !important; margin: 0; box-shadow: none !important; outline: none; width: 110px !important; font-weight: 600; font-size: 12px; color: var(--ig-text);">
                             <span style="color: #888; font-weight: bold;">-</span>
@@ -1003,7 +1011,7 @@
                         </div>
                     </div> 
                     <input type="hidden" id="editId">
-                    <div id="reviewHeaderPRD" class="hidden" style="background: #f0f4f9; padding: 15px; border-radius: 2px; margin-top: 15px; border: 1px solid #d2e3fc; display: flex; flex-direction: column; gap: 8px;">
+                    <div id="reviewHeaderPRD" class="hidden" style="background: #f0f4f9; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #d2e3fc; display: flex; flex-direction: column; gap: 8px;">
                         <div style="font-size:13px; color:#1a73e8;"><strong><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">tag</span> ID Laporan:</strong> <span id="rh-id-prd"></span></div>
                         <div style="font-size:13px; color:#444;"><strong><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">person</span> Karu:</strong> <span id="rh-karu-prd"></span></div>
                         <div style="font-size:13px; color:#444;"><strong><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">groups</span> Operator:</strong> <span id="rh-op-prd"></span></div>
@@ -1011,7 +1019,7 @@
                     <input type="hidden" id="formMode">
                     <input type="hidden" id="originalUser"> 
 
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background: #f9f9f9; padding: 10px; border-radius: 2px; margin-top: 15px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background: #f9f9f9; padding: 10px; border-radius: 8px; margin-top: 15px;">
                         <label style="font-weight:bold; display:flex; align-items:center; gap:5px;"><span class="material-symbols-outlined" style="font-size:18px;">calendar_month</span> TANGGAL</label>
                         <input type="date" id="inputDate" style="width:auto; border: 1px solid #ccc;">
                     </div>
@@ -1033,14 +1041,14 @@
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                             <label style="font-weight:bold; display:flex; align-items:center; gap:5px;"><span class="material-symbols-outlined" style="font-size:18px;">group</span> OPERATOR:</label>
                             
-                            <label style="font-size:12px; font-weight:bold; color:var(--ig-primary); cursor:pointer; display:flex; align-items:center; gap:5px; background:#e0f2fe; padding:4px 8px; border-radius:2px;">
+                            <label style="font-size:12px; font-weight:bold; color:var(--ig-primary); cursor:pointer; display:flex; align-items:center; gap:5px; background:#e0f2fe; padding:4px 8px; border-radius: 8px;">
                                 <input type="checkbox" id="chkPerbantuan" onchange="togglePerbantuan()"> Form Perbantuan
                             </label>
                         </div>
                         
                         <div id="opGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap:5px;"></div>
                         
-                        <input type="text" id="txtOpManual" class="hidden" placeholder="Ketik nama operator perbantuan di sini..." style="width:100%; padding:12px; border:1px solid var(--border); border-radius:2px;">
+                        <input type="text" id="txtOpManual" class="hidden" placeholder="Ketik nama operator perbantuan di sini..." style="width:100%; padding:12px; border:1px solid var(--border); border-radius: 8px;">
                     </div>
 
                     <div id="itemArea" class="hidden" style="margin-top:20px; padding-top:15px; border-top:2px dashed #eee;">
@@ -1071,14 +1079,14 @@
                     </div>
                     
                     <input type="hidden" id="editBSId">
-                    <div id="reviewHeaderBS" class="hidden" style="background: #fef2f2; padding: 15px; border-radius: 2px; margin-top: 15px; border: 1px solid #fecaca; display: flex; flex-direction: column; gap: 8px;">
+                    <div id="reviewHeaderBS" class="hidden" style="background: #fef2f2; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #fecaca; display: flex; flex-direction: column; gap: 8px;">
                         <div style="font-size:13px; color:#dc2626;"><strong><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">tag</span> ID Laporan:</strong> <span id="rh-id-bs"></span></div>
                         <div style="font-size:13px; color:#444;"><strong><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">person</span> Karu / User:</strong> <span id="rh-karu-bs"></span></div>
                     </div>
                     <input type="hidden" id="formBSMode">
                     <input type="hidden" id="originalBSUser"> 
 
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background: #f9f9f9; padding: 10px; border-radius: 2px; margin-top: 15px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background: #f9f9f9; padding: 10px; border-radius: 8px; margin-top: 15px;">
                         <label style="font-weight:bold; display:flex; align-items:center; gap:5px;"><span class="material-symbols-outlined" style="font-size:18px;">calendar_month</span> TANGGAL</label>
                         <input type="date" id="inputBSDate" style="width:auto; border: 1px solid #ccc;">
                     </div>
@@ -1115,9 +1123,9 @@
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; width: 100%; overflow-x: auto; padding-bottom: 5px;">
                     <div style="position: relative; flex: 1; min-width: 180px;">
                         <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 10px; color: #888; font-size: 18px;">search</span>
-                        <input type="text" id="findViewData" placeholder="Cari data..." onkeyup="filterViewData()" style="width:100%; padding: 10px 10px 10px 35px; margin: 0; box-sizing: border-box; border-radius: 2px;">
+                        <input type="text" id="findViewData" placeholder="Cari data..." onkeyup="filterViewData()" style="width:100%; padding: 10px 10px 10px 35px; margin: 0; box-sizing: border-box; border-radius: 8px;">
                     </div>
-                    <div style="display: flex; align-items: center; gap: 5px; background: #eef2f6; border: 1px solid var(--border); border-radius: 2px; padding: 0 10px; height: 38px; white-space: nowrap;">
+                    <div style="display: flex; align-items: center; gap: 5px; background: #eef2f6; border: 1px solid var(--border); border-radius: 8px; padding: 0 10px; height: 38px; white-space: nowrap;">
                         <span class="material-symbols-outlined" style="color: var(--ig-primary); font-size: 18px;">calendar_month</span>
                         <input type="date" id="viewDateFrom" onchange="filterViewData()" style="border: none !important; background: transparent !important; padding: 0 !important; margin: 0; box-shadow: none !important; outline: none; width: 110px !important; font-weight: 600; font-size: 12px; color: var(--ig-text);">
                         <span style="color: #888; font-weight: bold;">-</span>
@@ -1152,7 +1160,7 @@
                 </h3>
                 <p style="color:#666;">Silakan filter data yang ingin ditarik ke format Microsoft Excel (.xlsx)</p>
                 
-                <div style="margin-top:20px; padding:30px; border:1px dashed #ccc; border-radius:2px; background:#fcfcfc; display:flex; flex-direction:column; align-items:center; gap:15px;">
+                <div style="margin-top:20px; padding:30px; border:1px dashed #ccc; border-radius: 8px; background:#fcfcfc; display:flex; flex-direction:column; align-items:center; gap:15px;">
                     <span class="material-symbols-outlined" style="font-size:60px; color:#1d6f42;">description</span>
                     <button onclick="openExportModal()" class="btn-success" style="padding:15px 30px; font-size:14px; margin-top:10px; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
                         <span class="material-symbols-outlined">filter_alt</span> Export File
@@ -1479,6 +1487,11 @@ function loginSuccess() {
     document.getElementById('uName').innerText = USER.name;
     document.getElementById('uRole').innerHTML = `<span class="material-symbols-outlined" style="font-size:12px;">shield_person</span> ${USER.role}`;
 
+    // --- FIX RESET TANGGAL SAAT BARU MASUK ---
+    setDefaultLaporanDates();
+    setDefaultViewDates();
+    // -----------------------------------------
+
     const btnHeaderRole = document.getElementById('btnHeaderRole');
     if(USER.role === 'Author') {
         btnHeaderRole.classList.remove('disabled'); 
@@ -1589,7 +1602,7 @@ function renderSmartPagination(containerId, totalPages, currentPage, callbackFn)
         let btn = document.createElement('button');
         btn.innerHTML = content;
         btn.disabled = isDisabled;
-        btn.style = `padding: 4px 10px; border: 1px solid var(--ig-primary); background: ${isActive ? 'var(--ig-primary)' : 'white'}; color: ${isActive ? 'white' : 'var(--ig-primary)'}; cursor: ${isDisabled ? 'not-allowed' : 'pointer'}; border-radius: 2px; font-weight: bold; transition:0.2s; font-size:12px; opacity: ${isDisabled ? '0.4' : '1'}`;
+        btn.style = `padding: 4px 10px; border: 1px solid var(--ig-primary); background: ${isActive ? 'var(--ig-primary)' : 'white'}; color: ${isActive ? 'white' : 'var(--ig-primary)'}; cursor: ${isDisabled ? 'not-allowed' : 'pointer'}; border-radius: 8px; font-weight: bold; transition:0.2s; font-size:12px; opacity: ${isDisabled ? '0.4' : '1'}`;
         if (!isDisabled) btn.onclick = () => callbackFn(pageNum);
         pag.appendChild(btn);
     };
@@ -1729,7 +1742,7 @@ function loadLaporanTable() {
 
     paginatedData.forEach(d => {
         let badgeClass = d.status==='Approved' ? 'st-approved' : (d.status==='Submitted' ? 'st-submitted' : (d.status==='Rejected' || d.status==='Batal' ? 'st-rejected' : 'st-draft'));
-        let typeBadge = d.type === 'BS' ? `<span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">BS</span>` : `<span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">PRD</span>`;
+        let typeBadge = d.type === 'BS' ? `<span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius: 8px; font-size:10px; font-weight:bold;">BS</span>` : `<span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius: 8px; font-size:10px; font-weight:bold;">PRD</span>`;
         let userDisplay = d.type === 'BS' ? d.user : d.karu;
 
         // ==== LOGIKA ICON SYNC ====
@@ -1753,14 +1766,17 @@ function loadLaporanTable() {
         let iconViewServer = `<span class="action-icon" onclick='openViewModal("${d.id}", "server")' title="Lihat Detail"><span class="material-symbols-outlined">visibility</span></span>`;
         let iconEdit = `<span class="action-icon" onclick='openForm("${d.id}", "edit_draft")' title="Edit Dokumen"><span class="material-symbols-outlined" style="color:var(--ig-primary);">edit_square</span></span>`;
         let iconReview = `<span class="action-icon icon-success" onclick='openForm("${d.id}", "review_staff")' title="Review Dokumen"><span class="material-symbols-outlined">check_circle</span></span>`;
-        let iconDelete = currentRole === 'Author' ? `<span class="action-icon" onclick='cancelDokumen("${d.id}", "${d.type}")' title="Batal/Hapus Dokumen" style="color:var(--danger);"><span class="material-symbols-outlined">delete_forever</span></span>` : "";
+        
+        // --- FIX TOMBOL HAPUS DRAFT ---
+        let iconDeleteServer = currentRole === 'Author' ? `<span class="action-icon" onclick='cancelDokumen("${d.id}", "${d.type}")' title="Batal/Hapus Dokumen" style="color:var(--danger);"><span class="material-symbols-outlined">delete_forever</span></span>` : "";
+        let iconDeleteDraft = `<span class="action-icon" onclick='hapusDraftLokal("${d.id}")' title="Hapus Draft Lokal" style="color:var(--danger);"><span class="material-symbols-outlined">delete_forever</span></span>`;
 
         if(d.status === 'Draft') { 
-            aksiBtn = `${iconViewLocal} ${iconEdit} ${iconDelete}`; 
+            aksiBtn = `${iconViewLocal} ${iconEdit} ${iconDeleteDraft}`; 
         } 
         else if(d.status === 'Submitted') {
             if(['Staff','PPIC','Supervisor','Author'].includes(currentRole)) { 
-                aksiBtn = `${iconReview} ${iconViewServer} ${iconEdit} ${iconDelete}`; 
+                aksiBtn = `${iconReview} ${iconViewServer} ${iconEdit} ${iconDeleteServer}`; 
             } 
             else if (currentRole === 'Admin') { 
                 aksiBtn = `${iconViewServer} ${iconEdit}`; 
@@ -1771,13 +1787,15 @@ function loadLaporanTable() {
         } else {
             // Untuk status Approved / Rejected
             aksiBtn = `${iconViewServer}`;
-            if(currentRole === 'Author') aksiBtn += ` ${iconEdit} ${iconDelete}`;
+            if(currentRole === 'Author') aksiBtn += ` ${iconEdit} ${iconDeleteServer}`;
         }
 
         let opDisplay = d.ops ? d.ops : "-"; let jobDisplay = d.job ? d.job : "-";
 
+        // --- FIX KOLOM ID TAMBAH "white-space:nowrap;" ---
         body.innerHTML += `<tr>
-            <td style="font-weight:600; font-size:11px;">${d.id}</td><td align="center">${typeBadge}</td><td>${d.date.substr(0,10)}</td>
+            <td style="font-weight:600; font-size:11px; white-space:nowrap;">${d.id}</td>
+            <td align="center">${typeBadge}</td><td>${d.date.substr(0,10)}</td>
             <td>${userDisplay}</td><td style="max-width:200px; white-space:normal; word-wrap:break-word;">${opDisplay}</td>
             <td>${jobDisplay}</td>
             <td><div style="display:flex; align-items:center; gap:6px;"><span class="badge ${badgeClass}">${d.status}</span> ${syncIndicator}</div></td>
@@ -1890,7 +1908,7 @@ function loadViewDataTable() {
     let paginatedData = myData.slice(start, start + rowsPerPageView);
 
     paginatedData.forEach(d => {
-        let typeBadge = d.tipe === 'BS' ? `<span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">BS</span>` : `<span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">PRD</span>`;
+        let typeBadge = d.tipe === 'BS' ? `<span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius: 8px; font-size:10px; font-weight:bold;">BS</span>` : `<span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius: 8px; font-size:10px; font-weight:bold;">PRD</span>`;
         
         // --- 🎯 LOGIKA WARNA MERAH UNTUK (System) ---
         let tampilKaru = (d.karu === "(System)") 
@@ -2255,7 +2273,7 @@ function addRow(n = '', q = '') {
         if(r === c.lastElementChild && val.length > 2) addRow();
         if(val.length < 2) return;
         let l = document.createElement('div'); l.className = 'autocomplete-items';
-        l.style = "position:absolute; top:40px; left:30px; right:0; background:white; border:1px solid #ddd; z-index:9999; max-height:200px; overflow-y:auto; box-shadow:0 5px 15px rgba(0,0,0,0.1); border-radius:2px;";
+        l.style = "position:absolute; top:40px; left:30px; right:0; background:white; border:1px solid #ddd; z-index:9999; max-height:200px; overflow-y:auto; box-shadow:0 5px 15px rgba(0,0,0,0.1); border-radius: 8px;";
         r.appendChild(l); let count = 0;
         
         let jobVal = document.getElementById('selJobValue').value;
@@ -2312,10 +2330,10 @@ function addRow(n = '', q = '') {
 }
 function addBSRow(n = '', q = '', ket = '') {
     const c = document.getElementById('rowBSContainer'); const r = document.createElement('div'); r.className = 'input-bs-row-wrapper';
-    r.style = "display:flex; flex-direction:column; gap:0; margin-bottom:-1px; padding:10px; position:relative; border:1px solid #ccc; border-radius:2px; background:white; position:relative;";
+    r.style = "display:flex; flex-direction:column; gap:0; margin-bottom:-1px; padding:10px; position:relative; border:1px solid #ccc; border-radius: 8px; background:white; position:relative;";
     r.innerHTML = `
         <div style="display:flex; gap:0;">
-            <input type="text" class="bs-name" placeholder="Kode/Nama Barang" style="flex:2; border-radius:2px 0 0 4px;" value="${n}">
+            <input type="text" class="bs-name" placeholder="Kode/Nama Barang" style="flex:2; border-radius: 8px 0 0 4px;" value="${n}">
             <div style="flex:1; display:flex;">
                 <input type="number" class="bs-qty" placeholder="Qty" style="width:100%; border-left:none; border-radius:0;" value="${q}">
                 <button onclick="removeBSRow(this)" class="btn-delete-bs-row" style="background:var(--danger); color:white; border:1px solid var(--danger); padding:0 10px; cursor:pointer; border-radius: 0 4px 4px 0; display:flex; align-items:center; justify-content:center;" title="Hapus Baris"><span class="material-symbols-outlined" style="font-size:16px;">delete</span></button>
@@ -2330,7 +2348,7 @@ function addBSRow(n = '', q = '', ket = '') {
         let val = this.value.toLowerCase(); let old = r.querySelector('.autocomplete-items'); if(old) old.remove();
         if(val.length < 2) return;
         let l = document.createElement('div'); l.className = 'autocomplete-items';
-        l.style = "position:absolute; top:45px; left:10px; right:10px; background:white; border:1px solid #ddd; z-index:9999; max-height:150px; overflow-y:auto; box-shadow:0 5px 15px rgba(0,0,0,0.1); border-radius:2px;";
+        l.style = "position:absolute; top:45px; left:10px; right:10px; background:white; border:1px solid #ddd; z-index:9999; max-height:150px; overflow-y:auto; box-shadow:0 5px 15px rgba(0,0,0,0.1); border-radius: 8px;";
         r.appendChild(l); let count = 0;
         for(let m of DATA.master) {
             let isGarukItem = m.kode.toUpperCase().startsWith("GARUK-");
@@ -2581,6 +2599,12 @@ async function saveData(status, type = 'PRD') {
     // 2. UNTUK SUBMIT / APPROVE / REJECT (LOGIKA BARU)
     // Hapus draft lokal karena sudah mau dikirim
     removeLocalDraft(id);
+function hapusDraftLokal(id) {
+    showConfirm("Hapus Draft", `Yakin ingin menghapus draft ${id}? Data yang belum disubmit akan hilang.`, () => {
+        removeLocalDraft(id);
+        loadLaporanTable();
+    });
+}
     
     // Update tampilan data di layar (biar user lihat perubahannya instan)
     let existingIdx = DATA.history.findIndex(x => x.id === payload.id);
