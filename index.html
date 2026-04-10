@@ -88,8 +88,15 @@
             vertical-align: middle;
         }
         .excel-table tbody tr:hover td { 
-            background-color: #fef08a !important; /* Efek highlight kuning saat kursor lewat */
+            background-color: #f0f9ff !important; /* Efek highlight biru muda IG */
             cursor: cell; 
+        }
+        /* --- STYLE KHUSUS WRAP KODE BARANG --- */
+        #viewMaster .excel-table td:nth-child(1),
+        #viewViewdata .excel-table td:nth-child(7) {
+            white-space: normal !important;
+            min-width: 300px !important; /* Lebar minimal biar nggak kependekan */
+            line-height: 1.5;
         }
         
         * { box-sizing: border-box; }
@@ -141,6 +148,36 @@
         .stagger-anim > *:nth-child(4) { animation-delay: 0.2s; }
         .stagger-anim > *:nth-child(n+5) { animation-delay: 0.25s; }
         .hidden { display: none !important; }
+        
+        /* ==== STYLE UNIVERSAL BOX BADGE (SEMUA DATA) ==== */
+        .ui-box-badge {
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-block;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            white-space: nowrap;
+        }
+        /* Khusus teks panjang (Kode Barang / Operator) */
+        .ui-box-wrap {
+            white-space: normal !important;
+            min-width: 220px; /* Lebar wrap yang pas */
+            max-width: 350px;
+            line-height: 1.4;
+        }
+        /* Khusus Qty (Lebih menonjol) */
+        .ui-box-qty {
+            background: #f0f9ff;
+            color: var(--ig-primary);
+            border-color: #bae6fd;
+            font-size: 13px;
+            font-weight: 900;
+            padding: 4px 12px;
+        }
 
         /* ==== EFEK TIMBUL BUBBLE (GEMINI STYLE) ==== */
         .card, .confirm-box, .select-modal-box {
@@ -743,7 +780,19 @@
 
                     <div style="overflow-x:auto;">
                         <table class="excel-table">
-                            <thead><tr><th>ID</th><th>TIPE</th><th>TGL</th><th>KARU</th><th>OPERATOR</th><th>JOB</th><th>STATUS</th><th style="text-align:center;">AKSI</th></tr></thead>
+                            <thead>
+    <tr>
+        <th data-col-lap="id" onclick="sortLaporan('id')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan ID">ID <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+        <th data-col-lap="type" onclick="sortLaporan('type')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Tipe">TIPE <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+        <th data-col-lap="date" onclick="sortLaporan('date')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Tanggal">TGL <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+        <th data-col-lap="karu" onclick="sortLaporan('karu')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Karu">KARU <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+        <th data-col-lap="ops" onclick="sortLaporan('ops')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Operator">OPERATOR <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+        <th data-col-lap="job" onclick="sortLaporan('job')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Job">JOB <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+        <th data-col-lap="status" onclick="sortLaporan('status')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Status">STATUS <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+        <th style="text-align:center;">AKSI</th>
+    </tr>
+</thead>
+                            
                             <tbody id="laporanTableBody"></tbody>
                         </table>
                     </div>
@@ -1395,13 +1444,13 @@ function renderMaster(list) {
     const body = document.getElementById('masterBody'); body.innerHTML = '';
     list.forEach(m => {
         body.innerHTML += `<tr>
-            <td style="font-weight:800; color:#0f172a;">${m.kode}</td>
+            <td><div class="ui-box-badge ui-box-wrap" style="color:#0f172a; border-color:#94a3b8;">${m.kode}</div></td>
             <td>${getKatBadge(m.kat)}</td>
-            <td style="font-weight:600; color:#475569;">${m.motif}</td>
-            <td align="center" style="font-weight:bold;">${m.guling}</td>
-            <td align="center" style="font-weight:bold;">${m.bantal}</td>
-            <td align="center" style="font-weight:bold;">${m.peang}</td>
-            <td align="center" style="font-weight:bold;">${m.badan}</td>
+            <td><div class="ui-box-badge">${m.motif}</div></td>
+            <td align="center"><div class="ui-box-badge">${m.guling}</div></td>
+            <td align="center"><div class="ui-box-badge">${m.bantal}</div></td>
+            <td align="center"><div class="ui-box-badge">${m.peang}</div></td>
+            <td align="center"><div class="ui-box-badge">${m.badan}</div></td>
         </tr>`;
     });
 }
@@ -1452,6 +1501,36 @@ function setDefaultLaporanDates() {
     document.getElementById('laporanDateFrom').value = `${y}-${m}-01`; document.getElementById('laporanDateTo').value = `${y}-${m}-${lastDay}`;
 }
 
+let currentSortColLaporan = ''; 
+let currentSortDirLaporan = 'asc';
+
+function sortLaporan(col) {
+    if (currentSortColLaporan === col) { 
+        currentSortDirLaporan = currentSortDirLaporan === 'asc' ? 'desc' : 'asc'; 
+    } else { 
+        currentSortColLaporan = col; 
+        currentSortDirLaporan = 'asc'; 
+    }
+    
+    // Reset icon panah ke abu-abu semua
+    document.querySelectorAll('#laporanListMode thead th').forEach(th => { 
+        let icon = th.querySelector('.material-symbols-outlined'); 
+        if(icon) { icon.innerText = 'unfold_more'; icon.style.opacity = '0.5'; } 
+    });
+    
+    // Bikin tebal icon kolom yang lagi diklik
+    let targetTh = document.querySelector(`#laporanListMode thead th[data-col-lap="${col}"]`);
+    if(targetTh) { 
+        let icon = targetTh.querySelector('.material-symbols-outlined'); 
+        if(icon) { 
+            icon.innerText = currentSortDirLaporan === 'asc' ? 'arrow_downward' : 'arrow_upward'; 
+            icon.style.opacity = '1'; 
+        } 
+    }
+    currentPageLaporan = 1; 
+    loadLaporanTable();
+}
+
 function loadLaporanTable() {
     if(!document.getElementById('laporanDateFrom').value || !document.getElementById('laporanDateTo').value) { setDefaultLaporanDates(); }
     const body = document.getElementById('laporanTableBody'); body.innerHTML = '';
@@ -1477,44 +1556,64 @@ function loadLaporanTable() {
     }
 
     if(myData.length === 0) { body.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:#888; font-weight:600;">Belum ada data laporan pada periode ini</td></tr>`; document.getElementById('laporanPagination').innerHTML = ''; return; }
+    if (currentSortColLaporan) {
+        myData.sort((a, b) => {
+            let valA = a[currentSortColLaporan] || '';
+            let valB = b[currentSortColLaporan] || '';
+            valA = valA.toString().toLowerCase();
+            valB = valB.toString().toLowerCase();
+            
+            if (valA < valB) return currentSortDirLaporan === 'asc' ? -1 : 1;
+            if (valA > valB) return currentSortDirLaporan === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
 
     let totalPages = Math.ceil(myData.length / rowsPerPageLaporan);
     if(currentPageLaporan > totalPages) currentPageLaporan = totalPages; if(currentPageLaporan < 1) currentPageLaporan = 1;
     let start = (currentPageLaporan - 1) * rowsPerPageLaporan; let paginatedData = myData.slice(start, start + rowsPerPageLaporan);
 
     paginatedData.forEach(d => {
-        let badgeClass = d.status==='Approved' ? 'st-approved' : (d.status==='Submitted' ? 'st-submitted' : (d.status==='Rejected' || d.status==='Batal' ? 'st-rejected' : 'st-draft'));
         let typeBadge = d.type === 'BS' ? `<span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius: 4px; font-size:10px; font-weight:bold;">BS</span>` : `<span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius: 4px; font-size:10px; font-weight:bold;">PRD</span>`;
-        let userDisplay = d.type === 'BS' ? d.user : d.karu;
+        let tampilKaru = (d.karu === "(System)") ? `<span class="ui-box-badge" style="color:#dc2626;">(System)</span>` : `<div class="ui-box-badge" style="color:var(--ig-primary);">${d.karu}</div>`;
+        let jobBadge = getJobBadge(d.job);
+        
+        let masterItem = DATA.master.find(m => m.kode === d.kode);
+        let badgeKat = masterItem ? getKatBadge(masterItem.kat) : "";
 
-        let isPendingSync = syncQueue.some(q => q.id === d.id); let syncIndicator = "";
-        if (d.status === 'Draft') { syncIndicator = `<span class="material-symbols-outlined" style="font-size:16px; color:#888;" title="Draft Lokal">save</span>`; } 
-        else if (isPendingSync) { if (isSyncing && syncQueue[0].id === d.id) { syncIndicator = `<span class="material-symbols-outlined icon-syncing" style="font-size:16px;" title="Sedang Mengirim...">sync</span>`; } else { syncIndicator = `<span class="material-symbols-outlined icon-cloud" style="font-size:16px;" title="Menunggu Antrean">cloud_upload</span>`; } } 
-        else { syncIndicator = `<span class="material-symbols-outlined icon-synced" style="font-size:16px;" title="Tersimpan di Server">cloud_done</span>`; }
-
-        let aksiBtn = "";
-        let iconViewLocal = `<span class="action-icon" onclick='openViewModal("${d.id}", "local")' title="Lihat Detail"><span class="material-symbols-outlined">visibility</span></span>`;
-        let iconViewServer = `<span class="action-icon" onclick='openViewModal("${d.id}", "server")' title="Lihat Detail"><span class="material-symbols-outlined">visibility</span></span>`;
-        let iconEdit = `<span class="action-icon" onclick='openForm("${d.id}", "edit_draft")' title="Edit Dokumen"><span class="material-symbols-outlined" style="color:var(--ig-primary);">edit_square</span></span>`;
-        let iconReview = `<span class="action-icon icon-success" onclick='openForm("${d.id}", "review_staff")' title="Review Dokumen"><span class="material-symbols-outlined">check_circle</span></span>`;
-        let iconDeleteServer = currentRole === 'Author' ? `<span class="action-icon" onclick='cancelDokumen("${d.id}", "${d.type}")' title="Batal/Hapus Dokumen" style="color:var(--danger);"><span class="material-symbols-outlined">delete_forever</span></span>` : "";
-        let iconDeleteDraft = `<span class="action-icon" onclick='hapusDraftLokal("${d.id}")' title="Hapus Draft Lokal" style="color:var(--danger);"><span class="material-symbols-outlined">delete_forever</span></span>`;
-
-        if(d.status === 'Draft') { aksiBtn = `${iconViewLocal} ${iconEdit} ${iconDeleteDraft}`; } 
-        else if(d.status === 'Submitted') {
-            if(['Staff','PPIC','Supervisor','Author'].includes(currentRole)) { aksiBtn = `${iconReview} ${iconViewServer} ${iconEdit} ${iconDeleteServer}`; } 
-            else if (currentRole === 'Admin') { aksiBtn = `${iconViewServer} ${iconEdit}`; } else { aksiBtn = `${iconViewServer}`; }
-        } else {
-            aksiBtn = `${iconViewServer}`; if(currentRole === 'Author') aksiBtn += ` ${iconEdit} ${iconDeleteServer}`;
-        }
         let opDisplay = d.ops ? d.ops : "-"; 
-        let jobDisplay = getJobBadge(d.job); // <--- PAKAI FUNGSI KOTAK WARNA
+        let jobDisplay = getJobBadge(d.job);
 
+        // --- 👇 INI DIA VARIABEL YANG HILANG, KITA TAMBAHIN 👇 ---
+        let userDisplay = tampilKaru;
+        let badgeClass = d.status === 'Approved' ? 'st-approved' : (d.status === 'Submitted' ? 'st-submitted' : (d.status === 'Draft' ? 'st-draft' : 'st-rejected'));
+        let syncIndicator = d.status === 'Draft' ? '<span class="material-symbols-outlined icon-cloud" style="font-size:14px;">cloud_off</span>' : '<span class="material-symbols-outlined icon-synced" style="font-size:14px;">cloud_done</span>';
+        // Logika Pengecekan Akses Edit
+        let canEdit = true;
+        if (d.status === 'Approved' && currentRole !== 'Author') {
+            canEdit = false; // Kunci jika sudah Approved dan BUKAN Author
+        }
+
+        // Render Tombol Kedua (Pensil untuk edit, atau Open untuk lihat)
+        let editAtauOpenBtn = canEdit 
+            ? `<span class="action-icon" onclick="openForm('${d.id}', '${d.status === 'Draft' ? 'edit_draft' : 'review_staff'}')" title="Edit Dokumen"><span class="material-symbols-outlined">edit</span></span>`
+            : `<span class="action-icon" onclick="openViewModal('${d.id}', 'server')" title="Dokumen Dikunci (Klik untuk Buka)"><span class="material-symbols-outlined" style="color:#94a3b8;">open_in_new</span></span>`;
+
+        let aksiBtn = `
+            <span class="action-icon" onclick="openViewModal('${d.id}', 'server')" title="Lihat Detail"><span class="material-symbols-outlined">visibility</span></span>
+            ${editAtauOpenBtn}
+        `;
+        
+        // --------------------------------------------------------
+
+        // Note: Bagian <td> untuk userDisplay aku rapihin biar tag <div> nya nggak double
         body.innerHTML += `<tr>
-            <td style="font-weight:700; font-size:11px; color:#0f172a; white-space:nowrap;">${d.id}</td>
-            <td align="center">${typeBadge}</td><td style="font-weight:600;">${d.date.substr(0,10)}</td>
-            <td style="color:var(--ig-primary); font-weight:700;">${userDisplay}</td><td style="max-width:200px; white-space:normal; word-wrap:break-word;">${opDisplay}</td>
-            <td style="white-space:nowrap;">${jobDisplay}</td>
+            <td><div class="ui-box-badge">${d.id}</div></td>
+            <td align="center">${typeBadge}</td>
+            <td><div class="ui-box-badge">${d.date.substr(0,10)}</div></td>
+            <td>${userDisplay}</td> 
+            <td><div class="ui-box-badge ui-box-wrap">${opDisplay}</div></td>
+            <td>${jobDisplay}</td>
             <td><div style="display:flex; align-items:center; gap:6px;"><span class="badge ${badgeClass}">${d.status}</span> ${syncIndicator}</div></td>
             <td align="center" style="white-space:nowrap;">${aksiBtn}</td>
         </tr>`;
@@ -1581,20 +1680,32 @@ function loadViewDataTable() {
 
     paginatedData.forEach(d => {
         let typeBadge = d.tipe === 'BS' ? `<span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius: 4px; font-size:10px; font-weight:bold;">BS</span>` : `<span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius: 4px; font-size:10px; font-weight:bold;">PRD</span>`;
-        let tampilKaru = (d.karu === "(System)") ? `<span style="color:#dc2626; font-weight:bold;">(System)</span>` : d.karu;
+        let tampilKaru = (d.karu === "(System)") ? `<span class="ui-box-badge" style="color:#dc2626;">(System)</span>` : `<div class="ui-box-badge" style="color:var(--ig-primary);">${d.karu}</div>`;
+        let jobBadge = getJobBadge(d.job);
         
-        let jobBadge = getJobBadge(d.job); // <--- PAKAI FUNGSI KOTAK WARNA
+        let masterItem = DATA.master.find(m => m.kode === d.kode);
+        let badgeKat = masterItem ? getKatBadge(masterItem.kat) : "";
+
+        // Pecah nama operator pakai koma, bersihkan spasi, lalu jadikan kotak (badge)
+        let opArr = d.ops && d.ops !== "-" ? d.ops.split(',').map(o => o.trim()).filter(o => o !== "") : [];
+        let opBadges = opArr.length > 0 
+            ? opArr.map(o => `<div class="ui-box-badge">${o}</div>`).join('') 
+            : `<div class="ui-box-badge">-</div>`;
 
         body.innerHTML += `<tr>
-            <td style="font-weight:700; font-size:11px; color:#0f172a; white-space:nowrap;">${d.id}</td>
+            <td><div class="ui-box-badge">${d.id}</div></td>
             <td align="center">${typeBadge}</td>
-            <td style="white-space:nowrap; font-weight:600;">${d.tgl}</td>
-            <td style="white-space:nowrap; color:var(--ig-primary); font-weight:700;">${tampilKaru}</td>
-            <td style="white-space:nowrap;">${jobBadge}</td>
-            <td style="white-space:nowrap;">${d.ops}</td>
-            <td style="font-weight:800; color:#0f172a; white-space:nowrap;">${d.kode}</td>
-            <td align="center" style="font-weight:900; font-size:13px; color:var(--ig-primary); background:#f0f9ff;">${d.qty}</td>
-            <td style="color:#c2410c; font-size:11px; white-space:nowrap;">${d.ket}</td>
+            <td><div class="ui-box-badge">${d.tgl}</div></td>
+            <td>${tampilKaru}</td>
+            <td>${jobBadge}</td>
+            <td><div style="display:flex; flex-wrap:wrap; gap:4px; max-width:250px;">${opBadges}</div></td>
+            <td>
+                <div class="ui-box-badge ui-box-wrap" style="text-align:left;">
+                    ${d.kode} <div style="margin-top:6px;">${badgeKat}</div>
+                </div>
+            </td>
+            <td align="center"><div class="ui-box-qty">${d.qty}</div></td>
+            <td><div class="ui-box-badge ui-box-wrap" style="color:#c2410c;">${d.ket}</div></td>
         </tr>`;
     });
 
@@ -1702,6 +1813,11 @@ function openForm(id, mode) {
         else if (mode === 'review_staff') { document.getElementById('btnGroupKaru').classList.add('hidden'); document.getElementById('btnGroupStaff').classList.remove('hidden'); }
         showView('laporan'); switchLaporanMode('input');
     }
+    // Sembunyikan tombol Approve & Reject jika bukan Staff/PPIC/Supervisor/Author
+    let isApprover = ['Staff', 'PPIC', 'Supervisor', 'Author'].includes(currentRole);
+    document.querySelectorAll('#btnGroupStaff button:not(:nth-child(2)), #btnGroupBSStaff button:not(:nth-child(2))').forEach(b => {
+        b.style.display = isApprover ? 'flex' : 'none';
+    });
 }
 
 function loadOps(karu) {
@@ -1761,14 +1877,27 @@ function addRow(n = '', q = '') {
             let isGarukItem = m.kode.toUpperCase().startsWith("GARUK-"); let matchKeyword = m.kode.toLowerCase().includes(val);
             if (!matchKeyword) continue; if (isGarukJob && !isGarukItem) continue; if (!isGarukJob && !isBahanMasuk && isGarukItem) continue;
             if(m.kode.toLowerCase().includes(val)) {
+                
+                // --- PERBAIKAN: HANYA ADA 1 DEKLARASI (TIDAK DOUBLE) ---
                 let infoSaldo = ""; let prosesWajibCek = ['Garuk Dacron', 'Pengisian', 'Jahit Tutup', 'Penyarungan', 'Packing', 'Ikat/Ball'];
                 if (prosesWajibCek.includes(jobVal)) {
                     let sisa = getSaldoBarang(m.kode, jobVal, currentId); let warnaTeks = sisa > 0 ? '#166534' : '#991b1b'; let bgWarna = sisa > 0 ? '#dcfce7' : '#fee2e2';
                     infoSaldo = `<span style="background:${bgWarna}; color:${warnaTeks}; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:800; border: 1px solid ${sisa > 0 ? '#bbf7d0' : '#fecaca'};">Stok: ${sisa}</span>`;
                 }
-                let d = document.createElement('div'); d.innerHTML = `<span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:10px; font-weight:500;">${m.kode}</span> ${infoSaldo}`; d.style = "padding:10px 12px; border-bottom:1px solid #eee; cursor:pointer; display:flex; justify-content:space-between; align-items:center;";
+                
+                let d = document.createElement('div'); 
+                d.innerHTML = `
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px; overflow:hidden; padding-right:10px; align-items:flex-start;">
+                        <span class="ui-box-badge ui-box-wrap" style="color:#0f172a; border-color:#94a3b8;">${m.kode}</span>
+                        <div>${getKatBadge(m.kat)}</div>
+                    </div>
+                    ${infoSaldo}
+                `; 
+                d.style = "padding:12px; border-bottom:1px solid #eee; cursor:pointer; display:flex; justify-content:space-between; align-items:flex-start;";
+                
                 d.onmouseover = () => d.style.backgroundColor = "#f0fdf4"; d.onmouseout = () => d.style.backgroundColor = "white";
-                d.onclick = () => { inp.value = m.kode; l.remove(); qty.focus(); updateWipInfo(r, m.kode); }; l.appendChild(d); count++; if(count>10) break;
+                d.onclick = () => { inp.value = m.kode; l.remove(); qty.focus(); updateWipInfo(r, m.kode); }; 
+                l.appendChild(d); count++; if(count>10) break;
             }
         }
     };
@@ -1798,8 +1927,18 @@ function addBSRow(n = '', q = '', ket = '') {
             let isGarukItem = m.kode.toUpperCase().startsWith("GARUK-"); let matchKeyword = m.kode.toLowerCase().includes(val);
             if (isGarukItem || !matchKeyword) continue;
             if(m.kode.toLowerCase().includes(val)) {
-                let d = document.createElement('div'); d.innerText = m.kode; d.style = "padding:10px; border-bottom:1px solid #eee; cursor:pointer;";
-                d.onclick = () => { inp.value = m.kode; l.remove(); r.querySelector('.bs-qty').focus(); }; l.appendChild(d); count++; if(count>10) break;
+                let d = document.createElement('div'); 
+                d.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-start;">
+                        <span class="ui-box-badge ui-box-wrap" style="color:#0f172a; border-color:#94a3b8;">${m.kode}</span>
+                        <div>${getKatBadge(m.kat)}</div>
+                    </div>
+                `; 
+                d.style = "padding:12px; border-bottom:1px solid #eee; cursor:pointer;";
+                
+                d.onmouseover = () => d.style.backgroundColor = "#f0fdf4"; d.onmouseout = () => d.style.backgroundColor = "white";
+                d.onclick = () => { inp.value = m.kode; l.remove(); r.querySelector('.bs-qty').focus(); }; 
+                l.appendChild(d); count++; if(count>10) break;
             }
         }
     };
@@ -2748,9 +2887,9 @@ function getJobBadge(job) {
 }
 
 function getKatBadge(kat) {
-    if (!kat || kat === "-") return "-";
-    // Pakai warna netral tapi tegas untuk master barang
-    return `<span style="background:#f8fafc; color:#334155; border:1px solid #cbd5e1; padding:3px 8px; border-radius:4px; font-size:10px; font-weight:800; white-space:nowrap; display:inline-block;">${kat}</span>`;
+    if (!kat || kat === "-") return "";
+    // Langsung tembak pakai class ui-box-badge biar ukuran, font, dan paddingnya seragam 100%
+    return `<div class="ui-box-badge" style="color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">${kat}</div>`;
 }
 </script>
 </body>
