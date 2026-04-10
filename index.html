@@ -1891,6 +1891,9 @@ async function saveData(status, type = 'PRD') {
         return;
     }
     
+    // BUG FIX: Hapus draft lokal jika dokumen sudah dikirim (Submit/Approve/Reject)
+    removeLocalDraft(payload.id);
+    
     let existingIdx = DATA.history.findIndex(x => x.id === payload.id);
     if (existingIdx >= 0) DATA.history[existingIdx] = payload; else DATA.history.push(payload);
     
