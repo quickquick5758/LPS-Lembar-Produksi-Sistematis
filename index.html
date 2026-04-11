@@ -432,31 +432,58 @@
 </div>
 
 <div id="viewItemModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9940; align-items:center; justify-content:center; padding:20px;">
-    <div class="card" style="width:100%; max-width:800px; max-height:85vh; overflow-y:auto; position:relative; display:flex; flex-direction:column;">
-        <span onclick="document.getElementById('viewItemModal').style.display='none'" style="position:absolute; right:20px; top:20px; cursor:pointer; font-weight:bold; font-size:18px; color:#888; z-index:10;"><span class="material-symbols-outlined">close</span></span>
-        
-        <h3 style="margin-top:0; color:var(--ig-primary); display:flex; align-items:center; gap:8px;"><span class="material-symbols-outlined">receipt_long</span> <span id="vi-title">DETAIL LAPORAN</span></h3>
-        <p style="margin:5px 0; border-bottom: 1px solid #eee; padding-bottom: 15px; line-height: 1.6;">
-            <strong>ID:</strong> <span id="vi-id"></span> &nbsp;|&nbsp; 
-            <strong>Tipe:</strong> <span id="vi-type"></span> &nbsp;|&nbsp; 
-            <strong>User:</strong> <span id="vi-karu"></span> &nbsp;|&nbsp; 
-            <strong>Pekerjaan:</strong> <span id="vi-job" style="color:var(--ig-primary); font-weight:bold;">-</span>
-        </p>
-        
-        <div id="vi-op-container" style="background:#f0f2f5; padding:10px; margin:15px 0;">
-            <strong>Operator:</strong> <span id="vi-ops" style="color:#444;"></span>
+    <div class="card" style="width:100%; max-width:800px; height:85vh; padding:0; position:relative; display:flex; flex-direction:column; overflow:hidden;">
+
+        <div style="padding: 15px 20px; border-bottom: 1px solid #e2e8f0; background: #ffffff; display: flex; justify-content: space-between; align-items: center; z-index: 10; flex-shrink: 0;">
+            <h3 style="margin:0; color:var(--ig-text); display:flex; align-items:center; gap:15px;">
+                <span class="material-symbols-outlined" onclick="document.getElementById('viewItemModal').style.display='none'" style="cursor:pointer; color:#64748b; font-weight:bold; transition:0.2s;" onmouseover="this.style.color='var(--ig-primary)'" onmouseout="this.style.color='#64748b'">arrow_back</span>
+                <span id="vi-title">Detail Laporan</span>
+            </h3>
+            <span id="vi-badge-status" class="badge">STATUS</span>
         </div>
-        
-        <div id="vi-print-btns" style="display:none; gap:10px; margin-bottom:15px; justify-content:flex-end;">
-            <button onclick="printReport('pdf')" class="btn-outline-danger" style="padding:8px 15px;"><span class="material-symbols-outlined">picture_as_pdf</span> Cetak PDF</button>
-            <button onclick="printReport('hvs')" class="btn-outline" style="padding:8px 15px;"><span class="material-symbols-outlined">print</span> Print Out</button>
-        </div>
-        
-        <div style="width:100%; overflow-x:auto;">
-            <table class="excel-table" style="width:100%;">
-                <thead id="vi-head"><tr><th style="width:50px; text-align:center;">NO</th><th>NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th></tr></thead>
-                <tbody id="vi-body"></tbody>
-            </table>
+
+        <div style="flex: 1; overflow-y: auto; padding: 20px; background: #f8fafc;">
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 25px;">
+
+                <div style="background: #ffffff; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: center;">
+                    <div id="vi-karu" style="font-weight: 800; font-size: 16px; color: #0f172a;">Nama Karu</div>
+                    <div id="vi-role" style="font-size: 12px; color: #64748b; margin-top: 4px;">Jabatan</div>
+                </div>
+
+                <div style="background: #ffffff; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 8px; font-size: 12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <span style="color:#64748b; width: 90px; flex-shrink:0;">ID Dokumen</span>
+                        <strong id="vi-id" style="color:var(--ig-primary); text-align:right;">LPS-...</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <span style="color:#64748b; width: 90px; flex-shrink:0;">Tanggal</span>
+                        <strong id="vi-date" style="text-align:right;">YYYY-MM-DD</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <span style="color:#64748b; width: 90px; flex-shrink:0;">Tipe</span>
+                        <span id="vi-type" style="text-align:right; font-weight:bold;">Produksi</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <span style="color:#64748b; width: 90px; flex-shrink:0;">Operator</span>
+                        <strong id="vi-ops" style="text-align:right; line-height: 1.4;">-</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="vi-print-btns" style="display:none; gap:10px; margin-bottom:15px; justify-content:flex-end;">
+                <button onclick="printReport('pdf')" class="btn-outline-danger" style="padding:8px 15px;"><span class="material-symbols-outlined">picture_as_pdf</span> Cetak PDF</button>
+                <button onclick="printReport('hvs')" class="btn-outline" style="padding:8px 15px;"><span class="material-symbols-outlined">print</span> Print Out</button>
+            </div>
+
+            <div style="width:100%; overflow-x:auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+                <table class="excel-table" style="width:100%; margin:0; border:none; box-shadow:none;">
+                    <thead id="vi-head"><tr><th style="width:50px; text-align:center;">NO</th><th>NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th></tr></thead>
+                    <tbody id="vi-body"></tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 </div>
@@ -623,6 +650,56 @@
     </div>
 
     <div class="view-container" id="viewContainer">
+        <div id="viewDetail" class="hidden stagger-anim">
+            <div class="card" style="padding: 0; overflow: hidden; min-height: calc(100vh - 120px); background: #fafafa; border: none !important; box-shadow: none !important;">
+                
+                <div style="background: #fff; padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 10;">
+                    <span class="material-symbols-outlined" onclick="kembaliKeList()" style="cursor: pointer; font-size: 24px; color: var(--ig-text);">arrow_back</span>
+                    <h3 style="margin: 0; font-size: 16px; font-weight: 700; flex: 1;">Detail Laporan</h3>
+                    <span id="dtlStatusBadge"></span>
+                </div>
+
+                <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+                    
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); display: flex; align-items: center; justify-content: center; padding: 2px;">
+                            <div style="width: 100%; height: 100%; border-radius: 50%; background: #fff; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: var(--ig-text);" id="dtlAvatar"></div>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 14px; font-weight: 700; color: var(--ig-text); display: flex; align-items: center; gap: 5px;">
+                                <span id="dtlKaru"></span> <span class="material-symbols-outlined" style="font-size: 14px; color: var(--ig-primary);">verified</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--ig-sec-text); margin-top: 2px;" id="dtlJobDate"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px; font-size: 13px; line-height: 1.6; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
+                        <b><span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">tag</span> ID Dokumen:</b> <span id="dtlId" style="color: var(--ig-primary); font-weight: bold;"></span><br>
+                        <b><span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">group</span> Operator:</b> <span id="dtlOps" style="color: var(--ig-sec-text);"></span>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-bottom: 25px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 15px 0;">
+                        <div style="text-align: center; flex: 1;">
+                            <div style="font-size: 20px; font-weight: 900;" id="dtlTotalItem">0</div>
+                            <div style="font-size: 11px; color: var(--ig-sec-text); text-transform: uppercase; letter-spacing: 0.5px;">Macam Barang</div>
+                        </div>
+                        <div style="text-align: center; flex: 1;">
+                            <div style="font-size: 20px; font-weight: 900; color: var(--ig-primary);" id="dtlTotalQty">0</div>
+                            <div style="font-size: 11px; color: var(--ig-sec-text); text-transform: uppercase; letter-spacing: 0.5px;">Total Qty</div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 0 0 15px 0; font-size: 13px; color: var(--ig-sec-text); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 5px;"><span class="material-symbols-outlined" style="font-size: 18px;">inventory_2</span> Rincian Item</h4>
+                    <div id="dtlItemsContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                        </div>
+
+                    <div id="dtlPrintBtns" style="display: none; gap: 10px; margin-top: 30px;">
+                        <button onclick="printReport('pdf')" class="btn-outline-danger" style="flex: 1; padding: 12px;"><span class="material-symbols-outlined">picture_as_pdf</span> Cetak PDF</button>
+                        <button onclick="printReport('hvs')" class="btn-outline" style="flex: 1; padding: 12px;"><span class="material-symbols-outlined">print</span> Print Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div id="viewHome" class="hidden stagger-anim">
             <div style="position: relative;">
@@ -1106,7 +1183,7 @@
         </div>
 
         <div id="viewGrafik" class="hidden stagger-anim">
-            <h2 style="color: #0f172a; margin-top: 0; margin-bottom: 20px;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 28px; color: var(--ig-primary);">monitoring</span> Grafik Produksi</h2>
+            <h2 style="color: #0f172a; margin-top: 0; margin-bottom: 20px;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 28px; color: var(--ig-primary);">monitoring</span> Grafik Produksi Ultimate</h2>
             
             <div style="background: white; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end;">
                 
@@ -1732,34 +1809,67 @@ function loadViewDataTable() {
 
 function filterViewData() { currentPageView = 1; loadViewDataTable(); }
 
+let previousView = 'laporan'; // Variabel penyimpan memori halaman asal
+
 function openViewModal(id, source) {
     let d = getLocalDrafts().find(x => x.id === id) || DATA.history.find(x => x.id === id) || getSyncQueue().find(x => x.id === id);
     if(!d) { showAlert("Error", "Gagal membuka data. Dokumen tidak ditemukan."); return; }
-    document.getElementById('vi-id').innerText = d.id;
-    document.getElementById('vi-type').innerHTML = d.type === 'BS' ? '<span style="color:#b91c1c; font-weight:bold;">BS Produksi</span>' : '<span style="color:#0369a1; font-weight:bold;">Produksi</span>';
-    document.getElementById('vi-karu').innerText = d.type === 'BS' ? d.user : d.karu;
-    document.getElementById('vi-job').innerText = d.type === 'BS' ? 'BS Produksi' : (d.job || '-');
     
-    let opContainer = document.getElementById('vi-op-container');
+    // Set Data ke Header Kotak Kanan & Kiri
+    document.getElementById('vi-id').innerText = d.id;
+    document.getElementById('vi-date').innerText = d.date.substr(0,10);
+    document.getElementById('vi-type').innerHTML = d.type === 'BS' ? '<span style="color:#b91c1c;">BS Produksi</span>' : '<span style="color:#0369a1;">Produksi</span>';
+    
+    // Kotak Kiri (User)
+    document.getElementById('vi-karu').innerText = d.type === 'BS' ? d.user : d.karu;
+    document.getElementById('vi-role').innerText = d.type === 'BS' ? 'Inputer BS Produksi' : (d.job || 'Kepala Regu');
+    
+    // Kotak Kanan (Operator) - FIX REQ #3: Sekarang narik data d.ops terlepas PRD/BS
+    document.getElementById('vi-ops').innerText = (d.ops && d.ops !== "") ? d.ops : "-";
+    
+    // Set Badge Status di Header Sticky Atas
+    let badgeClass = d.status === 'Approved' ? 'st-approved' : (d.status === 'Submitted' ? 'st-submitted' : (d.status === 'Draft' ? 'st-draft' : 'st-rejected'));
+    let badgeEl = document.getElementById('vi-badge-status');
+    badgeEl.className = `badge ${badgeClass}`;
+    badgeEl.innerText = d.status;
+    
+    // Render Tabel Item (Kode aslimu yang sudah perfect)
     if(d.type === 'BS') {
-        opContainer.style.display = 'none'; document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th>NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th><th>KETERANGAN</th></tr>`;
+        document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th>NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th><th>KETERANGAN</th></tr>`;
     } else {
-        opContainer.style.display = 'block'; document.getElementById('vi-ops').innerText = d.ops || '-'; document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th>NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th></tr>`;
+        document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th>NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th></tr>`;
     }
     
-    let tbody = document.getElementById('vi-body'); tbody.innerHTML = ''; let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items; let totalQty = 0; 
+    let tbody = document.getElementById('vi-body'); tbody.innerHTML = ''; 
+    let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items; 
+    let totalQty = 0; 
+    
     if(items && items.length > 0) {
         items.forEach((item, index) => {
             let qty = parseInt(item.q) || 0; totalQty += qty; 
-            if(d.type === 'BS') { tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td>${item.n}</td><td style="text-align:center; font-weight:bold;">${qty}</td><td>${item.ket || '-'}</td></tr>`; } 
-            else { tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td>${item.n}</td><td style="text-align:center; font-weight:bold;">${qty}</td></tr>`; }
+            if(d.type === 'BS') { 
+                tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td>${item.n}</td><td style="text-align:center; font-weight:bold;">${qty}</td><td>${item.ket || '-'}</td></tr>`; 
+            } else { 
+                tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td>${item.n}</td><td style="text-align:center; font-weight:bold;">${qty}</td></tr>`; 
+            }
         });
-        if(d.type === 'BS') { tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td><td style="background:#f8f9fa;"></td></tr>`; } 
-        else { tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td></tr>`; }
-    } else { tbody.innerHTML = `<tr><td colspan="${d.type === 'BS' ? 4 : 3}" align="center">Kosong</td></tr>`; }
+        
+        if(d.type === 'BS') { 
+            tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td><td style="background:#f8f9fa;"></td></tr>`; 
+        } else { 
+            tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td></tr>`; 
+        }
+    } else { 
+        tbody.innerHTML = `<tr><td colspan="${d.type === 'BS' ? 4 : 3}" align="center">Kosong</td></tr>`; 
+    }
     
     document.getElementById('vi-print-btns').style.display = (d.status === 'Approved') ? 'flex' : 'none';
     document.getElementById('viewItemModal').style.display = 'flex';
+}
+
+// Fungsi tombol panah Back
+function kembaliKeList() {
+    showView(previousView);
 }
 
 function openLaporanList() { showView('laporan'); switchLaporanMode('list'); }
@@ -2345,7 +2455,7 @@ function filterSplitItems() {
 
 // Catatan: Jangan lupa panggil initSplitScreen() di dalam fungsi showView('splitscreen')
 // =====================================================================
-// JAVASCRIPT RACIKAN PAMUNGKAS: SPLIT SCREEN 🚀
+// JAVASCRIPT RACIKAN PAMUNGKAS: SPLIT SCREEN ULTIMATE 🚀
 // =====================================================================
 
 let currentSplitId = null;
@@ -2620,7 +2730,7 @@ function renderSplitActions(d) {
     }
 }
 // ==========================================
-// ENGINE GRAFIK PRODUKSI
+// ENGINE GRAFIK PRODUKSI ULTIMATE
 // ==========================================
 let mainDataChart = null;
 
@@ -3054,7 +3164,7 @@ function printReport(type) {
                     window.print();
                     window.close();
                 }, 500);
-            <\\/script>
+            <\/script>
         </body>
         </html>
     `);
