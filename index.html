@@ -1106,7 +1106,7 @@
         </div>
 
         <div id="viewGrafik" class="hidden stagger-anim">
-            <h2 style="color: #0f172a; margin-top: 0; margin-bottom: 20px;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 28px; color: var(--ig-primary);">monitoring</span> Grafik Produksi Ultimate</h2>
+            <h2 style="color: #0f172a; margin-top: 0; margin-bottom: 20px;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 28px; color: var(--ig-primary);">monitoring</span> Grafik Produksi</h2>
             
             <div style="background: white; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end;">
                 
@@ -2345,7 +2345,7 @@ function filterSplitItems() {
 
 // Catatan: Jangan lupa panggil initSplitScreen() di dalam fungsi showView('splitscreen')
 // =====================================================================
-// JAVASCRIPT RACIKAN PAMUNGKAS: SPLIT SCREEN ULTIMATE 🚀
+// JAVASCRIPT RACIKAN PAMUNGKAS: SPLIT SCREEN 🚀
 // =====================================================================
 
 let currentSplitId = null;
@@ -2620,7 +2620,7 @@ function renderSplitActions(d) {
     }
 }
 // ==========================================
-// ENGINE GRAFIK PRODUKSI ULTIMATE
+// ENGINE GRAFIK PRODUKSI
 // ==========================================
 let mainDataChart = null;
 
@@ -2907,6 +2907,158 @@ function getKatBadge(kat) {
     if (!kat || kat === "-") return "";
     // Langsung tembak pakai class ui-box-badge biar ukuran, font, dan paddingnya seragam 100%
     return `<div class="ui-box-badge" style="color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">${kat}</div>`;
+}
+// ==========================================
+// ENGINE CETAK DOKUMEN (PRINT & PDF)
+// ==========================================
+function printReport(type) {
+    // 1. Ambil ID dokumen yang lagi dibuka
+    let docId = document.getElementById('vi-id').innerText;
+    
+    // Jaga-jaga kalau pakai mode Detail IG
+    if (!docId || docId === "") {
+        let dtlId = document.getElementById('dtlId');
+        if (dtlId) docId = dtlId.innerText;
+    }
+
+    if (!docId) {
+        showAlert("Error", "Tidak ada dokumen yang dipilih untuk dicetak.");
+        return;
+    }
+
+    // 2. Cari data lengkapnya di database (History / Draft)
+    let d = DATA.history.find(x => x.id === docId) || getLocalDrafts().find(x => x.id === docId);
+    if (!d) {
+        showAlert("Error", "Data dokumen tidak ditemukan di database.");
+        return;
+    }
+
+    let isBS = d.type === 'BS';
+    let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
+    let totalQty = 0;
+
+    // 3. Bangun Tabel Barangnya
+    let tableHTML = `
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; font-family: 'Times New Roman', Times, serif;">
+            <thead>
+                <tr style="background: #f0f0f0;">
+                    <th style="border: 1px solid #000; padding: 8px; width: 40px; text-align: center;">NO</th>
+                    <th style="border: 1px solid #000; padding: 8px; text-align: left;">NAMA BARANG</th>
+                    <th style="border: 1px solid #000; padding: 8px; width: 80px; text-align: center;">QTY</th>
+                    ${isBS ? '<th style="border: 1px solid #000; padding: 8px; text-align: left;">KETERANGAN</th>' : ''}
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    if (items && items.length > 0) {
+        items.forEach((item, index) => {
+            let qty = parseInt(item.q) || 0;
+            totalQty += qty;
+            tableHTML += `
+                <tr>
+                    <td style="border: 1px solid #000; padding: 6px; text-align: center;">${index + 1}</td>
+                    <td style="border: 1px solid #000; padding: 6px;">${item.n}</td>
+                    <td style="border: 1px solid #000; padding: 6px; text-align: center;">${qty}</td>
+                    ${isBS ? `<td style="border: 1px solid #000; padding: 6px;">${item.ket || '-'}</td>` : ''}
+                </tr>
+            `;
+        });
+        tableHTML += `
+            <tr>
+                <td colspan="2" style="border: 1px solid #000; padding: 8px; text-align: right; font-weight: bold;">TOTAL KESELURUHAN</td>
+                <td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold;">${totalQty}</td>
+                ${isBS ? '<td style="border: 1px solid #000; padding: 8px;"></td>' : ''}
+            </tr>
+        `;
+    } else {
+        tableHTML += `<tr><td colspan="${isBS ? 4 : 3}" style="border: 1px solid #000; padding: 10px; text-align: center;">Tidak ada item.</td></tr>`;
+    }
+    tableHTML += `</tbody></table>`;
+
+    // 4. Susun Format Header (Berdasarkan Gambar)
+    let titleDoc = isBS ? "LEMBAR BS PRODUKSI" : "LEMBAR LAPORAN PRODUKSI";
+    let karuName = isBS ? d.user : d.karu;
+    let labelKaru = isBS ? "Karu/User" : "Kepala Regu";
+    
+    // Susun Informasi Data menggunakan Tabel tanpa border agar rapi
+    let headerInfoHTML = `
+        <table style="width: 100%; font-size: 14px; margin-bottom: 25px; border: none; font-family: 'Times New Roman', Times, serif;">
+            <tr>
+                <td style="width: 120px; padding-bottom: 8px;">ID</td>
+                <td style="width: 15px; padding-bottom: 8px;">:</td>
+                <td style="padding-bottom: 8px;">${d.id}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom: 8px;">Tanggal</td>
+                <td style="padding-bottom: 8px;">:</td>
+                <td style="padding-bottom: 8px;">${d.date.substr(0,10)}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom: 8px;">${labelKaru}</td>
+                <td style="padding-bottom: 8px;">:</td>
+                <td style="padding-bottom: 8px;">${karuName}</td>
+            </tr>
+            ${!isBS ? `
+            <tr>
+                <td style="padding-bottom: 8px;">Pekerjaan</td>
+                <td style="padding-bottom: 8px;">:</td>
+                <td style="padding-bottom: 8px;">${d.job || '-'}</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom: 8px;">Operator Tim</td>
+                <td style="padding-bottom: 8px;">:</td>
+                <td style="padding-bottom: 8px;">${d.ops || '-'}</td>
+            </tr>
+            ` : ''}
+        </table>
+    `;
+    
+    // Buka tab tersembunyi/baru untuk proses print
+    let printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>${docId} - Print Document</title>
+            <style>
+                body { font-family: 'Times New Roman', Times, serif; padding: 20px; color: #000; }
+                .header-title { text-align: center; margin-bottom: 12px; }
+                .header-title h2 { margin: 0; padding: 0; font-size: 18px; letter-spacing: 1px; font-weight: bold; }
+                .divider { border-bottom: 1.5px solid #000; margin-bottom: 25px; }
+                .intro-text { font-size: 14px; margin-bottom: 12px; }
+                .footer { margin-top: 50px; display: flex; justify-content: space-between; text-align: center; font-size: 13px; padding: 0 20px; }
+                .ttd-box { height: 80px; }
+                @media print {
+                    @page { size: A4; margin: 1.5cm; }
+                    body { -webkit-print-color-adjust: exact; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header-title">
+                <h2>${titleDoc}</h2>
+            </div>
+            <div class="divider"></div>
+
+            ${headerInfoHTML}
+
+            <div class="intro-text">
+                Berikut adalah rincian barang ${isBS ? 'BS' : 'Produksi'} :
+            </div>
+
+            ${tableHTML}
+
+            <script>
+                // Tunggu render HTML selesai baru panggil Print Browser
+                setTimeout(function() {
+                    window.print();
+                    window.close();
+                }, 500);
+            <\\/script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
 }
 </script>
 </body>
