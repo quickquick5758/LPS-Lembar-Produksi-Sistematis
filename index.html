@@ -99,6 +99,23 @@
             line-height: 1.5;
         }
         
+        /* Styling fleksibel khusus untuk box KODE di Master Barang */
+.kode-barang-flex {
+    display: inline-block;
+    min-width: 200px;     
+    max-width: 100%;      
+    white-space: normal !important;  /* Izinkan teks turun ke bawah (wrap) di layar sempit */
+    word-break: break-word;
+}
+
+/* Aturan khusus ketika dibuka di layar besar (Desktop / Tablet besar) */
+@media (min-width: 768px) {
+    .kode-barang-flex {
+        width: max-content !important; 
+        max-width: none !important; /* BONGKAR gembok batasan 350px dari ui-box-wrap */
+        white-space: nowrap !important; /* Paksa teks lurus 1 baris memanjang lega di PC */
+    }
+}
         * { box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background: var(--ig-bg); color: var(--ig-text); font-size: 13px; display: flex; height: 100vh; overflow: hidden; }
 
@@ -1444,8 +1461,8 @@ function renderMaster(list) {
     const body = document.getElementById('masterBody'); body.innerHTML = '';
     list.forEach(m => {
         body.innerHTML += `<tr>
-            <td><div class="ui-box-badge ui-box-wrap" style="color:#0f172a; border-color:#94a3b8;">${m.kode}</div></td>
-            <td>${getKatBadge(m.kat)}</td>
+            <td><div class="ui-box-badge ui-box-wrap kode-barang-flex" style="color:#0f172a; border-color:#94a3b8;">${m.kode}</div></td>
+            <td><div class="ui-box-badge">${m.kat}</div></td>
             <td><div class="ui-box-badge">${m.motif}</div></td>
             <td align="center"><div class="ui-box-badge">${m.guling}</div></td>
             <td align="center"><div class="ui-box-badge">${m.bantal}</div></td>
