@@ -433,7 +433,7 @@
     </div>
 </div>
 
-<<div id="viewItemModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9940; align-items:center; justify-content:center; padding:20px;">
+<div id="viewItemModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9940; align-items:center; justify-content:center; padding:20px;">
     <div class="card" style="width:100%; max-width:800px; max-height:85vh; height:auto; padding:0; position:relative; display:flex; flex-direction:column; overflow:hidden;">
 
         <div style="padding: 15px 20px; border-bottom: 1px solid #e2e8f0; background: #ffffff; display: flex; justify-content: space-between; align-items: center; z-index: 10; flex-shrink: 0;">
@@ -525,7 +525,7 @@
 
 <div id="pendingApprovalModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9930; align-items:center; justify-content:center; padding: 20px;">
     <div class="card" style="width:100%; max-width:400px; position:relative; max-height: 80vh; display: flex; flex-direction: column;">
-        <span onclick="document.getElementById('pendingApprovalModal').style.display='none'" style="position:absolute; right:15px; top:15px; cursor:pointer; color:#888;"><span class="material-symbols-outlined">close</span></span>
+        <span onclick="document.getElementById('pendingApprovalModal').style.display='none';" style="position:absolute; right:15px; top:15px; cursor:pointer; color:#888;"><span class="material-symbols-outlined">close</span></span>
         
         <h3 style="margin-top:0; display:flex; align-items:center; gap:8px; color:var(--danger); border-bottom: 1px solid #eee; padding-bottom: 10px;">
             <span class="material-symbols-outlined">pending_actions</span> MENUNGGU APPROVE
@@ -761,7 +761,6 @@
                                             <div style="font-size:13px; font-weight:800; color:var(--ig-primary); text-transform: uppercase; letter-spacing: 1px;">&mdash; HARI INI &mdash;</div>
                                             <input type="hidden" id="filterPelangganValue" value="ALL">
                                             <div class="custom-select-btn" id="btnFilterPelanggan" onclick="openPelangganSelect()" style="padding: 6px 12px !important; font-size: 11px; width: auto; max-width: 150px; border-radius: 4px !important; background: #ffffff; border: 1px solid var(--border) !important; margin: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;">
-                                                <span id="labelFilterPelanggan" style="font-weight: 600; color: var(--ig-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Semua Pelanggan</span>
                                                 <span class="material-symbols-outlined" style="font-size: 16px; color: #888; margin-left: 5px;">expand_more</span>
                                             </div>
                                         </div>
@@ -892,7 +891,7 @@
         <th data-col-lap="id" onclick="sortLaporan('id')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan ID">ID <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
         <th data-col-lap="type" onclick="sortLaporan('type')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Tipe">TIPE <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
         <th data-col-lap="date" onclick="sortLaporan('date')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Tanggal">TGL <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
-        <th data-col-lap="karu" onclick="sortLaporan('karu')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Karu">KARU <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+        <th data-col-lap="karu" onclick="sortLaporan('karu')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Karu">KARU/USER <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
         <th data-col-lap="ops" onclick="sortLaporan('ops')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Operator">OPERATOR <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
         <th data-col-lap="job" onclick="sortLaporan('job')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Job">JOB <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
         <th data-col-lap="status" onclick="sortLaporan('status')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Status">STATUS <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
@@ -998,13 +997,24 @@
                     </div>
                     <input type="hidden" id="formBSMode"><input type="hidden" id="originalBSUser"> 
 
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background: #f9f9f9; padding: 10px; border-radius: 4px; margin-top: 15px;">
-                        <label style="font-weight:bold; display:flex; align-items:center; gap:5px;"><span class="material-symbols-outlined" style="font-size:18px;">calendar_month</span> TANGGAL</label>
-                        <input type="date" id="inputBSDate" style="width:auto; border: 1px solid #ccc;">
+                    <div style="position: relative; padding: 10px; padding-right: 170px; margin-bottom: 15px; background: #f9f9f9; border-radius: 4px; margin-top: 15px; min-height: 45px;">
+                        <div style="width: 100%;">
+                            <input type="hidden" id="selBSKaruValue" value="">
+                            <div class="custom-select-btn" id="btnInputBSKaru" onclick="openInputBSKaruSelect()" style="margin:0; width:100%;">
+                                <span id="labelInputBSKaru" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-- Pilih Karu --</span>
+                                <span class="material-symbols-outlined" style="color:#888; font-size:16px; flex-shrink: 0;">keyboard_arrow_down</span>
+                            </div>
+                        </div>
+                        
+                        <div style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 5px;">
+                            <label style="font-weight:bold; display:flex; align-items:center; gap:2px; margin:0; font-size: 11px; color: #444;"><span class="material-symbols-outlined" style="font-size:16px;">calendar_month</span> TGL</label>
+                            <input type="date" id="inputBSDate" style="width:115px; border: 1px solid #ccc; margin:0; padding: 8px 10px; font-size: 12px;">
+                        </div>
                     </div>
-                    <div style="display:none;"><input type="text" id="inputBSUser" disabled></div>
+                    
+                    <div style="display:none;"><input type="text" id="inputBSUser" disabled></div>
 
-                    <div id="itemBSArea" style="margin-top:20px; padding-top:15px; border-top:2px dashed #eee;">
+                    <div id="itemBSArea" class="hidden" style="margin-top:20px; padding-top:15px; border-top:2px dashed #eee;">
                         <label style="font-weight:bold; display:flex; align-items:center; gap:5px; margin-bottom:10px;"><span class="material-symbols-outlined" style="font-size:18px;">category</span> ITEM BARANG BS:</label>
                         <div id="rowBSContainer"></div>
                         
@@ -1438,6 +1448,17 @@ function openInputKaruSelect() {
     let items = EXPORT_KARU_LIST.map(k => ({value: k, label: k}));
     openSelectionModal("Pilih Karu", items, document.getElementById('selKaruValue').value, (val, label) => {
         document.getElementById('selKaruValue').value = val; document.getElementById('labelInputKaru').innerText = label; document.getElementById('labelInputKaru').style.color = "var(--ig-text)"; loadOps(val);
+    });
+}
+
+function openInputBSKaruSelect() {
+    if(document.getElementById('btnInputBSKaru').classList.contains('disabled')) return;
+    let items = EXPORT_KARU_LIST.map(k => ({value: k, label: k}));
+    openSelectionModal("Pilih Karu", items, document.getElementById('selBSKaruValue').value, (val, label) => {
+        document.getElementById('selBSKaruValue').value = val; 
+        document.getElementById('labelInputBSKaru').innerText = label; 
+        document.getElementById('labelInputBSKaru').style.color = "var(--ig-text)"; 
+        document.getElementById('itemBSArea').classList.remove('hidden'); // Munculkan form input BS
     });
 }
 
@@ -1986,8 +2007,10 @@ function startInputNew() {
 
 function startInputBS() {
     document.getElementById('editBSId').value = ""; document.getElementById('formBSMode').value = "new"; document.getElementById('originalBSUser').value = USER.name; 
-    document.getElementById('inputBSDate').valueAsDate = new Date(); document.getElementById('inputBSUser').value = USER.name; 
-    document.getElementById('rowBSContainer').innerHTML = ''; addBSRow(); document.getElementById('reviewHeaderBS').classList.add('hidden');
+    document.getElementById('inputBSDate').valueAsDate = new Date(); document.getElementById('inputBSUser').value = USER.name; 
+    document.getElementById('selBSKaruValue').value = ""; document.getElementById('labelInputBSKaru').innerText = "-- Pilih Karu --"; document.getElementById('labelInputBSKaru').style.color = "#888";
+    document.getElementById('itemBSArea').classList.add('hidden');
+    document.getElementById('rowBSContainer').innerHTML = ''; addBSRow(); document.getElementById('reviewHeaderBS').classList.add('hidden');
     toggleFormLock(false, 'BS');
     document.getElementById('btnGroupBSUser').classList.remove('hidden'); document.getElementById('btnSimpanBSDraft').classList.remove('hidden'); document.getElementById('btnEditBSDraft').classList.add('hidden');
     document.getElementById('btnKirimBS').classList.add('hidden'); document.getElementById('btnGroupBSStaff').classList.add('hidden');
@@ -2031,7 +2054,7 @@ function openForm(id, mode) {
         let opArray = d.ops ? d.ops.split(',').map(s => s.trim()) : [];
         document.querySelectorAll('.op-btn').forEach(btn => { if(opArray.includes(btn.innerText)) btn.classList.add('selected'); });
         document.getElementById('rowContainer').innerHTML = '';
-        try { let itemsArr = typeof d.items === 'string' ? JSON.parse(d.items) : d.items; if(itemsArr && itemsArr.length > 0) { itemsArr.forEach(item => addRow(item.n, item.q)); if(mode === 'edit_draft') addRow(); } else addRow(); } catch(e) { addRow(); }
+        try { let itemsArr = typeof d.items === 'string' ? JSON.parse(d.items) : d.items; if(itemsArr && itemsArr.length > 0) { itemsArr.forEach(item => addRow(item.n, item.q, item.ket || '')); if(mode === 'edit_draft') addRow(); } else addRow(); } catch(e) { addRow(); }
 
         toggleFormLock(false, 'PRD');
         if(mode === 'edit_draft') { document.getElementById('btnGroupKaru').classList.remove('hidden'); document.getElementById('btnSimpanDraft').classList.remove('hidden'); document.getElementById('btnEditDraft').classList.add('hidden'); document.getElementById('btnKirim').classList.remove('hidden'); document.getElementById('btnGroupStaff').classList.add('hidden'); } 
@@ -2062,66 +2085,103 @@ function togglePerbantuan() {
 function removeRow(btn) { btn.closest('.input-row-wrapper').remove(); if(document.getElementById('rowContainer').children.length === 0) addRow(); }
 function removeBSRow(btn) { btn.closest('.input-bs-row-wrapper').remove(); if(document.getElementById('rowBSContainer').children.length === 0) addBSRow(); }
 
-function addRow(n = '', q = '') {
-    const c = document.getElementById('rowContainer'); const r = document.createElement('div'); r.className = 'input-row-wrapper'; r.style = "display:flex; flex-direction:column; gap:0; margin-bottom:12px; position:relative;";
-    let currentJob = document.getElementById('selJobValue').value; let isDakronJob = (currentJob === 'Garuk Dacron' || currentJob === 'Masuk Dacron');
-    let pName = isDakronJob ? 'Cari Master Garuk...' : 'Nama Barang'; let pQty = isDakronJob ? 'Berat' : 'Qty'; let sSatuan = isDakronJob ? 'KG' : 'Pcs';
+function addRow(n = '', q = '', ket = '') {
+    const c = document.getElementById('rowContainer');
+    const r = document.createElement('div');
+    r.className = 'input-row-wrapper';
+    r.style = "margin-bottom:12px; position:relative;"; // Hapus flex-direction column agar layout internal aman
 
-    r.innerHTML = `
-        <div style="display:flex; flex-direction:column; width: 100%; border: 1px solid #bae6fd; border-radius: 4px; overflow: hidden; background: #ffffff;">
-            <div style="display:flex; width: 100%; align-items: stretch;">
-                <div style="display:flex; align-items:center; background:#e0f2fe; padding:0 10px; border-right: 1px solid #bae6fd; color:#0284c7;"><span class="material-symbols-outlined" style="font-size:16px;">drag_indicator</span></div>
-                <input type="text" class="i-name" placeholder="${pName}" style="flex:2; border:none !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; padding: 12px 10px;" value="${n}">
-                <div style="width: 1px; background: #bae6fd;"></div>
-                <div style="flex:1; display:flex;">
-                    <input type="number" class="i-qty" placeholder="${pQty}" style="width:100%; min-width: 50px; border:none !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; text-align:center; padding: 12px 5px;" value="${q}">
-                    <span class="satuan-label" style="background:#e0f2fe; padding:0 10px; display:flex; align-items:center; border-left:1px solid #bae6fd; font-size:11px; color:#0284c7; font-weight:bold;">${sSatuan}</span>
-                    <button onclick="removeRow(this)" class="btn-delete-row" style="background:var(--danger); color:white; border:none; padding:0 12px; cursor:pointer; display:flex; align-items:center; justify-content:center;" title="Hapus Baris"><span class="material-symbols-outlined" style="font-size:16px;">delete</span></button>
-                </div>
-            </div>
-            <div class="wip-info hidden" style="font-size:11px; padding: 8px 12px; background: #f0f9ff; color: #0284c7; border-top: 1px solid #bae6fd; display: flex; justify-content: space-between; font-weight: 500; letter-spacing: 0.3px;"><span>Gudang: <b class="w-masuk" style="font-size:12px;">0</b></span><span>Diproses: <b class="w-keluar" style="font-size:12px;">0</b></span><span>Sisa: <b class="w-sisa" style="font-size:12px; font-weight:900;">0</b></span></div>
-        </div>`;
-    c.appendChild(r);
+    let currentJob = document.getElementById('selJobValue').value;
+    let isDakronJob = (currentJob === 'Garuk Dacron' || currentJob === 'Masuk Dacron');
+    let pName = isDakronJob ? 'Cari Master Garuk...' : 'Nama Barang';
+    let pQty = isDakronJob ? 'Berat' : 'Qty';
+    let sSatuan = isDakronJob ? 'KG' : 'Pcs';
+
+    // MEMASUKKAN HTML DENGAN LAYOUT 1 BARIS FULL (KODE - STOK - QTY - KET)
+r.innerHTML = `
+<div class="item-row" style="border: 1px solid var(--ig-primary); border-radius: 6px; background: #fff; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); width: 100%; display: flex; align-items: stretch;">
     
-    const inp = r.querySelector('.i-name'); const qty = r.querySelector('.i-qty');
+    <div class="drag-handle" style="width: 35px; background: #e1f5fe; color: #0288d1; display: flex; align-items: center; justify-content: center; cursor: grab; font-size: 18px; border-right: 1px solid #81d4fa; flex-shrink: 0;">&#8942;&#8942;</div>
+    
+    <div style="flex: 5; display: flex; min-width: 150px; border-right: 1px solid #e1f5fe;">
+        <input type="text" class="i-name autocomplete-input" placeholder="${pName}" value="${n}" style="width: 100%; border: none !important; outline: none !important; background: transparent !important; padding: 12px 10px; font-size: 13px; font-weight: 600; color: #333; box-shadow: none !important; border-radius: 0 !important;">
+    </div>
+
+    <div style="width: 80px; display: flex; align-items: center; justify-content: center; background: #fafafa; border-right: 1px solid #e1f5fe; flex-shrink: 0;">
+        <input type="text" class="i-stok" value="Stok: -" readonly style="width: 100%; border: none !important; background: transparent !important; text-align: center; font-size: 11px; font-weight: 800; color: #dc2626; box-shadow: none !important; outline: none !important; padding: 0;">
+    </div>
+    
+    <div style="width: 70px; display: flex; flex-shrink: 0; background: #f8fafc;">
+        <input type="number" class="i-qty" placeholder="${pQty}" value="${q}" style="width: 100%; border: none !important; outline: none !important; text-align: center; background: transparent !important; font-size: 14px; font-weight: 900; color: var(--ig-primary); box-shadow: none !important; padding: 10px 5px; border-radius: 0 !important;">
+    </div>
+    <div class="satuan-label" style="width: 45px; background: #f0f9ff; color: #0288d1; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border-right: 1px solid #e1f5fe; flex-shrink: 0;">
+        ${sSatuan}
+    </div>
+
+    <div style="flex: 1; display: flex; min-width: 120px; background: #fafafa;">
+        <input type="text" class="i-ket" placeholder="Keterangan..." value="${ket}" style="width: 100%; border: none !important; outline: none !important; background: transparent !important; font-size: 12px; color: #64748b; box-shadow: none !important; border-radius: 0 !important; padding: 12px 10px;">
+    </div>
+
+    <div class="delete-btn btn-delete-row" onclick="removeRow(this)" style="width: 45px; background: #ef5350; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex-shrink: 0;" title="Hapus">
+        <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+    </div>
+
+</div>
+`;
+
+    c.appendChild(r);
+
+    const inp = r.querySelector('.i-name');
+    const qty = r.querySelector('.i-qty');
+    
     if(n) setTimeout(() => updateWipInfo(r, n), 200);
     qty.onfocus = () => { if(r === c.lastElementChild) addRow(); };
     inp.addEventListener('change', function() { updateWipInfo(r, this.value); });
-    
+
     inp.oninput = function() {
-        let val = this.value.toLowerCase(); let old = r.querySelector('.autocomplete-items'); if(old) old.remove();
-        r.querySelector('.wip-info').classList.add('hidden');
-        if(r === c.lastElementChild && val.length > 2) addRow();
+        let val = this.value.toLowerCase(); let old = r.querySelector('.autocomplete-items'); if(old) old.remove();
+        if(r === c.lastElementChild && val.length > 2) addRow();
         if(val.length < 2) return;
+
         let l = document.createElement('div'); l.className = 'autocomplete-items';
         l.style = "position:absolute; top:45px; left:35px; right:0; background:white; border:1px solid #ddd; z-index:9999; max-height:200px; overflow-y:auto; box-shadow:0 5px 15px rgba(0,0,0,0.1); border-radius: 4px;";
         r.appendChild(l); let count = 0;
-        let jobVal = document.getElementById('selJobValue').value; let currentId = document.getElementById('editId').value; let isGarukJob = (jobVal === "Garuk Dacron"); let isBahanMasuk = (jobVal === "Bahan Baku Masuk");
+
+        let jobVal = document.getElementById('selJobValue').value; 
+        let currentId = document.getElementById('editId').value; 
+        let isGarukJob = (jobVal === "Garuk Dacron"); 
+        let isBahanMasuk = (jobVal === "Bahan Baku Masuk");
 
         for(let m of DATA.master) {
-            let isGarukItem = m.kode.toUpperCase().startsWith("GARUK-"); let matchKeyword = m.kode.toLowerCase().includes(val);
-            if (!matchKeyword) continue; if (isGarukJob && !isGarukItem) continue; if (!isGarukJob && !isBahanMasuk && isGarukItem) continue;
+            let isGarukItem = m.kode.toUpperCase().startsWith("GARUK-"); 
+            let matchKeyword = m.kode.toLowerCase().includes(val);
+            if (!matchKeyword) continue; 
+            if (isGarukJob && !isGarukItem) continue; 
+            if (!isGarukJob && !isBahanMasuk && isGarukItem) continue;
+
             if(m.kode.toLowerCase().includes(val)) {
-                
-                // --- PERBAIKAN: HANYA ADA 1 DEKLARASI (TIDAK DOUBLE) ---
-                let infoSaldo = ""; let prosesWajibCek = ['Garuk Dacron', 'Pengisian', 'Jahit Tutup', 'Penyarungan', 'Packing', 'Ikat/Ball'];
+                let infoSaldo = ""; 
+                let prosesWajibCek = ['Garuk Dacron', 'Pengisian', 'Jahit Tutup', 'Penyarungan', 'Packing', 'Ikat/Ball'];
                 if (prosesWajibCek.includes(jobVal)) {
-                    let sisa = getSaldoBarang(m.kode, jobVal, currentId); let warnaTeks = sisa > 0 ? '#166534' : '#991b1b'; let bgWarna = sisa > 0 ? '#dcfce7' : '#fee2e2';
+                    let sisa = getSaldoBarang(m.kode, jobVal, currentId); 
+                    let warnaTeks = sisa > 0 ? '#166534' : '#991b1b'; 
+                    let bgWarna = sisa > 0 ? '#dcfce7' : '#fee2e2';
                     infoSaldo = `<span style="background:${bgWarna}; color:${warnaTeks}; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:800; border: 1px solid ${sisa > 0 ? '#bbf7d0' : '#fecaca'};">Stok: ${sisa}</span>`;
                 }
                 
-                let d = document.createElement('div'); 
+                let d = document.createElement('div');
                 d.innerHTML = `
                     <div style="flex:1; display:flex; flex-direction:column; gap:6px; overflow:hidden; padding-right:10px; align-items:flex-start;">
                         <span class="ui-box-badge ui-box-wrap" style="color:#0f172a; border-color:#94a3b8;">${m.kode}</span>
-                        <div>${getKatBadge(m.kat)}</div>
                     </div>
                     ${infoSaldo}
-                `; 
+                `;
                 d.style = "padding:12px; border-bottom:1px solid #eee; cursor:pointer; display:flex; justify-content:space-between; align-items:flex-start;";
                 
-                d.onmouseover = () => d.style.backgroundColor = "#f0fdf4"; d.onmouseout = () => d.style.backgroundColor = "white";
-                d.onclick = () => { inp.value = m.kode; l.remove(); qty.focus(); updateWipInfo(r, m.kode); }; 
+                d.onmouseover = () => d.style.backgroundColor = "#f0fdf4"; 
+                d.onmouseout = () => d.style.backgroundColor = "white";
+                d.onclick = () => { inp.value = m.kode; l.remove(); qty.focus(); updateWipInfo(r, m.kode); };
+                
                 l.appendChild(d); count++; if(count>10) break;
             }
         }
@@ -2230,7 +2290,7 @@ async function saveData(status, type = 'PRD') {
     }
     
     let items = [];
-    if(type === 'PRD') { document.querySelectorAll('.input-row-wrapper').forEach(r => { let n = r.querySelector('.i-name').value; let q = r.querySelector('.i-qty').value; if(n && q) items.push({n:n, q:q}); }); } 
+    if(type === 'PRD') { document.querySelectorAll('.input-row-wrapper').forEach(r => { let n = r.querySelector('.i-name').value; let q = r.querySelector('.i-qty').value; let ket = r.querySelector('.i-ket') ? r.querySelector('.i-ket').value : ''; if(n && q) items.push({n:n, q:q, ket:ket}); }); }
     else { document.querySelectorAll('.input-bs-row-wrapper').forEach(r => { let n = r.querySelector('.bs-name').value; let q = r.querySelector('.bs-qty').value; let ket = r.querySelector('.bs-ket').value; if(n && q) items.push({n:n, q:q, ket:ket}); }); }
 
     if(items.length === 0) return showAlert("Peringatan", "Barang tidak boleh kosong!");
@@ -2244,9 +2304,11 @@ async function saveData(status, type = 'PRD') {
         if(!jobVal) return showAlert("Peringatan", "Harap pilih Pekerjaan!");
         payload = { action: 'saveDataPRD', type: 'PRD', id: id, date: document.getElementById('inputDate').value, karu: isBahanBaku ? "(System)" : karuVal, job: jobVal, ops: ops, items: items, status: status, user: originalCreator };
     } else {
-        let originalCreator = document.getElementById('originalBSUser').value || USER.name;
-        payload = { action: 'saveDataBS', type: 'BS', id: id, date: document.getElementById('inputBSDate').value, karu: "-", job: "BS Produksi", ops: "-", items: items, status: status, user: originalCreator };
-    }
+        let bsKaru = document.getElementById('selBSKaruValue').value;
+        if(!bsKaru || bsKaru === "-- Pilih Karu --") { return showAlert("Peringatan", "Harap pilih Karu terlebih dahulu!"); }
+        let originalCreator = document.getElementById('originalBSUser').value || USER.name;
+        payload = { action: 'saveDataBS', type: 'BS', id: id, date: document.getElementById('inputBSDate').value, karu: bsKaru, job: "BS Produksi", ops: "-", items: items, status: status, user: originalCreator };
+    }
 
     if (status === 'Draft') {
         saveLocalDraft(payload); showSuccessAnim(id); toggleFormLock(true, type);
@@ -2466,16 +2528,17 @@ function getSaldoBarangInfo(kodeBarang, jobTarget, currentId = null) {
 }
 
 function updateWipInfo(rowElement, kodeBarang) {
-    let jobVal = document.getElementById('selJobValue').value; let currentId = document.getElementById('editId').value; let wipBox = rowElement.querySelector('.wip-info');
-    let prosesWajibCek = ['Garuk Dacron', 'Pengisian', 'Jahit Tutup', 'Penyarungan', 'Packing', 'Ikat/Ball'];
-    if (!prosesWajibCek.includes(jobVal) || !kodeBarang) { if(wipBox) wipBox.classList.add('hidden'); return; }
+    let jobVal = document.getElementById('selJobValue').value; let currentId = document.getElementById('editId').value; 
+    let stokInput = rowElement.querySelector('.i-stok');
+    let prosesWajibCek = ['Garuk Dacron', 'Pengisian', 'Jahit Tutup', 'Penyarungan', 'Packing', 'Ikat/Ball'];
+    
+    if (!stokInput) return;
+    if (!prosesWajibCek.includes(jobVal) || !kodeBarang) { stokInput.value = "Stok: -"; return; }
 
-    let info = getSaldoBarangInfo(kodeBarang, jobVal, currentId);
-    if(wipBox) {
-        wipBox.querySelector('.w-masuk').innerText = info.masuk; wipBox.querySelector('.w-keluar').innerText = info.keluar; wipBox.querySelector('.w-sisa').innerText = info.sisa; wipBox.classList.remove('hidden');
-        if (info.sisa <= 0) { wipBox.style.background = '#fef2f2'; wipBox.style.color = '#dc2626'; wipBox.style.borderColor = '#fecaca'; } 
-        else { wipBox.style.background = '#e0f2fe'; wipBox.style.color = '#0369a1'; wipBox.style.borderColor = '#bae6fd'; }
-    }
+    let info = getSaldoBarangInfo(kodeBarang, jobVal, currentId);
+    stokInput.value = "Stok: " + info.sisa;
+    if (info.sisa <= 0) { stokInput.style.color = '#dc2626'; stokInput.style.background = '#fef2f2 !important'; } 
+    else { stokInput.style.color = '#0284c7'; stokInput.style.background = '#f0f9ff !important'; }
 }
 
 function getSaldoBarang(kodeBarang, jobTarget, currentId = null) { return getSaldoBarangInfo(kodeBarang, jobTarget, currentId).sisa; }
@@ -2503,7 +2566,7 @@ function openPendingApprovalModal() {
                     <div style="font-weight:bold; font-size:13px; color:#0f172a; margin-bottom: 3px;">${d.id} ${typeBadge}</div>
                     <div style="font-size:11px; color:#64748b;"><span class="material-symbols-outlined" style="font-size:12px; vertical-align:middle;">person</span> ${d.type === 'BS' ? d.user : d.karu}</div>
                 </div>
-                <button onclick="openViewModal('${d.id}', 'server')" class="btn-outline" style="padding:6px 10px; border-radius:6px !important; color:var(--ig-primary); border-color:var(--ig-primary) !important; background: white;" title="Lihat Dokumen">
+                <button onclick="document.getElementById('pendingApprovalModal').style.display='none'; openDocumentFull('${d.id}')" class="btn-outline" style="padding:6px 10px; border-radius:6px !important; color:var(--ig-primary); border-color:var(--ig-primary) !important; background: white;" title="Lihat Dokumen">
                     <span class="material-symbols-outlined" style="font-size:18px;">visibility</span>
                 </button>
             </div>`;
