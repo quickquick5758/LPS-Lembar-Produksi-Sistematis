@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-
+    
     <style>
         :root {
             /* TEMA INSTAGRAM CLEAN & FLAT */
@@ -94,10 +94,9 @@
             cursor: cell; 
         }
         /* --- STYLE KHUSUS WRAP KODE BARANG --- */
-        #viewMaster .excel-table td:nth-child(1),
-        #viewViewdata .excel-table td:nth-child(7) {
+        #viewMaster .excel-table td:nth-child(1) {
             white-space: normal !important;
-            min-width: 300px !important; /* Lebar minimal biar nggak kependekan */
+            min-width: 300px !important;
             line-height: 1.5;
         }
         
@@ -384,10 +383,10 @@
     position: fixed; top: 20px; right: 20px; background: #ffffff; border-left: 4px solid #16a34a; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 12px 16px; display: flex; align-items: center; gap: 10px; z-index: 9999; transform: translateX(150%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 #bgUpdateToast.show { transform: translateX(0); }
-    </style>
+        
+    </style>
 </head>
 <body>
-
 <div id="loadingOverlay">
     <div class="confirm-box" style="padding: 30px; width: auto; min-width: 250px;">
         <div class="sk-folding-cube"><div class="sk-cube1 sk-cube"></div><div class="sk-cube2 sk-cube"></div><div class="sk-cube4 sk-cube"></div><div class="sk-cube3 sk-cube"></div></div>
@@ -434,11 +433,11 @@
 </div>
 
 <div id="viewItemModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9940; align-items:center; justify-content:center; padding:20px;">
-    <div class="card" style="width:100%; max-width:800px; max-height:85vh; height:auto; padding:0; position:relative; display:flex; flex-direction:column; overflow:hidden;">
+    <div id="modalCardDetail" class="card modal-masuk-dari-atas" style="width:100%; max-width:800px; max-height:85vh; height:auto; padding:0; position:relative; display:flex; flex-direction:column; overflow:hidden;">
 
         <div style="padding: 15px 20px; border-bottom: 1px solid #e2e8f0; background: #ffffff; display: flex; justify-content: space-between; align-items: center; z-index: 10; flex-shrink: 0;">
             <h3 style="margin:0; color:var(--ig-text); display:flex; align-items:center; gap:15px;">
-                <span class="material-symbols-outlined" onclick="document.getElementById('viewItemModal').style.display='none'" style="cursor:pointer; color:#64748b; font-weight:bold; transition:0.2s;" onmouseover="this.style.color='var(--ig-primary)'" onmouseout="this.style.color='#64748b'">arrow_back</span>
+                <span class="material-symbols-outlined" onclick="closeDocumentModal()" style="cursor:pointer; color:#64748b; font-weight:bold; transition:0.2s;" onmouseover="this.style.color='var(--ig-primary)'" onmouseout="this.style.color='#64748b'">arrow_back</span>
                 <span id="vi-title">Detail Laporan</span>
             </h3>
             <span id="vi-badge-status" class="badge">STATUS</span>
@@ -657,7 +656,7 @@
                     <span id="dtlStatusBadge"></span>
                 </div>
 
-                <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+                <div style="padding: 20px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box;">
     
     <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
         <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); display: flex; align-items: center; justify-content: center; padding: 2px;">
@@ -1061,7 +1060,8 @@
                                 <th data-col="karu" onclick="sortViewData('karu')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Karu">KARU <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
                                 <th data-col="job" onclick="sortViewData('job')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Pekerjaan">PEKERJAAN <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
                                 <th data-col="ops" onclick="sortViewData('ops')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Operator">OPERATOR <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
-                                <th data-col="kode" onclick="sortViewData('kode')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Barang">KODE/BARANG <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+                                <th data-col="kode" onclick="sortViewData('kode')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Barang">NAMA BARANG <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+                                <th data-col="kat" onclick="sortViewData('kat')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Kategori">KATEGORI <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
                                 <th data-col="qty" onclick="sortViewData('qty')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Qty">QTY <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
                                 <th data-col="ket" onclick="sortViewData('ket')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Keterangan">KETERANGAN <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
                             </tr>
@@ -1828,17 +1828,16 @@ function loadViewDataTable() {
             <td>${tampilKaru}</td>
             <td>${jobBadge}</td>
             <td><div style="display:flex; flex-wrap:wrap; gap:4px; max-width:250px;">${opBadges}</div></td>
-            <td>
-                <div class="ui-box-badge ui-box-wrap" style="text-align:left;">
-                    ${d.kode} <div style="margin-top:6px;">${badgeKat}</div>
-                </div>
+            <td style="white-space: nowrap !important;">
+                <div class="ui-box-badge" style="text-align:left;">${d.kode}</div>
             </td>
+            <td style="white-space: nowrap !important;">${badgeKat}</td>
             <td align="center"><div class="ui-box-qty">${d.qty}</div></td>
             <td><div class="ui-box-badge ui-box-wrap" style="color:#c2410c;">${d.ket}</div></td>
         </tr>`;
     });
 
-    body.innerHTML += `<tr style="background-color: #e0f2fe;"><td colspan="7" style="text-align:right; font-weight:800; color:#0369a1; padding-right:15px; border-top:2px solid #bae6fd;">TOTAL QTY (DARI ${myData.length} DATA):</td><td style="text-align:center; font-weight:900; font-size:15px; color:#0369a1; border-top:2px solid #bae6fd;">${grandTotalQty.toLocaleString('id-ID')}</td><td style="border-top:2px solid #bae6fd;"></td></tr>`;
+    body.innerHTML += `<tr style="background-color: #e0f2fe;"><td colspan="8" style="text-align:right; font-weight:800; color:#0369a1; padding-right:15px; border-top:2px solid #bae6fd;">TOTAL QTY (DARI ${myData.length} DATA):</td><td style="text-align:center; font-weight:900; font-size:15px; color:#0369a1; border-top:2px solid #bae6fd;">${grandTotalQty.toLocaleString('id-ID')}</td><td style="border-top:2px solid #bae6fd;"></td></tr>`;
     renderSmartPagination('viewPagination', totalPages, currentPageView, (newPg) => { currentPageView = newPg; loadViewDataTable(); });
 }
 
@@ -1899,12 +1898,31 @@ function viewDocumentModal(id) {
         } else { 
             tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td></tr>`; 
         }
-    } else { 
-        tbody.innerHTML = `<tr><td colspan="${d.type === 'BS' ? 4 : 3}" align="center">Kosong</td></tr>`; 
-    }
-    
-    // Tampilkan Floating Window
-    document.getElementById('viewItemModal').style.display = 'flex';
+    } else { 
+        tbody.innerHTML = `<tr><td colspan="${d.type === 'BS' ? 4 : 3}" align="center">Kosong</td></tr>`; 
+    }
+    
+    // Tampilkan Floating Window
+    let modalOverlay = document.getElementById('viewItemModal');
+    let modalCard = document.getElementById('modalCardDetail');
+    
+    modalOverlay.style.display = 'flex'; // Munculkan layar gelapnya
+    
+    // Kasih jeda 10 milidetik agar CSS transition bisa berjalan mulus
+    setTimeout(() => {
+        modalCard.classList.add('muncul');
+    }, 10);
+}
+
+// FUNGSI BARU: Tutup Modal dengan Animasi Naiki
+function closeDocumentModal() {
+    let modalCard = document.getElementById('modalCardDetail');
+    modalCard.classList.remove('muncul'); // Tarik kotaknya ke atas
+    
+    // Tunggu 400ms (sesuai durasi CSS) baru sembunyikan layar gelapnya
+    setTimeout(() => {
+        document.getElementById('viewItemModal').style.display = 'none';
+    }, 400); 
 }
 
 // 2. FUNGSI OPEN (Untuk Halaman Full Page Detail)
