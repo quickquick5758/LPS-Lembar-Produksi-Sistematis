@@ -67,32 +67,36 @@
         /* ==== TABEL EXCEL SHARP & TEGAS ==== */
         .excel-table { 
             width: 100%; 
-            border-collapse: collapse !important; /* Kunci utama biar garisnya nyatu & tajam! */
+            border-collapse: collapse !important; /* Menggabungkan border agar pemisah kolom tidak ganda */
             background: #ffffff; 
-            border: 1px solid #94a3b8 !important; 
         }
         .excel-table th { 
-            padding: 10px 12px !important; 
-            background: #0284c7 !important; /* Biru teges ala header Excel */
-            font-weight: 700; 
-            color: #ffffff !important; 
-            border: 1px solid #0369a1 !important; /* Garis pembatas header */
-            text-align: left; text-transform: uppercase; letter-spacing: 0.5px; 
+            background-color: #f8fafc !important; /* Warna abu-abu sangat terang ala Excel bersih */
+            color: #475569 !important; /* Warna teks abu-abu gelap / tegas */
+            font-weight: 800 !important;
+            text-transform: uppercase;
+            padding: 12px 15px !important;
+            border: 1px solid #cbd5e1 !important; /* Garis pemisah per kolom di header */
+            border-bottom: 2px solid #94a3b8 !important; /* Garis bawah header lebih tebal */
+            text-align: left; 
+            letter-spacing: 0.5px; 
             position: sticky !important; 
             top: 0 !important; 
             z-index: 20 !important; 
         }   
         .excel-table td { 
-            padding: 6px 10px !important; /* Padding dibikin agak rapat biar muat banyak data */
-            border: 1px solid #cbd5e1 !important; /* Garis sel yang jelas */
+            padding: 10px 15px !important;
+            border: 1px solid #cbd5e1 !important; /* Garis pemisah diselaraskan dengan header */
+            color: #334155 !important;
             text-align: left; 
-            font-size: 12px !important;
+            font-size: 13px !important;
             vertical-align: middle;
         }
         .excel-table tbody tr:hover td { 
-            background-color: #f0f9ff !important; /* Efek highlight biru muda IG */
+            background-color: #f9fafb !important; /* Efek hover yang lebih lembut */
             cursor: cell; 
         }
+        
         /* --- STYLE KHUSUS WRAP KODE BARANG --- */
         #viewMaster .excel-table td:nth-child(1) {
             white-space: normal !important;
@@ -293,11 +297,6 @@
 
         .dash-table th, .excel-table th { font-size: 13px !important; }
         .dash-table td, .excel-table td { font-size: 14px !important; font-weight: 600; }
-        .excel-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 4px; overflow: hidden; box-shadow: var(--shadow-timbul); background: #ffffff; }
-        .excel-table th { padding: 15px !important; background: var(--excel-header); font-weight: 700; color: #444; border-bottom: 2px solid var(--border); text-align: left; text-transform: uppercase; letter-spacing: 0.5px; }
-        .excel-table td { padding: 6px 8px !important; border-bottom: 1px solid #f0f0f0; text-align: left; }
-        .excel-table tr:last-child td { border-bottom: none; }
-        .excel-table tr:hover td { background-color: #f8fafd; }
 
         .op-btn { border: none; padding: 10px; text-align: center; cursor: pointer; background: #f0f4f9; transition: 0.2s; color: #555; }
         .op-btn.selected { background: var(--ig-primary); color: white; border: none; font-weight: 800; transform: scale(1.05); box-shadow: 0 4px 8px rgba(26,115,232,0.3) !important; }
@@ -790,7 +789,7 @@
                                             <div style="font-size: 11px; color: var(--ig-primary); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Total Kiriman Global</div>
                                             <div id="valGlobalTotal" style="font-size: 26px; font-weight: 800; color: var(--ig-primary); margin-top: 5px;">0</div>
                                         </div>
-                                        <div style="overflow-y: auto; max-height: 300px; border-radius: 4px; border: 1px solid var(--border);">
+                                        <div style="overflow-y: auto; max-height: 450px; border-radius: 4px; border: 1px solid var(--border);">
                                             <table class="excel-table dash-table" style="width: 100%; margin: 0; border: none; box-shadow: none;">
                                                 <thead><tr><th style="text-align: left;">NAMA PELANGGAN / SUPPLIER</th><th style="text-align: right; width: 80px;">QTY</th></tr></thead>
                                                 <tbody id="tableSupplierBody"></tbody>
@@ -1761,7 +1760,7 @@ function buildViewDataCache() {
     filteredData.forEach(item => {
         let itemsArr = typeof item.items === 'string' ? JSON.parse(item.items) : item.items;
         itemsArr.forEach(brg => {
-            flat.push({ tipe: item.type, tgl: item.date.substr(0,10), id: item.id, karu: item.type === 'BS' ? item.user : item.karu, job: item.job || "-", ops: item.ops || "-", kode: brg.n, qty: brg.q, ket: item.type === 'BS' ? (brg.ket || "-") : "-" });
+            flat.push({ tipe: item.type, tgl: item.date.substr(0,10), id: item.id, karu: item.type === 'BS' ? item.user : item.karu, job: item.job || "-", ops: item.ops || "-", kode: brg.n, qty: brg.q, ket: brg.ket || "-" });
         });
     });
     VIEW_DATA_CACHE = flat;
@@ -1833,7 +1832,7 @@ function loadViewDataTable() {
             </td>
             <td style="white-space: nowrap !important;">${badgeKat}</td>
             <td align="center"><div class="ui-box-qty">${d.qty}</div></td>
-            <td><div class="ui-box-badge ui-box-wrap" style="color:#c2410c;">${d.ket}</div></td>
+            <td style="white-space:normal !important; word-wrap:break-word;"><div class="ui-box-badge" style="color:#c2410c; display:inline-flex; align-items:center; min-width:120px; max-width:100%; white-space:normal; word-break:break-word;">${d.ket}</div></td>
         </tr>`;
     });
 
@@ -1874,10 +1873,11 @@ function viewDocumentModal(id) {
     
     // Render Tabel Item
     if(d.type === 'BS') {
-        document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th>NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th><th>KETERANGAN</th></tr>`;
+        document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th style="width:65%;">NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th><th style="width:25%;">KETERANGAN</th></tr>`;
     } else {
-        document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th>NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th></tr>`;
+        document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th style="width:70%;">NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th></tr>`;
     }
+        document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th style="width:75%;">NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th><th style="width:25%;">KETERANGAN</th></tr>`;
     
     let tbody = document.getElementById('vi-body'); tbody.innerHTML = ''; 
     let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items; 
@@ -1886,21 +1886,16 @@ function viewDocumentModal(id) {
     if(items && items.length > 0) {
         items.forEach((item, index) => {
             let qty = parseInt(item.q) || 0; totalQty += qty; 
-            if(d.type === 'BS') { 
-                tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td>${item.n}</td><td style="text-align:center; font-weight:bold;">${qty}</td><td>${item.ket || '-'}</td></tr>`; 
-            } else { 
-                tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td>${item.n}</td><td style="text-align:center; font-weight:bold;">${qty}</td></tr>`; 
-            }
+            let ketBadge = item.ket && item.ket !== "-" ? `<div class="ui-box-badge" style="color:#c2410c; background:#fff7ed; border-color:#fed7aa; white-space:normal; font-size:11px; display:inline-flex; align-items:center; word-break:break-word; min-width:100px; max-width:100%;">${item.ket}</div>` : '-';
+
+            tbody.innerHTML += `<tr><td style="text-align:center;">${index+1}</td><td style="white-space:normal !important; word-wrap:break-word; line-height:1.4;">${item.n}</td><td style="text-align:center; font-weight:bold;">${qty}</td><td style="white-space:normal !important;">${ketBadge}</td></tr>`; 
         });
         
-        if(d.type === 'BS') { 
-            tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td><td style="background:#f8f9fa;"></td></tr>`; 
-        } else { 
-            tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td></tr>`; 
-        }
-    } else { 
-        tbody.innerHTML = `<tr><td colspan="${d.type === 'BS' ? 4 : 3}" align="center">Kosong</td></tr>`; 
-    }
+        tbody.innerHTML += `<tr><td colspan="2" style="text-align:right; font-weight:800; background:#f8f9fa; color:#000000;">TOTAL KESELURUHAN</td><td style="text-align:center; font-weight:900; background:#f8f9fa; color:#000000; font-size:15px;">${totalQty}</td><td style="background:#f8f9fa;"></td></tr>`; 
+    } else { 
+        tbody.innerHTML = `<tr><td colspan="4" align="center">Kosong</td></tr>`; 
+    }
+
     
     // Tampilkan Floating Window
     let modalOverlay = document.getElementById('viewItemModal');
@@ -1961,9 +1956,9 @@ function openDocumentFull(id) {
             <thead>
                 <tr>
                     <th style="width:50px; text-align:center;">NO</th>
-                    <th>NAMA BARANG</th>
+                    <th style="width:45%;">NAMA BARANG</th>
                     <th style="width:80px; text-align:center;">QTY</th>
-                    ${isBS ? '<th>KETERANGAN</th>' : ''}
+                    <th style="width:35%;">KETERANGAN</th>
                 </tr>
             </thead>
             <tbody>
@@ -1972,16 +1967,20 @@ function openDocumentFull(id) {
     if(items && items.length > 0) {
         items.forEach((item, index) => {
             let qty = parseInt(item.q) || 0; totalQty += qty; 
+            
+            // 👇 INI BADGE BOX UNTUK KETERANGANNYA
+            let ketBadge = item.ket && item.ket !== "-" ? `<div class="ui-box-badge" style="color:#c2410c; background:#fff7ed; border-color:#fed7aa; font-size:11px; display:inline-flex; align-items:center; word-break:break-word; white-space:normal; min-width:120px; max-width:100%;">${item.ket}</div>` : '-';
+
             tableHTML += `
             <tr>
                 <td style="text-align:center;">${index+1}</td>
                 <td style="white-space:normal !important; word-wrap:break-word; line-height:1.4;">${item.n}</td>
                 <td style="text-align:center; font-weight:bold; color:var(--ig-primary); font-size:14px;">${qty}</td>
-                ${isBS ? `<td style="color:var(--danger); font-size:11px;">${item.ket || '-'}</td>` : ''}
+                <td style="white-space:normal !important; word-wrap:break-word;">${ketBadge}</td>
             </tr>`;
         });
     } else {
-        tableHTML += `<tr><td colspan="${isBS ? 4 : 3}" align="center" style="padding:15px; color:#888;">Item Kosong</td></tr>`;
+        tableHTML += `<tr><td colspan="4" align="center" style="padding:15px; color:#888;">Item Kosong</td></tr>`;
     }
 
     tableHTML += `</tbody></table></div>`;
@@ -2397,7 +2396,9 @@ async function processExport() {
         filteredData.forEach(item => {
             let itemsArr = typeof item.items === 'string' ? JSON.parse(item.items) : item.items;
             itemsArr.forEach(brg => {
-                let colKaruUser = item.type === 'BS' ? item.user : item.karu; let colKet = item.type === 'BS' ? (brg.ket || "-") : "-";     
+                let colKaruUser = item.type === 'BS' ? item.user : item.karu; 
+                // 👇 PASTIKAN BARIS INI SEPERTI INI 👇
+                let colKet = brg.ket || "-";      
                 flatData.push({ "TIPE": item.type === 'BS' ? 'BS' : 'PRD', "TANGGAL": item.date.substr(0,10), "ID LAPORAN": item.id, "KARU / USER": colKaruUser, "PEKERJAAN": item.job || "-", "OPERATOR": item.ops || "-", "NAMA BARANG": brg.n, "QTY": Number(brg.q), "STATUS": item.status, "KETERANGAN": colKet });
             });
         });
@@ -3213,7 +3214,7 @@ function printReport(type) {
     let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items;
     let totalQty = 0;
 
-    // 3. Bangun Tabel Rincian Item
+    // 3. Bangun Tabel Rincian Item (Hilangkan isBS di kolom Keterangan)
     let tableHTML = `
         <table style="width: 100%; border-collapse: collapse; font-size: 13px; font-family: 'Inter', sans-serif; margin-bottom: 30px;">
             <thead>
@@ -3221,7 +3222,7 @@ function printReport(type) {
                     <th style="border: 1px solid #0369a1; padding: 10px 8px; width: 40px; text-align: center;">NO</th>
                     <th style="border: 1px solid #0369a1; padding: 10px 8px; text-align: left;">NAMA BARANG</th>
                     <th style="border: 1px solid #0369a1; padding: 10px 8px; width: 80px; text-align: center;">QTY</th>
-                    ${isBS ? '<th style="border: 1px solid #0369a1; padding: 10px 8px; text-align: left;">KETERANGAN</th>' : ''}
+                    <th style="border: 1px solid #0369a1; padding: 10px 8px; text-align: left;">KETERANGAN</th>
                 </tr>
             </thead>
             <tbody>
@@ -3236,7 +3237,7 @@ function printReport(type) {
                     <td style="border: 1px solid #cbd5e1; padding: 8px; text-align: center;">${index + 1}</td>
                     <td style="border: 1px solid #cbd5e1; padding: 8px;">${item.n}</td>
                     <td style="border: 1px solid #cbd5e1; padding: 8px; text-align: center; font-weight:bold;">${qty}</td>
-                    ${isBS ? `<td style="border: 1px solid #cbd5e1; padding: 8px;">${item.ket || '-'}</td>` : ''}
+                    <td style="border: 1px solid #cbd5e1; padding: 8px;">${item.ket || '-'}</td>
                 </tr>
             `;
         });
@@ -3244,7 +3245,7 @@ function printReport(type) {
             <tr>
                 <td colspan="2" style="border: 1px solid #cbd5e1; padding: 10px 8px; text-align: right; font-weight: 800; background:#f8fafc; -webkit-print-color-adjust: exact; color-adjust: exact;">TOTAL KESELURUHAN</td>
                 <td style="border: 1px solid #cbd5e1; padding: 10px 8px; text-align: center; font-weight: 900; background:#f8fafc; font-size:14px; -webkit-print-color-adjust: exact; color-adjust: exact;">${totalQty}</td>
-                ${isBS ? '<td style="border: 1px solid #cbd5e1; background:#f8fafc; -webkit-print-color-adjust: exact; color-adjust: exact;"></td>' : ''}
+                <td style="border: 1px solid #cbd5e1; background:#f8fafc; -webkit-print-color-adjust: exact; color-adjust: exact;"></td>
             </tr>
         `;
     } else {
