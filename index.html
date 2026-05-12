@@ -3156,13 +3156,45 @@ function kirimAduanLuar() {
     // Simulasi proses ngirim
     setTimeout(() => {
         hideLoading();
+
+        // --- TAMBAHAN: Render otomatis ke tabel Services ---
+        let today = new Date();
+        let tglStr = String(today.getDate()).padStart(2, '0') + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + today.getFullYear();
+        let randomId = 'TKT-' + Math.floor(Math.random() * 900 + 100);
         
+        let katBadge = '';
+        if(kategori === 'Bug Sistem') katBadge = '<span style="background: #fee2e2; color: #b91c1c; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">Bug Sistem</span>';
+        else if(kategori === 'Kritik Saran') katBadge = '<span style="background: #fef3c7; color: #b45309; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">Kritik Saran</span>';
+        else katBadge = '<span style="background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold;">Kendala Login</span>';
+        
+        let imgBadge = base64Image ? '<br><span style="font-size: 10px; color: #0284c7; display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; background: #e0f2fe; padding: 2px 6px; border-radius: 4px;"><span class="material-symbols-outlined" style="font-size: 12px;">image</span> Ada Lampiran</span>' : '';
+
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td style="font-weight:bold; font-size: 11px;">${randomId}</td>
+            <td>${tglStr}</td>
+            <td style="font-weight:600; color:var(--ig-primary);">${nama}</td>
+            <td>${katBadge}</td>
+            <td style="max-width: 250px; white-space: normal; line-height: 1.4; color: #475569;">
+                "${pesan}"
+                ${imgBadge}
+            </td>
+            <td><span class="badge st-submitted">Menunggu</span></td>
+            <td align="center">
+                <span class="material-symbols-outlined" style="color: #f59e0b; cursor: pointer;" title="Proses Tiket">pending</span>
+            </td>
+        `;
+        
+        let tbody = document.getElementById('tiketTableBody');
+        if(tbody) tbody.insertBefore(tr, tbody.firstChild); // Masukkan ke urutan paling atas tabel
+        // --------------------------------------------------
+
         // Bersihkan form
         document.getElementById('srvNama').value = '';
         document.getElementById('srvPesan').value = '';
         document.getElementById('srvFileLuar').value = '';
         document.getElementById('srvCompressedImageLuar').value = '';
-        
+
         closeSupportModal();
         showAlert("Laporan Terkirim!", "Terima kasih. Tim IT kami akan segera mengecek kendala kamu. Beserta lampiran gambarnya (jika ada). Harap tunggu ya! 🚀");
     }, 1500);
