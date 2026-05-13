@@ -85,11 +85,11 @@
             z-index: 20 !important; 
         }   
         .excel-table td { 
-            padding: 10px 15px !important;
-            border: 1px solid #cbd5e1 !important; /* Garis pemisah diselaraskan dengan header */
-            color: #334155 !important;
+            padding: 2px 6px !important; /* Dibuat tidak terlalu tinggi */
+            border: 1px solid #cbd5e1 !important;
+            color: #475569 !important; /* Disamakan warnanya dengan header agar senada */
             text-align: left; 
-            font-size: 13px !important;
+            font-size: 14px !important; /* Disamakan dengan font dasar */
             vertical-align: middle;
         }
         .excel-table tbody tr:hover td { 
@@ -466,7 +466,11 @@
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <span style="color:#64748b; width: 90px; flex-shrink:0;">Karu</span>
-                        <strong id="vi-ops" style="text-align:right; line-height: 1.4;">-</strong>
+                        <strong id="vi-karu-kanan" style="text-align:right; line-height: 1.4;">-</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <span style="color:#64748b; width: 90px; flex-shrink:0;">Shift</span>
+                        <strong id="vi-shift" style="text-align:right; line-height: 1.4; color: var(--ig-primary);">-</strong>
                     </div>
                 </div>
 
@@ -683,9 +687,13 @@
             <span id="dtlOps" style="color: var(--ig-text);"></span>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <span><span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle; color:#64748b;">work</span> <b style="color:#64748b;">Pekerjaan</b></span>
-            <span id="dtlJob" style="color: #f59e0b; font-weight: 600;"></span>
-        </div>
+            <span><span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle; color:#64748b;">work</span> <b style="color:#64748b;">Pekerjaan</b></span>
+            <span id="dtlJob" style="color: #f59e0b; font-weight: 600;"></span>
+        </div>
+        <div id="dtlShiftContainer" style="display:flex; justify-content:space-between; align-items:flex-start; margin-top:6px;">
+            <span><span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle; color:#64748b;">schedule</span> <b style="color:#64748b;">Shift</b></span>
+            <span id="dtlShift" style="color: var(--ig-primary); font-weight: 600;"></span>
+        </div>
     </div>
 
     <div style="display: flex; gap: 15px; margin-bottom: 25px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 15px 0;">
@@ -801,7 +809,7 @@
                         </div>
 
                         <div class="card card-jam" style="padding: 0; border: 1px solid var(--border);">
-                            <div style="padding: 12px 15px; background: #fafafa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                            <div style="padding: 6px 8px; background: #fafafa; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
                                 <h4 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 13px; text-transform: uppercase; color: var(--ig-text);"><span class="material-symbols-outlined" style="color:#f59e0b">schedule</span> Performa Per Jam (Hari Ini)</h4>
                                 <span style="font-size:12px; color:var(--ig-sec-text); display:flex; align-items:center; gap:3px; background: #efefef; padding: 2px 4px; border-radius: 4px;"><span class="material-symbols-outlined" style="font-size:12px;">swipe</span> Geser</span>
                             </div>
@@ -889,7 +897,7 @@
         <th data-col-lap="id" onclick="sortLaporan('id')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan ID">ID <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
         <th data-col-lap="type" onclick="sortLaporan('type')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Tipe">TIPE <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
         <th data-col-lap="date" onclick="sortLaporan('date')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Tanggal">TGL <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
-        <th data-col-lap="karu" onclick="sortLaporan('karu')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Karu">KARU/USER <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
+        <th data-col-lap="karu" onclick="sortLaporan('karu')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Karu">KARU <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
         <th data-col-lap="ops" onclick="sortLaporan('ops')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Operator">OPERATOR <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
         <th data-col-lap="job" onclick="sortLaporan('job')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Job">JOB <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
         <th data-col-lap="status" onclick="sortLaporan('status')" style="cursor:pointer; white-space:nowrap; user-select:none; position:relative; padding-right:25px !important;" title="Urutkan Status">STATUS <span class="material-symbols-outlined" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:14px; opacity:0.5;">unfold_more</span></th>
@@ -995,24 +1003,31 @@
                     </div>
                     <input type="hidden" id="formBSMode"><input type="hidden" id="originalBSUser"> 
 
-                    <div style="position: relative; padding: 10px; padding-right: 170px; margin-bottom: 15px; background: #f9f9f9; border-radius: 4px; margin-top: 15px; min-height: 45px;">
-                        <div style="width: 100%;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background: #f9f9f9; padding: 10px; border-radius: 4px; margin-top: 15px;">
+                        <label style="font-weight:bold; display:flex; align-items:center; gap:5px;"><span class="material-symbols-outlined" style="font-size:18px;">calendar_month</span> TANGGAL</label>
+                        <input type="date" id="inputBSDate" style="width:auto; border: 1px solid #ccc; padding: 8px 10px; border-radius: 4px; font-family: 'Inter', sans-serif;">
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; width: 100%; gap:10px; margin-bottom:10px;">
+                        <div style="width:100%;">
                             <input type="hidden" id="selBSKaruValue" value="">
-                            <div class="custom-select-btn" id="btnInputBSKaru" onclick="openInputBSKaruSelect()" style="margin:0; width:100%;">
+                            <div class="custom-select-btn" id="btnInputBSKaru" onclick="openInputBSKaruSelect()" style="width:100%;">
                                 <span id="labelInputBSKaru" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-- Pilih Karu --</span>
                                 <span class="material-symbols-outlined" style="color:#888; font-size:16px; flex-shrink: 0;">keyboard_arrow_down</span>
                             </div>
                         </div>
-                        
-                        <div style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 5px;">
-                            <label style="font-weight:bold; display:flex; align-items:center; gap:2px; margin:0; font-size: 11px; color: #444;"><span class="material-symbols-outlined" style="font-size:16px;">calendar_month</span> TGL</label>
-                            <input type="date" id="inputBSDate" style="width:115px; border: 1px solid #ccc; margin:0; padding: 8px 10px; font-size: 12px;">
+                        <div style="width:100%;">
+                            <input type="hidden" id="selBSShiftValue" value="">
+                            <div class="custom-select-btn" id="btnInputBSShift" onclick="openInputBSShiftSelect()" style="width:100%;">
+                                <span id="labelInputBSShift" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-- Pilih Shift --</span>
+                                <span class="material-symbols-outlined" style="color:#888; font-size:16px; flex-shrink: 0;">keyboard_arrow_down</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div style="display:none;"><input type="text" id="inputBSUser" disabled></div>
+                    <div style="display:none;"><input type="text" id="inputBSUser" disabled></div>
 
-                    <div id="itemBSArea" class="hidden" style="margin-top:20px; padding-top:15px; border-top:2px dashed #eee;">
+                    <div id="itemBSArea" class="hidden" style="margin-top:20px; padding-top:15px; border-top:2px dashed #eee;">
                         <label style="font-weight:bold; display:flex; align-items:center; gap:5px; margin-bottom:10px;"><span class="material-symbols-outlined" style="font-size:18px;">category</span> ITEM BARANG BS:</label>
                         <div id="rowBSContainer"></div>
                         
@@ -1326,7 +1341,7 @@
 </div>
 
 <script>
-const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbyXaPS_5s0p54LU6DN0B_LH-3DQ3GurbRQQxi2FmfiosZq_OTBVSAFU2laH-1VhmTnu/exec"; 
+const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbzaatcPKcR_1n590eZDfAh2hBAvc8we27ktKS7lvHN1kJTRweGbZpoatlwDQouJROAp/exec"; 
 
 let DATA = {};
 let currentPageLaporan = 1; let rowsPerPageLaporan = 15;
@@ -1450,6 +1465,15 @@ function openInputKaruSelect() {
     });
 }
 
+function checkBSInputReady() {
+    let k = document.getElementById('selBSKaruValue').value;
+    let s = document.getElementById('selBSShiftValue').value;
+    // Munculkan list item BS hanya jika Karu dan Shift sudah dipilih
+    if(k && k !== '-- Pilih Karu --' && s && s !== '-- Pilih Shift --') {
+        document.getElementById('itemBSArea').classList.remove('hidden');
+    }
+}
+
 function openInputBSKaruSelect() {
     if(document.getElementById('btnInputBSKaru').classList.contains('disabled')) return;
     let items = EXPORT_KARU_LIST.map(k => ({value: k, label: k}));
@@ -1457,7 +1481,23 @@ function openInputBSKaruSelect() {
         document.getElementById('selBSKaruValue').value = val; 
         document.getElementById('labelInputBSKaru').innerText = label; 
         document.getElementById('labelInputBSKaru').style.color = "var(--ig-text)"; 
-        document.getElementById('itemBSArea').classList.remove('hidden'); // Munculkan form input BS
+        checkBSInputReady();
+    });
+}
+
+function openInputBSShiftSelect() {
+    if(document.getElementById('btnInputBSShift').classList.contains('disabled')) return;
+    let items = [
+        {value: 'Shift 1', label: 'Shift 1'},
+        {value: 'Shift 2', label: 'Shift 2'},
+        {value: 'Shift 3', label: 'Shift 3'},
+        {value: 'Normal Shift', label: 'Normal Shift'}
+    ];
+    openSelectionModal("Pilih Shift", items, document.getElementById('selBSShiftValue').value, (val, label) => {
+        document.getElementById('selBSShiftValue').value = val; 
+        document.getElementById('labelInputBSShift').innerText = label; 
+        document.getElementById('labelInputBSShift').style.color = "var(--ig-text)"; 
+        checkBSInputReady();
     });
 }
 
@@ -1701,16 +1741,16 @@ function sortLaporan(col) {
 
     paginatedData.forEach(d => {
         let typeBadge = d.type === 'BS' ? `<span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius: 4px; font-size:10px; font-weight:bold;">BS</span>` : `<span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius: 4px; font-size:10px; font-weight:bold;">PRD</span>`;
-        let tampilKaru = (d.karu === "(System)") ? `<span class="ui-box-badge" style="color:#dc2626;">(System)</span>` : `<div class="ui-box-badge" style="color:var(--ig-primary);">${d.karu}</div>`;
-        let jobBadge = getJobBadge(d.job);
-        
-        let masterItem = DATA.master.find(m => m.kode === d.kode);
-        let badgeKat = masterItem ? getKatBadge(masterItem.kat) : "";
+        let tampilKaru = (d.karu === "(System)") ? `<span class="ui-box-badge" style="color:#dc2626;">(System)</span>` : `<div class="ui-box-badge" style="color:var(--ig-primary);">${d.karu || '-'}</div>`;
+        let jobBadge = getJobBadge(d.job);
+        
+        let masterItem = DATA.master.find(m => m.kode === d.kode);
+        let badgeKat = masterItem ? getKatBadge(masterItem.kat) : "";
 
-        let opDisplay = d.ops ? d.ops : "-"; 
-        let jobDisplay = getJobBadge(d.job);
+        let opDisplay = d.type === 'BS' ? (d.shift || d.job || d.ops || "-") : (d.ops || "-"); 
+        let jobDisplay = getJobBadge(d.job);
 
-        let userDisplay = tampilKaru;
+        let userDisplay = tampilKaru;
         let badgeClass = d.status === 'Approved' ? 'st-approved' : (d.status === 'Submitted' ? 'st-submitted' : (d.status === 'Draft' ? 'st-draft' : 'st-rejected'));
         let syncIndicator = d.status === 'Draft' ? '<span class="material-symbols-outlined icon-cloud" style="font-size:14px;">cloud_off</span>' : '<span class="material-symbols-outlined icon-synced" style="font-size:14px;">cloud_done</span>';
         
@@ -1721,18 +1761,20 @@ function sortLaporan(col) {
         }
 
         // --- 👇 BAGIAN TOMBOL YANG BARU 👇 ---
-        
-        // 1. Tombol Mata untuk Buka Modal (Intip Cepat)
-        let btnMata = `<span class="action-icon" onclick="viewDocumentModal('${d.id}')" title="Intip Cepat"><span class="material-symbols-outlined">visibility</span></span>`;
+        
+        // 1. Tombol Mata untuk Buka Modal (Intip Cepat) (Bisa diakses semua role)
+        let btnMata = `<span class="action-icon" onclick="viewDocumentModal('${d.id}')" title="Intip Cepat"><span class="material-symbols-outlined">visibility</span></span>`;
 
-        // 2. Tombol Pensil (Buka Form Edit) ATAU Tombol Open (Buka Full Page)
-        let editAtauOpenBtn = canEdit 
-            ? `<span class="action-icon" onclick="openForm('${d.id}', '${d.status === 'Draft' ? 'edit_draft' : 'review_staff'}')" title="Edit Dokumen"><span class="material-symbols-outlined">edit</span></span>`
-            : `<span class="action-icon" onclick="openDocumentFull('${d.id}')" title="Lihat Full Page"><span class="material-symbols-outlined" style="color:#94a3b8;">open_in_new</span></span>`;
+        // 2. Tombol Open (Buka Full Page) (Bisa diakses semua role)
+        let btnOpen = `<span class="action-icon" onclick="openDocumentFull('${d.id}')" title="Lihat Full Page"><span class="material-symbols-outlined" style="color:#94a3b8;">open_in_new</span></span>`;
 
-        let aksiBtn = `${btnMata} ${editAtauOpenBtn}`;
-        
-        // ------------------------------------
+        // 3. Tombol Pensil (Edit) (Hanya muncul jika rolenya punya akses edit / Author)
+        let btnEdit = canEdit 
+            ? `<span class="action-icon" onclick="openForm('${d.id}', '${d.status === 'Draft' ? 'edit_draft' : 'review_staff'}')" title="Edit Dokumen"><span class="material-symbols-outlined" style="color:var(--ig-primary);">edit</span></span>`
+            : ``; // Kosong jika tidak punya akses
+
+        // Gabungkan ketiganya
+        let aksiBtn = `${btnMata} ${btnOpen} ${btnEdit}`;
 
         body.innerHTML += `<tr>
             <td><div class="ui-box-badge">${d.id}</div></td>
@@ -1855,15 +1897,16 @@ function viewDocumentModal(id) {
     document.getElementById('vi-type').innerHTML = d.type === 'BS' ? '<span style="color:#b91c1c;">BS Produksi</span>' : '<span style="color:#0369a1;">Produksi</span>';
     
     // --- PENUKARAN (SWAP) DIMULAI ---
-    
-    // Kotak Kiri (Sekarang diisi OPERATOR)
-    document.getElementById('vi-karu').innerText = d.type === 'BS' ? d.user : (d.ops && d.ops !== "" ? d.ops : "-");
-    document.getElementById('vi-role').innerText = d.type === 'BS' ? 'Inputer BS Produksi' : 'Operator';
-    
-    // Kotak Kanan (Sekarang diisi KEPALA REGU)
-    document.getElementById('vi-ops').innerText = d.type === 'BS' ? '-' : (d.karu || 'Kepala Regu');
-    
-    // --- PENUKARAN SELESAI ---
+        
+    // Kotak Kiri (Sekarang diisi USER PEMBUAT / OPERATOR)
+    document.getElementById('vi-karu').innerText = d.type === 'BS' ? (d.user || "-") : (d.ops && d.ops !== "" ? d.ops : "-");
+    document.getElementById('vi-role').innerText = d.type === 'BS' ? 'User Pembuat' : 'Operator';
+    
+    // Kotak Kanan (Sekarang murni diisi NAMA KARU & SHIFT)
+    document.getElementById('vi-karu-kanan').innerText = d.karu || '-';
+    document.getElementById('vi-shift').innerText = d.shift || '-';
+    
+    // --- PENUKARAN SELESAI ---
     
     // Set Badge Status
     let badgeClass = d.status === 'Approved' ? 'st-approved' : (d.status === 'Submitted' ? 'st-submitted' : (d.status === 'Draft' ? 'st-draft' : 'st-rejected'));
@@ -1875,10 +1918,8 @@ function viewDocumentModal(id) {
     if(d.type === 'BS') {
         document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th style="width:65%;">NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th><th style="width:25%;">KETERANGAN</th></tr>`;
     } else {
-        document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th style="width:70%;">NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th></tr>`;
-    }
         document.getElementById('vi-head').innerHTML = `<tr><th style="width:50px; text-align:center;">NO</th><th style="width:75%;">NAMA BARANG</th><th style="width:80px; text-align:center;">QTY</th><th style="width:25%;">KETERANGAN</th></tr>`;
-    
+    }
     let tbody = document.getElementById('vi-body'); tbody.innerHTML = ''; 
     let items = typeof d.items === 'string' ? JSON.parse(d.items) : d.items; 
     let totalQty = 0; 
@@ -1930,18 +1971,19 @@ function openDocumentFull(id) {
     let totalQty = 0;
 
     // --- PENUKARAN (SWAP) DI FULL PAGE ---
-    let namaOperator = isBS ? d.user : (d.ops && d.ops !== "" ? d.ops : "-"); 
-    let namaKaru = isBS ? "-" : (d.karu || 'Kepala Regu'); 
+    let namaOperator = isBS ? (d.user || "-") : (d.ops && d.ops !== "" ? d.ops : "-");
+    let namaKaru = d.karu || 'Kepala Regu';
 
     // Set Data ke Elemen
     document.getElementById('dtlKaru').innerText = namaOperator;
-    document.getElementById('dtlRoleLabel').innerText = isBS ? 'Inputer BS Produksi' : 'Operator';
-    document.getElementById('dtlAvatar').innerText = namaOperator ? namaOperator.charAt(0).toUpperCase() : "U";
+    document.getElementById('dtlRoleLabel').innerText = isBS ? 'User Pembuat' : 'Operator';
+    document.getElementById('dtlAvatar').innerText = namaOperator ? namaOperator.charAt(0).toUpperCase() : "U";
 
-    document.getElementById('dtlId').innerText = d.id;
-    document.getElementById('dtlDate').innerText = d.date.substr(0,10);
-    document.getElementById('dtlOps').innerText = namaKaru; 
-    document.getElementById('dtlJob').innerText = isBS ? 'BS Produksi' : (d.job || '-');
+    document.getElementById('dtlId').innerText = d.id;
+    document.getElementById('dtlDate').innerText = d.date.substr(0,10);
+    document.getElementById('dtlOps').innerText = namaKaru; 
+    document.getElementById('dtlJob').innerText = d.job || '-';
+    document.getElementById('dtlShift').innerText = d.shift || (isBS ? d.job : '-');
 
     // Set Badge Status
     let badgeClass = d.status === 'Approved' ? 'st-approved' : (d.status === 'Submitted' ? 'st-submitted' : (d.status === 'Draft' ? 'st-draft' : 'st-rejected'));
@@ -2025,7 +2067,8 @@ function startInputNew() {
 function startInputBS() {
     document.getElementById('editBSId').value = ""; document.getElementById('formBSMode').value = "new"; document.getElementById('originalBSUser').value = USER.name; 
     document.getElementById('inputBSDate').valueAsDate = new Date(); document.getElementById('inputBSUser').value = USER.name; 
-    document.getElementById('selBSKaruValue').value = ""; document.getElementById('labelInputBSKaru').innerText = "-- Pilih Karu --"; document.getElementById('labelInputBSKaru').style.color = "#888";
+    document.getElementById('selBSKaruValue').value = ""; document.getElementById('labelInputBSKaru').innerText = "-- Pilih Karu --"; document.getElementById('labelInputBSKaru').style.color = "#888";
+    document.getElementById('selBSShiftValue').value = ""; document.getElementById('labelInputBSShift').innerText = "-- Pilih Shift --"; document.getElementById('labelInputBSShift').style.color = "#888";
     document.getElementById('itemBSArea').classList.add('hidden');
     document.getElementById('rowBSContainer').innerHTML = ''; addBSRow(); document.getElementById('reviewHeaderBS').classList.add('hidden');
     toggleFormLock(false, 'BS');
@@ -2056,6 +2099,15 @@ function openForm(id, mode) {
         try { let itemsArr = typeof d.items === 'string' ? JSON.parse(d.items) : d.items; if(itemsArr && itemsArr.length > 0) { itemsArr.forEach(item => addBSRow(item.n, item.q, item.ket)); if(mode === 'edit_draft') addBSRow(); } else addBSRow(); } catch(e) { addBSRow(); }
 
         toggleFormLock(false, 'BS');
+        document.getElementById('selBSKaruValue').value = d.karu || ""; 
+        document.getElementById('labelInputBSKaru').innerText = d.karu || "-- Pilih Karu --";
+        document.getElementById('labelInputBSKaru').style.color = d.karu ? "var(--ig-text)" : "#888";
+
+        let shiftVal = d.shift || d.job || "";
+        document.getElementById('selBSShiftValue').value = shiftVal;
+        document.getElementById('labelInputBSShift').innerText = shiftVal || "-- Pilih Shift --";
+        document.getElementById('labelInputBSShift').style.color = shiftVal ? "var(--ig-text)" : "#888";
+
         if (mode === 'review_staff') { document.getElementById('rh-id-bs').innerText = id; document.getElementById('rh-karu-bs').innerText = d.user || USER.name; document.getElementById('reviewHeaderBS').classList.remove('hidden'); } else { document.getElementById('reviewHeaderBS').classList.add('hidden'); }
         if(mode === 'edit_draft') { document.getElementById('btnGroupBSUser').classList.remove('hidden'); document.getElementById('btnSimpanBSDraft').classList.remove('hidden'); document.getElementById('btnEditBSDraft').classList.add('hidden'); document.getElementById('btnKirimBS').classList.remove('hidden'); document.getElementById('btnGroupBSStaff').classList.add('hidden'); } 
         else if (mode === 'review_staff') { document.getElementById('btnGroupBSUser').classList.add('hidden'); document.getElementById('btnGroupBSStaff').classList.remove('hidden'); }
@@ -2322,10 +2374,12 @@ async function saveData(status, type = 'PRD') {
         payload = { action: 'saveDataPRD', type: 'PRD', id: id, date: document.getElementById('inputDate').value, karu: isBahanBaku ? "(System)" : karuVal, job: jobVal, ops: ops, items: items, status: status, user: originalCreator };
     } else {
         let bsKaru = document.getElementById('selBSKaruValue').value;
-        if(!bsKaru || bsKaru === "-- Pilih Karu --") { return showAlert("Peringatan", "Harap pilih Karu terlebih dahulu!"); }
+        let bsShift = document.getElementById('selBSShiftValue').value;
+        if(!bsKaru || bsKaru === "-- Pilih Karu --") { return showAlert("Peringatan", "Harap pilih Karu terlebih dahulu!"); }
+        if(!bsShift || bsShift === "-- Pilih Shift --") { return showAlert("Peringatan", "Harap pilih Shift terlebih dahulu!"); }
         let originalCreator = document.getElementById('originalBSUser').value || USER.name;
-        payload = { action: 'saveDataBS', type: 'BS', id: id, date: document.getElementById('inputBSDate').value, karu: bsKaru, job: "BS Produksi", ops: "-", items: items, status: status, user: originalCreator };
-    }
+        payload = { action: 'saveDataBS', type: 'BS', id: id, date: document.getElementById('inputBSDate').value, karu: bsKaru, job: 'BS Produksi', shift: bsShift, ops: bsShift, items: items, status: status, user: originalCreator };
+    }
 
     if (status === 'Draft') {
         saveLocalDraft(payload); showSuccessAnim(id); toggleFormLock(true, type);
