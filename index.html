@@ -1371,7 +1371,7 @@
 </div>
 
 <script>
-const CLOUD_API_URL ="https://script.google.com/macros/s/AKfycbxHYfIkHcr6-2MdOICfiL5AN7suKkFvqTeythMvCBIxUV6FXaM0uHXVAF6wZrg51Oo/exec"; 
+const CLOUD_API_URL ="https://script.google.com/macros/s/AKfycbxRFjayUw04VE88nCWqkg8w3x2ZdspX2CuPNWdL2gzOxTE9kZtpy7w921rIxq4RUhkC/exec"; 
 
 let DATA = {};
 let currentPageLaporan = 1; let rowsPerPageLaporan = 15;
@@ -1855,7 +1855,7 @@ function buildViewDataCache() {
     filteredData.forEach(item => {
         let itemsArr = typeof item.items === 'string' ? JSON.parse(item.items) : item.items;
         itemsArr.forEach(brg => {
-                flat.push({ tipe: item.type, tgl: item.date.substr(0,10), id: item.id, karu: item.type === 'BS' ? item.user : item.karu, shift: item.shift || "-", job: item.job || "-", ops: item.ops || "-", kode: brg.n, qty: brg.q, ket: brg.ket || "-" });
+                flat.push({ tipe: item.type, tgl: item.date.substr(0,10), id: item.id, karu: item.karu, shift: item.shift || "-", job: item.job || "-", ops: item.type === 'BS' ? item.user : (item.ops || "-"), kode: brg.n, qty: brg.q, ket: brg.ket || "-" });
             });
     });
     VIEW_DATA_CACHE = flat;
@@ -2430,20 +2430,19 @@ async function saveData(status, type = 'PRD') {
     if(type === 'PRD') {
         let jobVal = document.getElementById('selJobValue').value; let isBahanBaku = (jobVal === "Bahan Baku Masuk"); let ops = "-";
         if (!isBahanBaku) { if (document.getElementById('chkPerbantuan').checked) { ops = document.getElementById('txtOpManual').value.trim() || "-"; } else { let selectedOps = []; document.querySelectorAll('.op-btn.selected').forEach(b => selectedOps.push(b.innerText)); ops = selectedOps.length > 0 ? selectedOps.join(', ') : "-"; } }
-        let originalCreator = document.getElementById('originalUser').value || USER.name; let karuVal = document.getElementById('selKaruValue').value;
+        let karuVal = document.getElementById('selKaruValue').value;
         let shiftVal = document.getElementById('selShiftValue').value;
         if(!isBahanBaku && (!karuVal || karuVal === "-- Pilih Karu --")) { return showAlert("Peringatan", "Harap pilih Karu!"); }
         if(!isBahanBaku && (!shiftVal || shiftVal === "-- Pilih Shift --")) { return showAlert("Peringatan", "Harap pilih Shift!"); }
         if(!jobVal) return showAlert("Peringatan", "Harap pilih Pekerjaan!");
-        payload = { action: 'saveDataPRD', type: 'PRD', id: id, date: document.getElementById('inputDate').value, karu: isBahanBaku ? "(System)" : karuVal, shift: shiftVal, job: jobVal, ops: ops, items: items, status: status, user: originalCreator };
-    } else {
-        let bsKaru = document.getElementById('selBSKaruValue').value;
+        payload = { action: 'saveDataPRD', type: 'PRD', id: id, date: document.getElementById('inputDate').value, karu: isBahanBaku ? "(System)" : karuVal, shift: shiftVal, job: jobVal, ops: ops, items: items, status: status };
+    } else {
+        let bsKaru = document.getElementById('selBSKaruValue').value;
         let bsShift = document.getElementById('selBSShiftValue').value;
         if(!bsKaru || bsKaru === "-- Pilih Karu --") { return showAlert("Peringatan", "Harap pilih Karu terlebih dahulu!"); }
         if(!bsShift || bsShift === "-- Pilih Shift --") { return showAlert("Peringatan", "Harap pilih Shift terlebih dahulu!"); }
-        let originalCreator = document.getElementById('originalBSUser').value || USER.name;
-        payload = { action: 'saveDataBS', type: 'BS', id: id, date: document.getElementById('inputBSDate').value, karu: bsKaru, job: 'BS Produksi', shift: bsShift, ops: bsShift, items: items, status: status, user: originalCreator };
-    }
+        payload = { action: 'saveDataBS', type: 'BS', id: id, date: document.getElementById('inputBSDate').value, karu: bsKaru, job: 'BS Produksi', shift: bsShift, ops: bsShift, items: items, status: status };
+    }
 
     if (status === 'Draft') {
         saveLocalDraft(payload); showSuccessAnim(id); toggleFormLock(true, type);
@@ -2514,10 +2513,11 @@ async function processExport() {
         filteredData.forEach(item => {
             let itemsArr = typeof item.items === 'string' ? JSON.parse(item.items) : item.items;
             itemsArr.forEach(brg => {
-                let colKaruUser = item.type === 'BS' ? item.user : item.karu; 
+                let colKaruUser = item.karu; 
+                let colOpsUser = item.type === 'BS' ? item.user : (item.ops || "-");
                 // 👇 PASTIKAN BARIS INI SEPERTI INI 👇
                 let colKet = brg.ket || "-";      
-                flatData.push({ "TIPE": item.type === 'BS' ? 'BS' : 'PRD', "TANGGAL": item.date.substr(0,10), "ID LAPORAN": item.id, "KARU / USER": colKaruUser, "SHIFT": item.shift || "-", "PEKERJAAN": item.job || "-", "OPERATOR": item.ops || "-", "NAMA BARANG": brg.n, "QTY": Number(brg.q), "STATUS": item.status, "KETERANGAN": colKet });
+                flatData.push({ "TIPE": item.type === 'BS' ? 'BS' : 'PRD', "TANGGAL": item.date.substr(0,10), "ID LAPORAN": item.id, "KARU / USER": colKaruUser, "SHIFT": item.shift || "-", "PEKERJAAN": item.job || "-", "OPERATOR": colOpsUser, "NAMA BARANG": brg.n, "QTY": Number(brg.q), "STATUS": item.status, "KETERANGAN": colKet });
             });
         });
 
@@ -2702,7 +2702,7 @@ function openPendingApprovalModal() {
             <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border:1px solid #e2e8f0; padding:10px 15px; border-radius:8px;">
                 <div>
                     <div style="font-weight:bold; font-size:13px; color:#0f172a; margin-bottom: 3px;">${d.id} ${typeBadge}</div>
-                    <div style="font-size:11px; color:#64748b;"><span class="material-symbols-outlined" style="font-size:12px; vertical-align:middle;">person</span> ${d.type === 'BS' ? d.user : d.karu}</div>
+                    <div style="font-size:12px; color:#64748b;"><span class="material-symbols-outlined" style="font-size:12px; vertical-align:middle;">person</span> ${d.karu}</div>
                 </div>
                 <button onclick="document.getElementById('pendingApprovalModal').style.display='none'; openDocumentFull('${d.id}')" class="btn-outline" style="padding:6px 10px; border-radius:6px !important; color:var(--ig-primary); border-color:var(--ig-primary) !important; background: white;" title="Lihat Dokumen">
                     <span class="material-symbols-outlined" style="font-size:18px;">visibility</span>
@@ -2883,7 +2883,7 @@ function filterSplitList() {
             </div>
             <div style="font-size:11px; color:#64748b; margin-bottom:8px; display:flex; align-items:center; gap:4px;">
                 <span class="material-symbols-outlined" style="font-size:14px; color:#94a3b8;">person</span> 
-                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">${d.type === 'BS' ? d.user : d.karu}</span>
+                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">${d.karu}</span>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-size:10px; color:#94a3b8; font-weight:600;">${d.date.substr(0,10)}</span>
@@ -3411,8 +3411,8 @@ function printReport(type) {
 
     // 4. Susun Header Kop Laporan
     let titleDoc = isBS ? "LEMBAR BS PRODUKSI" : "LEMBAR LAPORAN PRODUKSI";
-    let karuName = isBS ? d.user : d.karu;
-    let labelKaru = isBS ? "Karu/User" : "Kepala Regu";
+    let karuName = d.karu;
+    let labelKaru = "Kepala Regu";
     let jobText = isBS ? "BS Produksi" : (d.job || '-');
     
     let headerInfoHTML = `
