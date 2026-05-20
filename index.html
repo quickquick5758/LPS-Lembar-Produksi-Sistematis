@@ -1371,7 +1371,7 @@
 </div>
 
 <script>
-const CLOUD_API_URL ="https://script.google.com/macros/s/AKfycbxRFjayUw04VE88nCWqkg8w3x2ZdspX2CuPNWdL2gzOxTE9kZtpy7w921rIxq4RUhkC/exec"; 
+const CLOUD_API_URL ="https://script.google.com/macros/s/AKfycbxEH96hxb0N7qwSKjDKGAA4euB10ioBP9DvQYlg_CDZAHEQLuGsdr03r-7zRtb8cCaJ/exec"; 
 
 let DATA = {};
 let currentPageLaporan = 1; let rowsPerPageLaporan = 15;
@@ -1799,8 +1799,8 @@ function sortLaporan(col) {
         let masterItem = DATA.master.find(m => m.kode === d.kode);
         let badgeKat = masterItem ? getKatBadge(masterItem.kat) : "";
 
-        let opDisplay = d.type === 'BS' ? (d.shift || d.job || d.ops || "-") : (d.ops || "-"); 
-        let jobDisplay = getJobBadge(d.job);
+        let opDisplay = d.type === 'BS' ? "-" : (d.ops || "-"); 
+        let jobDisplay = d.type === 'BS' ? getJobBadge("BS Produksi") : getJobBadge(d.job);
 
         let userDisplay = tampilKaru;
         let badgeClass = d.status === 'Approved' ? 'st-approved' : (d.status === 'Submitted' ? 'st-submitted' : (d.status === 'Draft' ? 'st-draft' : 'st-rejected'));
